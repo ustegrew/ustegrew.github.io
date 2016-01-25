@@ -1,0 +1,344 @@
+/**
+ * it001 - main stylesheet.
+ */
+
+/**
+ * links
+ */
+a
+{
+    target-name:                    new;
+    target-new:                     tab;
+}
+
+/**
+ * Textual content
+ */
+p, ol, ul, div.note, div.related-info
+{
+    margin-left:                    2.5em;
+    margin-top:                     1em !important;
+}
+
+dl
+{
+    margin-left:                    4.5em;
+    margin-top:                     1em;
+}
+
+dt
+{
+    font-weight:                    bold;
+}
+
+dd
+{
+    margin-bottom:                  1em;
+    margin-left:                    2.5em;
+}
+
+div.note
+{
+    background-image:               url('../img/16x16/attn.png');
+    background-repeat:              no-repeat;
+    background-position:            left 5px;
+    
+    border-bottom:                  1px solid lightskyblue;
+    border-top:                     1px solid lightskyblue;
+    
+    min-height:                     20px;
+
+    padding-top:                    5px;
+    padding-bottom:                 5px;
+    padding-left:                   20px;
+}
+
+div.related-info /* TODO: duplicate of div.note. Needs design change for production version */
+{
+    background-image:               url('../img/16x16/attn.png');
+    background-repeat:              no-repeat;
+    background-position:            left 5px;
+    
+    border-bottom:                  1px solid lightskyblue;
+    border-top:                     1px solid lightskyblue;
+    
+    min-height:                     20px;
+
+    padding-top:                    5px;
+    padding-bottom:                 5px;
+    padding-left:                   20px;
+}
+
+div.quote
+{
+    border-bottom:                  1px solid darkgray;
+    border-top:                     1px solid darkgray;
+    font-style:                     italic;
+    font-family:                    serif;
+    font-size:                      1.2em;
+    margin-left:                    5em;
+    margin-right:                   5em;
+    padding-bottom:                 0.5em;
+    padding-left:                   1em;
+    padding-right:                  1em;
+    padding-top:                    0.5em;
+}
+
+/**
+ * Headings 
+ *
+ * Provides automatic numbering: Implementation courtesy 
+ * http://www.2ality.com/2012/01/numbering-headingshtml.html
+ *
+ * Comments from article:
+ *   - The above CSS resets the counter for the first numbering level called 
+ *     h2counter when it enters the body. Just to be safe, we reset it again at h1.
+ *   - The pseudo-class :before allows us to insert content before the inside of a tag.
+ *   - The character \0000a0 is a non-breaking space in CSS. Hence there are 
+ *     always two non-breaking spaces after the last dot of each heading number.
+ */
+body 
+{
+    counter-reset:                  h2count;
+}
+
+h1 
+{
+    counter-reset:                  h2count;
+    margin-top:                     0px !important;
+}
+
+h2:before 
+{
+    content:                        counter(h2count) ".\0000a0\0000a0";
+}
+
+h2
+{
+    counter-increment:              h2count;
+    counter-reset:                  h3count;
+    margin-top:                     1.5em !important;
+}
+
+h3:before 
+{
+    content:                        counter(h2count) "." counter(h3count) ".\0000a0\0000a0";
+}
+
+h3
+{
+    counter-increment:              h3count;
+    counter-reset:                  h4count;
+    font-size:                      1.5em !important;
+    margin-top:                     1.5em !important;
+}
+
+h4:before 
+{
+    content:                        counter(h2count) "." counter(h3count) "." counter(h4count) ".\0000a0\0000a0";
+}
+
+h4
+{
+    counter-increment:              h4count;
+    margin-top:                     2em !important;
+    font-size:                      1.2em !important;
+}
+
+/**
+ * Source code examples
+ */
+div.example
+{
+    margin-left:                    2.5em;
+    margin-right:                   2.5em;
+    margin-top:                     1em;
+}
+
+div.example_demo
+{
+    background:                     #d0d0d0;
+    margin-left:                    2.5em;
+    margin-right:                   2.5em;
+    margin-top:                     1em;
+    padding-bottom:                 0.5em;              
+}
+
+div.nomargin-top
+{
+    margin-top:                     0px !important;
+}
+
+div.example_demo > pre.prettyprint
+{
+    margin:                         1em !important;
+}
+
+pre.prettyprint
+{
+    border-radius:                  4px !important;
+    font-family:                    monospace !important;
+    margin-top:                     1em;
+    padding-left:                   3em;
+    
+    /* 
+        white-space:                pre-line;                                   [1]
+    */
+}
+
+pre.inline
+{
+    border:                         0px !important;
+    margin-top:                     0px !important;
+    padding-left:                   1.5em !important;
+    padding-top:                    0px !important;
+}
+
+tt
+{
+    font-family:                    monospace;
+    font-size:                      1.2em;
+    font-weight:                    600;
+}
+
+/**
+ * Table of different content items. For itemized lists of examples, concepts 
+ * etc.
+ */
+table.itemization
+{
+    background-color:               #b0b0b0;
+    border:                         1px solid #b0b0b0;
+    border-radius:                  15px;
+    border-spacing:                 1px;
+    margin-left:                    2.5em;
+    margin-top:                     2em;
+    width:                          95%;
+}
+
+table.itemization > tbody > tr > td
+{
+    background-color:               #efefef;
+    border-style:                   hidden;
+    border-radius:                  13px;
+    padding-bottom:                 10px;
+    padding-left:                   10px;
+    padding-right:                  10px;
+    padding-top:                    1em;
+    text-align:                     left;
+    vertical-align:                 top;
+}
+
+table.itemization pre.prettyprint
+{
+    border:                         0px !important;
+    margin-left:                    0px !important;
+    margin-top:                     0px !important;
+    padding-left:                   1.5em !important;
+}
+
+/**
+ * Instruction tables. For walkthroughs of type 
+ * click-here_then-right-click-there_then-type-this
+ */
+table.instruction
+{
+    background-color:               lightskyblue;
+    border-collapse:                collapse;
+    border-top:                     1px solid lightslategray;
+    margin-left:                    2.5em;
+    margin-top:                     2em;
+    table-layout:                   fixed;
+    width:                          95%;
+}
+
+table.instruction > tbody > tr > td
+{
+    border-bottom:                  4px solid lightslategray;
+    border-top:                     4px solid lightslategray;
+    padding:                        10px;
+    text-align:                     left;
+    vertical-align:                 top;
+}
+
+table.instruction > tbody > tr > td:nth-child(1)
+{
+    width:                          300px;
+    border-left:                    30px solid lightslategray;
+}
+
+table.instruction img
+{
+    max-width:                      90%;
+}
+
+/**
+ * Exercises
+ */
+ol.exercises
+{
+    margin-left:                    2.5em;
+    margin-top:                     1em !important;
+}
+
+ol.exercises > li
+{
+    margin-bottom:                  2.5em;
+}
+
+ol.exercises > li > ol
+{
+    margin-left:                    0px !important;
+    margin-top:                     0px !important;
+}
+
+ol.exercises > li > ol > li
+{
+    margin-bottom:                  0.5em;
+}
+
+/**
+ * figures
+ */
+body
+{
+    counter-reset:                  figcounter;
+}
+
+figure
+{
+    counter-increment:              figcounter;
+    margin-bottom:                  3em;
+    margin-left:                    3em;
+}
+
+figure > figcaption:before
+{
+    content:                        "fig. " counter(figcounter) ":\0000a0";
+}
+
+figure > figcaption
+{
+    font-style:                     italic;
+    position:                       relative;
+    top:                            0.3em;
+}
+
+figure > img
+{
+    border:                         2px solid lightsteelblue;
+    border-radius:                  2px;
+    padding:                        1em;
+}
+
+/*
+
+ [1]:  Disabled, as it doesn't work. we observed that 
+       some leading white spaces always remain. Now replaced
+       by javascript function. 
+       Left here for posterity. 
+
+ [2]:  Can't use padding - would put menu bar out of place.
+ [3]:  Must use margin - using padding in parent container would 
+       put menu bar out of place.
+*/

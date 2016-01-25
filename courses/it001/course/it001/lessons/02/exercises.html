@@ -1,0 +1,86 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <article>
+            <ol class="exercises">
+                <li>
+                    <ol>
+                        <li>
+                            Create a new web page <tt>1.html</tt> with an embedded script 
+                            that shows a message box with some text.
+                        </li>
+                        <li>
+                            Try your web page with the debugger. Use the breakpoint feature and 
+                            step through the code!
+                        </li>
+                    </ol>
+                </li>
+                <li>
+                    <ol>
+                        <li>Create a new web page <tt>2.html</tt>.</li>
+                        <li>Create a Javascript file <tt>2.js</tt>.</li>
+                        <li>Edit the the web page so it links to the Javascript file (<tt>&lt;script&gt;</tt> tag).</li>
+                        <li>In the Javascript file, put code which shows a message box with some text.</li>
+                        <li>Test the web page in your browser.</li>
+                    </ol>
+                </li>
+                <li>
+                    <ol>
+                        <li>Create a new empty web page <tt>0.html</tt>.</li>
+                        <li>Paste the code below into the web page.</li>
+                        <li>
+                            Execute the web page with the Google Chrome debugger. You need to be
+                            able to describe what the javascript code is doing! 
+                        </li>
+                        <li>
+                            Bonus! Change the Javascript code so it prints the message in the 
+                            <tt>&lt;pre&gt;</tt> element in the web page, and not in a message box!
+                        </li>
+                    </ol>
+                    <div class="example">
+                        <pre class="prettyprint">
+                            &lt;html&gt;
+                                &lt;head&gt;
+                                    &lt;script&gt;
+                                        var myNumber = 125;
+
+                                        function three_a_plus_one (a)
+                                        {
+                                            var a0;
+                                            var div2;
+                                            var nRuns;
+                                            var msg;
+
+                                            a0      = a;
+                                            nRuns   = 0;
+                                            while (a0 >= 2)
+                                            {
+                                                div2 = a0  %  2;
+                                                if (div2 === 0)
+                                                {
+                                                    a0 = a0 / 2;
+                                                }
+                                                else
+                                                {
+                                                    a0 = 3 * a0 + 1;
+                                                }
+                                                nRuns++;
+                                            }
+
+                                            msg = "For number " + a + " we needed " + nRuns + " iterations.";
+                                            window.alert (msg);
+                                        }
+                                    &lt;/script&gt;
+                                &lt;/head&gt;
+                                &lt;body onload="three_a_plus_one (myNumber);"&gt;
+                                    &lt;pre&gt;&lt;/pre&gt;
+                                &lt;/body&gt;
+                            &lt;/html&gt;
+                        </pre>
+                    </div>
+                </li>
+            </ol>
+        </article>
+    </body>
+</html>

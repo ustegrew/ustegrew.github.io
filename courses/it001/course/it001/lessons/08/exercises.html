@@ -1,0 +1,450 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <article>
+            <ol class="exercises">
+                <li>
+                    <p>
+                        Rewrite the following programs using functions.
+                    </p>
+                    <ol>
+                        <li>
+                            <div class="example">
+                                <pre class="prettyprint">
+                                    var i;
+                                    var x;
+                                    var exp;
+                                    var pow;
+
+                                    x   = 10;
+                                    exp = 2;
+                                    pow = 1;
+                                    for (i = 1; i &lt;= exp; i++)
+                                    {
+                                        pow = pow * x;
+                                    }
+                                    console.log (x + " to the power of " + exp + " = " + pow);
+
+                                    x   = 10;
+                                    exp = 3;
+                                    pow = 1;
+                                    for (i = 1; i &lt;= exp; i++)
+                                    {
+                                        pow = pow * x;
+                                    }
+                                    console.log (x + " to the power of " + exp + " = " + pow);
+
+                                    x   = 10;
+                                    exp = 5;
+                                    pow = 1;
+                                    for (i = 1; i &lt;= exp; i++)
+                                    {
+                                        pow = pow * x;
+                                    }
+                                    console.log (x + " to the power of " + exp + " = " + pow);
+                                </pre>                                
+                            </div>
+                        </li>
+                        <li>
+                            <div class="example">
+                                <pre class="prettyprint">
+                                    var x;
+                                    var y;
+
+                                    x = 6;
+                                    y = x &lt;&lt; 1;
+                                    console.log (x + "-&gt;" + y);
+
+                                    x = 5;
+                                    y = 4 * x / 2;
+                                    console.log (x + "-&gt;" + y);
+
+                                    x = 25;
+                                    y = x + x + x + x - x - x;
+                                    console.log (x + "-&gt;" + y);
+                                </pre>                                
+                            </div>
+                        </li>
+                    </ol>
+                </li>
+
+                <li>
+                    <p>
+                        The program below draws a stripey pattern onto a HTML canvas element. However, there 
+                        must be something wrong with the code, because we expected the program to draw a chessboard 
+                        pattern like this one:
+                    </p>
+                    <img src="course/it001/lessons/08/img/20.png"/>
+                    <p>
+                        In short - this program needs correction! As you're already at it -you can make much better 
+                        use of functions and use control flow statements! Here's the buggy souce code:
+                    </p>
+                    <div class="example">
+                        <pre class="prettyprint">
+                            &lt;html&gt;
+                                &lt;head&gt;
+                            &lt;script type="application/javascript"&gt;
+                            function DrawChessBoard ()
+                            {
+                                var cnv = document.getElementById ("canvas");
+                                var ctx = cnv.getContext ('2d');
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0,  0, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10,  0, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20,  0, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30,  0, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40,  0, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50,  0, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60,  0, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70,  0, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80,  0, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90,  0, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 10, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 10, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 10, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 10, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 10, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 10, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 10, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 10, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 10, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 10, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 20, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 20, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 20, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 20, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 20, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 20, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 20, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 20, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 20, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 20, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 30, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 30, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 30, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 30, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 30, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 30, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 30, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 30, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 30, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 30, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 40, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 40, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 40, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 40, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 40, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 40, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 40, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 40, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 40, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 40, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 50, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 50, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 50, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 50, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 50, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 50, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 50, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 50, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 50, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 50, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 60, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 60, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 60, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 60, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 60, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 60, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 60, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 60, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 60, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 60, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 70, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 70, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 70, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 70, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 70, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 70, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 70, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 70, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 70, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 70, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 80, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 80, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 80, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 80, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 80, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 80, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 80, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 80, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 80, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 80, 10, 10);
+
+                                ctx.fillStyle = "black";
+                                ctx.fillRect ( 0, 90, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (10, 90, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (20, 90, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (30, 90, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (40, 90, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (50, 90, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (60, 90, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (70, 90, 10, 10);
+                                ctx.fillStyle = "black";
+                                ctx.fillRect (80, 90, 10, 10);
+                                ctx.fillStyle = "white";
+                                ctx.fillRect (90, 90, 10, 10);
+                            }
+
+                            &lt;/script&gt;
+                                &lt;/head&gt;
+                                &lt;body onload="DrawChessBoard();"&gt;
+                                    &lt;canvas id="canvas" width="100" height="100"&gt;&lt;/canvas&gt;
+                                &lt;/body&gt;
+                            &lt;/html&gt;
+                        </pre>
+                    </div>
+                </li>
+
+                <li>
+                    <p>
+                        Here's the skeleton of a web page which performs different calculations on two operands:
+                    </p>
+                    <div class="example">
+                        <pre class="prettyprint">
+                            &lt;html&gt;
+                                &lt;head&gt;
+                            &lt;script type="text/javascript"&gt;
+                            function Exec ()
+                            {
+                                var op_a        = document.getElementById ("operand_a");
+                                var op_b        = document.getElementById ("operand_b");
+                                var operation   = document.getElementById ("operation");
+                                var result      = document.getElementById ("result");
+                                var out;
+
+                                out          = op_a.value + operation.value + op_b.value + "=???";
+                                result.value = "Result here";
+                                window.alert (out);
+                            }
+                            &lt;/script&gt;
+                                &lt;/head&gt;
+                                &lt;body&gt;
+                                    &lt;table bgcolor="#c0c0c0"&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;
+                                                &lt;input type=text id="operand_a"/&gt;
+                                            &lt;/td&gt;
+                                            &lt;td&gt;
+                                                &lt;select id="operation" size="5"&gt;
+                                                    &lt;option&gt;+&lt;/option&gt;
+                                                    &lt;option&gt;-&lt;/option&gt;
+                                                    &lt;option&gt;*&lt;/option&gt;
+                                                    &lt;option&gt;/&lt;/option&gt;
+                                                    &lt;option&gt;pow&lt;/option&gt;
+                                                &lt;/select&gt;
+                                            &lt;/td&gt;
+                                            &lt;td&gt;
+                                                &lt;input type=text id="operand_b"/&gt;
+                                            &lt;/td&gt;
+                                            &lt;td&gt;
+                                                &lt;button onclick="Exec();"&gt;=&lt;/button&gt;
+                                            &lt;/td&gt;
+                                            &lt;td&gt;
+                                                &lt;input type=text id="result"/&gt;
+                                            &lt;/td&gt;
+                                        &lt;/tr&gt;
+                                    &lt;/table&gt;
+                                &lt;/body&gt;
+                            &lt;/html&gt;
+                        </pre>
+                    </div>
+                    <p>
+                        The page offers the following operations:
+                    </p>
+                    <ul>
+                        <li><tt>+</tt> - Add operand B to operand A</li>
+                        <li><tt>-</tt> - Subtract operand B from operand A</li>
+                        <li><tt>*</tt> - Multiply operand A with operand B</li>
+                        <li><tt>/</tt> - Divide operand A by operand B</li>
+                        <li><tt>pow</tt> - Calculate operand A to the power of operand B</li>
+                    </ul>
+                    <p>
+                        To use the page
+                    </p>
+                    <ul>
+                        <li>
+                            The user enters the operands,
+                        </li>
+                        <li>
+                            chooses one of the operations in the list box
+                        </li>
+                        <li>
+                            and clicks the '=' button
+                        </li>
+                        <li>
+                            This will peform the chosen operation and print the result into the result box.
+                        </li>
+                    </ul>
+                    <p>
+                        The web page code above is just the bare bones. Your task is two fold:
+                    </p>
+                    <ol>
+                        <li>
+                            Write the missing Javascript code that makes the calculator page work as advertised!
+                            Put the code into the &lt;script&gt; section of the page's HTML code! Make libeal use of
+                            functions!
+                        </li>
+                        <li>
+                            With your code, implement robustness! For example, you can have the page print "#ERROR" 
+                            into the result field when the user provides nonsensical values! Identify all cases where 
+                            something could be wrong and provide the code to handle these cases!
+                        </li>
+                    </ol>
+                    <div class="note">
+                        This is a difficult task and needs careful consideration first. Don't rush, but carefully think it 
+                        through! Put effort into writing good code!
+                    </div>
+                </li>
+
+                <li>
+                    <p>
+                        The factorial of any integer number <i>n</i> is defined as the product of itself 
+                        and all smaller positive integers:
+                    </p>
+                    <div class="example">
+                        <pre class="prettyprint">
+                            n! = n * n-1 * n-2 * ... * 1
+                        </pre>
+                    </div>
+                    <p>
+                        Write a recursive function which computes the factorial of a positive integer!
+                    </p>
+                </li>
+
+                <li>
+                    <p>
+                        Write a program with a recursive function which generates the following series:
+                    </p>
+                    <div class="example">
+                        <pre class="prettyprint">
+                            "0 0 0"
+                            "0 0 1"
+                            "0 1 0"
+                            "0 1 1"
+                            "1 0 0"
+                            "1 0 1"
+                            "1 1 0"
+                            "1 1 1"
+                        </pre>
+                    </div>
+                </li>
+            </ol>
+        </article>
+    </body>
+</html>

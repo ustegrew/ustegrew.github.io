@@ -1,0 +1,223 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <ol class="exercises">
+            <li>
+                <p>
+                    For each of the following expressions, check whether it's valid.<br/>
+                    If an expression is valid, what will be the value of <tt>a</tt>?<br/>
+                    If an expression is invalid, state the reason why it is invalid.
+                </p>
+                <ol>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                a = 15 % 4 * 3;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                5 = 5;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                a + 4 = 0;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                a = 3++;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                               a = --b;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                               a = "3" + 3;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                               a = (15 >>> 2) % 2;
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                               a = (((21 >>> 2) > 6) ? "Very big" : "Not so big");
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                              a = 8 | 7 % 3;
+                            </pre>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <p>
+                    For each of the following programs, what's the output?
+                </p>
+                <ol>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                var a = 5;
+                                var b = --a;
+                                window.alert (b);
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                var a = 5;
+                                var b = a++;
+                                window.alert (b);
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                var a = 5;
+                                var b = ++a % 3;
+                                var c = a++ % 3;
+                                window.alert ("b is " + b + " and c is " + c);
+                            </pre>
+                        </div>
+                    </li>
+                    <li>
+                        <a name="01"></a>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                var out;
+                                var i = 1;
+                                var a = 
+                                [
+                                    "q", "a", "r", "t", 
+                                    "r", "n", "s", "u", 
+                                    "a", "i", "o", "l", 
+                                    "c", "j", "e", "p", 
+                                    "y", "x"
+                                ];
+
+                                out  = "The secret word is: ";
+
+                                out += a [i];
+
+                                i &lt;&lt;= 1;
+                                out += a [i];
+
+                                i &lt;&lt;= 1;
+                                out += a [i];
+
+                                i &lt;&lt;= 1;
+                                out += a [i];
+
+                                i &lt;&lt;= 1;
+                                out += a [i];
+
+                                window.alert (out);
+                            </pre>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <p>
+                    This program is supposed to show an alert box with the same 
+                    text as the program in the <a target="_blank" href="#01">previous exercise</a>. 
+                    But something went wrong, and the text is all garbled. Change 
+                    this program so it shows the proper text!
+                </p>
+                <ol>
+                    <li>
+                        <div class="example">
+                            <pre class="prettyprint">
+                                var out;
+                                var i = 16;
+                                var a = 
+                                [
+                                    "y", "a", "t", "q",
+                                    "n", "s", "u", "r", 
+                                    "i", "o", "l", "r", 
+                                    "j", "e", "p", "c", 
+                                    "x", "a"
+                                ];
+
+                                out  = "The secret word is: ";
+
+                                out += a [i];
+
+                                i >>= 1;
+                                out += a [i];
+
+                                i >>= 1;
+                                out += a [i];
+
+                                i >>= 1;
+                                out += a [i];
+
+                                i >>= 1;
+                                out += a [i];
+
+                                window.alert (out);
+                            </pre>
+                        </div>
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <p>
+                    For each of the following logic circuits, write a program which computes 
+                    and prints the circuit's truth table!
+                </p>
+                <ol>
+                    <li><br/><img src="course/it001/lessons/06/img/01.png"/></li>
+                    <li><br/><img src="course/it001/lessons/06/img/02.png"/></li>
+                    <li><br/><img src="course/it001/lessons/06/img/03.png"/></li>
+                </ol>
+            </li>
+            <li>
+                <p>
+                    Write a program which does the same as the program below - but without using 
+                    any comparison operators or flow control statements!
+                </p>
+                <div class="example">
+                    <pre class="prettyprint">
+                        /* Allowed values for x:
+                         *     0, 1, 2, 3, 4, 5, 6, 7
+                         */
+                        var x = 5;
+                        var out;
+
+                        out = (x >= 5)  ?  "true" : "false";
+                        console.log (out);
+                    </pre>
+                </div>
+            </li>
+        </ol>
+    </body>
+</html>

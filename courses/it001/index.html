@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico">
+        <title>
+            Courses
+        </title>
+        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/claro.css"        type="text/css">
+        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/document.css"     type="text/css">
+        <link rel="stylesheet"  href="lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css">
+        <script type="text/javascript" src="lib/esprima/esprima.js"></script>
+        <script type="text/javascript">
+            /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
+            var dojoConfig =
+            {
+                has:
+                {
+                    "dojo-firebug":         true,
+                    "dojo-debug-messages":  true
+                },
+                locale:             'en',
+                baseUrl:            'lib/',
+                tlmSiblingsOfDojo:  false,
+                packages:
+                [
+                    {name: 'ace',                   location: 'ace'},
+                    {name: 'dojo',                  location: 'dojo/dojo'},
+                    {name: 'dijit',                 location: 'dojo/dijit'},
+                    {name: 'dojox',                 location: 'dojo/dojox'},
+                    {name: 'gridx',                 location: 'dojo/gridx'},
+                    {name: 'jsdemo',                location: 'jsdemo'},
+                    {name: 'courseware',            location: 'courseware'},
+                    {name: 'google-code-prettify',  location: 'google-code-prettify'},
+                    {name: 'course',                location: '../course'}
+                ]
+            };
+        </script>
+        <script type             = "text/javascript"
+                src              = "lib/dojo/dojo/dojo.js"
+                data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
+            /* Integrate dojo toolkit */
+        </script>
+        <script type="text/javascript" src="app.js">
+            /* Application specific program */
+        </script>
+    </head>
+    <body class="claro">
+        <div id="pnlMain" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;"></div>
+    </body>
+</html>
