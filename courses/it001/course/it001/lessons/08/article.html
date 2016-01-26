@@ -338,7 +338,7 @@
                 instruction to end a function and to return a value back to the caller. Here's a function which computes
                 the double value of a given parameter and returns it to the caller.
             </p>
-            <div class="example" demo-id="notImpl">
+            <div class="example" demo-id="it001_Ex_08_030">
                 <pre class="prettyprint linenums">
                     /**
                      * Returns the double value of the given parameter.
@@ -481,7 +481,143 @@
             </p>
 
             <div class="example" demo-id="notImpl">
+                <!--
+                Make this example runnable.
+                In JSDemo descriptor, use variable: tree.
+                    this.tree =
+                    [
+                        {
+                            name:       "doc",
+                            type:       "dir",
+                            children:
+                            [
+                                {
+                                    name:       "math",
+                                    type:       "dir",
+                                    children:
+                                    [
+                                        {
+                                            name:       "geometries.odt",
+                                            type:       "file"
+                                        },
+                                        {
+                                            name:       "groups.odt",
+                                            type:       "file"
+                                        },
+                                        {
+                                            name:       "operators.odt",
+                                            type:       "file"
+                                        },
+                                        {
+                                            name:       "rings.odt",
+                                            type:       "file"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:       "physics",
+                                    type:       "dir",
+                                    children:
+                                    [
+                                        {
+                                            name:       "electromagnetics",
+                                            type:       "dir",
+                                            children:
+                                            [
+                                                {
+                                                    name:       "hist",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "huygens.txt",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "maxwell.txt",
+                                                    type:       "file"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name:       "mechanics",
+                                            type:       "dir",
+                                            children:
+                                            [
+                                                {
+                                                    name:       "joule",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "newton",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "si-units",
+                                                    type:       "file"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name:       "relativity",
+                                            type:       "dir",
+                                            children:
+                                            [
+                                                {
+                                                    name:       "Banana",
+                                                    type:       "fruit"
+                                                },
+                                                {
+                                                    name:       "einstein-rosen-effect.html",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "quantum-borders",
+                                                    type:       "file"
+                                                },
+                                                {
+                                                    name:       "travel.karbon",
+                                                    type:       "file"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            name:       "index.html",
+                                            type:       "file"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name:       "index.html",
+                                    type:       "file"
+                                },
+                                {
+                                    name:       "readme.txt",
+                                    type:       "file"
+                                }
+                            ]
+                        }
+                    ]
+                
+                Also, add example code:
+                    var tree = [ /* Long complicated structure */ ]
+
+                    function GetChildNodeOf (node, i)
+                    {
+                        return node.children [i];
+                    }
+
+                    function GetNumChildrenOf (node)
+                    {
+
+                    }
+
+                    function IsBanana (node)
+                    {
+                    }
+
+                -->
                 <pre class="prettyprint">
+
                     function Visit (node)
                     {
                         var     i;
