@@ -72,15 +72,6 @@ define
             fRepository:        null,
 
             /**
-             * If set to <code>true</code>, print additional debug information to the console
-             * during the object's life time.
-             *
-             * @type        boolean
-             * @private
-             */
-            fShowDebugInfo:     false,         
-            
-            /**
              * Loads program [<code>key</code>] into the simulator.
              *
              * @param       {String}    key             Key of the program to load.

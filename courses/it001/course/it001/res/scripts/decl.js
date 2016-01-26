@@ -18,6 +18,24 @@ define ([], function ()
         window.it001.gProgramRepository = {};
     }
 
+    /* Sets some configuration parameters for the course.
+     */
+    window.it001.config =
+    {
+        /* If TRUE:  
+         *     - On loading an article, show modal dialog with skeleton 
+         *       code for all examples in that article with demo-id 
+         *       attribute set. Skeleton code can be used as starting point for 
+         *       the 'run' demo development (saves a lot of typing).
+         *       Since these dialogs are pretty annoying, leave this switched 
+         *       off on the git repo. Switch on locally whilst developing 
+         *       the code that runs the examples. Don't forget to switch off 
+         *       when committing / pushing upstream.
+         *       TODO: Remove for production code.
+         */
+        debugShowPrograms: false         
+    };
+
     window.it001.gProgramRepository ["notImpl"] =
     {
         globals:

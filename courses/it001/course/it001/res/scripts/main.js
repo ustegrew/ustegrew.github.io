@@ -95,6 +95,11 @@ define
             return ret;
         };
         
+        /**
+         * Creates skeleton code for the descriptors in an article. This code will
+         * be shown in a modal dialog for each article loaded.
+         * TODO: Remove for production version.
+         */
         var MakeDescriptors = function ()
         {
             var kQuerySection       = "pre.prettyprint";
@@ -427,6 +432,10 @@ define
              * above each section */
             InitializeExamples ();
 
+            /* If configured, bring up modal dialog showing skeleton code for all
+             * examples with demo-id attribute set.
+             * TODO: Remove for production code. This is annoying, but needed during development.  
+             */
             if (window.it001.config.debugShowPrograms)
             {
                 MakeDescriptors ();
@@ -443,14 +452,6 @@ define
         {
             window.it001.pnlJSDemo.LoadProgram (key);
             window.it001.dlgJSDemo.show ();
-        };
-
-
-        /* Sets some configuration parameters for the course.
-         */
-        window.it001.config =
-        {
-            debugShowPrograms: true
         };
     }
 );

@@ -559,239 +559,239 @@ define (["course/it001/res/scripts/decl"], function ()
     };
     
 
-    window.it001.gProgramRepository ["it001_Ex_08_030"] =
-    {
-        globals:
-        {
-            symbols: ["dbl", "dblVal", "x", "stack", "global_scope", "push", "pop"]
-        },
-        transitionTable:
-        [
-            { // State 0
-                source:         "/**",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this.stack          = [];
-                        this.global_scope   =
-                        {
-                            data:
-                            {
-                                
-                            }
-                        }
-                        this.push = function ()
-                        {
-                            var scope =
-                            {
-
-                            }
-                        }
-                        this._SetState (18, false);
-                    }
-            },
-            { // State 1
-                source:         " * Returns the double value of the given parameter.",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 2
-                source:         " * ",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 3
-                source:         " * @param   x       The value to be doubled.",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 4
-                source:         " * @return          The double value.",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 5
-                source:         " */",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 6
-                source:         "function GetDoubleOf (x)",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 7
-                source:         "{",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this.scope
-                        this._SetState (10, false);
-                    }
-            },
-            { // State 8
-                source:         "    var dbl;",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 9
-                source:         "",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                    }
-            },
-            { // State 10
-                source:         "    dbl = 2 * x;",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this.dbl = 2 * x;
-                        this._SetState (11, false);
-                    }
-            },
-            { // State 11
-                source:         "",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (12, false);
-                    }
-            },
-            { // State 12
-                source:         "    return dbl;",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        return dbl;
-                        this._SetState (13, false);
-                    }
-            },
-            { // State 13
-                source:         "}",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (14, false);
-                    }
-            },
-            { // State 14
-                source:         "",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (15, false);
-                    }
-            },
-            { // State 15
-                source:         "/* -------------------------------------------------------------- */",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (16, false);
-                    }
-            },
-            { // State 16
-                source:         "var dblVal;",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (17, false);
-                    }
-            },
-            { // State 17
-                source:         "",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        this._SetState (18, false);
-                    }
-            },
-            { // State 18
-                source:         "dblVal = GetDoubleOf (2);",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        var frame = 
-                        {
-                            nextState:      19,
-                            isTerminal:     false
-                        };
-                        this.stack.push (frame);
-                        this._SetState (7, false);
-                    }
-            },
-            { // State 19
-                source:         "console.log (dblVal);",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:
-                    function ()
-                    {
-                        console.log (dblVal);
-                        this._SetState (20, true);
-                    }
-            },
-            { // State 20
-                source:         "/* End */",
-                symbols:        ["dbl", "dblVal", "x"],
-                comment:        "",
-                transition:     function (){}
-            }
-        ]
-    };
+//    window.it001.gProgramRepository ["it001_Ex_08_030"] =
+//    {
+//        globals:
+//        {
+//            symbols: ["dbl", "dblVal", "x", "stack", "global_scope", "push", "pop"]
+//        },
+//        transitionTable:
+//        [
+//            { // State 0
+//                source:         "/**",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this.stack          = [];
+//                        this.global_scope   =
+//                        {
+//                            data:
+//                            {
+//                                
+//                            }
+//                        }
+//                        this.push = function ()
+//                        {
+//                            var scope =
+//                            {
+//
+//                            }
+//                        }
+//                        this._SetState (18, false);
+//                    }
+//            },
+//            { // State 1
+//                source:         " * Returns the double value of the given parameter.",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 2
+//                source:         " * ",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 3
+//                source:         " * @param   x       The value to be doubled.",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 4
+//                source:         " * @return          The double value.",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 5
+//                source:         " */",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 6
+//                source:         "function GetDoubleOf (x)",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 7
+//                source:         "{",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this.scope
+//                        this._SetState (10, false);
+//                    }
+//            },
+//            { // State 8
+//                source:         "    var dbl;",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 9
+//                source:         "",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                    }
+//            },
+//            { // State 10
+//                source:         "    dbl = 2 * x;",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this.dbl = 2 * x;
+//                        this._SetState (11, false);
+//                    }
+//            },
+//            { // State 11
+//                source:         "",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (12, false);
+//                    }
+//            },
+//            { // State 12
+//                source:         "    return dbl;",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        return dbl;
+//                        this._SetState (13, false);
+//                    }
+//            },
+//            { // State 13
+//                source:         "}",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (14, false);
+//                    }
+//            },
+//            { // State 14
+//                source:         "",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (15, false);
+//                    }
+//            },
+//            { // State 15
+//                source:         "/* -------------------------------------------------------------- */",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (16, false);
+//                    }
+//            },
+//            { // State 16
+//                source:         "var dblVal;",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (17, false);
+//                    }
+//            },
+//            { // State 17
+//                source:         "",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        this._SetState (18, false);
+//                    }
+//            },
+//            { // State 18
+//                source:         "dblVal = GetDoubleOf (2);",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        var frame = 
+//                        {
+//                            nextState:      19,
+//                            isTerminal:     false
+//                        };
+//                        this.stack.push (frame);
+//                        this._SetState (7, false);
+//                    }
+//            },
+//            { // State 19
+//                source:         "console.log (dblVal);",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:
+//                    function ()
+//                    {
+//                        console.log (dblVal);
+//                        this._SetState (20, true);
+//                    }
+//            },
+//            { // State 20
+//                source:         "/* End */",
+//                symbols:        ["dbl", "dblVal", "x"],
+//                comment:        "",
+//                transition:     function (){}
+//            }
+//        ]
+//    };
     
 
 //     window.it001.gProgramRepository ["it001_Ex_08_040"] =
