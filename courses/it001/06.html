@@ -1,0 +1,1503 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_06</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/06/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Control flow</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Control flow</h1>
+                <p>
+                    Control flow is the order in which the statements are executed when the program runs. Generally, 
+                    statements are executed from top to bottom, in the order in which they appear in the program. 
+                    This linear control flow is not always useful. Here's an example of a program with a less than
+                    useful linear control flow:
+                </p>
+<pre class="prettyprint linenums">
+/*
+* For each second in 0, 1, 2, ..., 10 we compute
+* the distance a vehicle will have travelled at
+* a constant speed of 30 m/s.
+*/
+ 
+var v = 30;
+var t;
+var x;
+var msg;
+ 
+t = 0;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 1;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 2;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 3;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 4;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 5;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 6;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 7;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 8;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 9;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+ 
+t = 10;
+x = v * t;
+msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+console.log (msg);
+</pre>
+                <p>
+                    This program is far too long! The main reason for the inflated size is unecessary 
+                    repetition of code. The following program achieves the same goal with a 
+                    <tt>for</tt> loop (lines 12 to 17):
+                </p>                    
+<pre class="prettyprint linenums">
+/*
+ * For each second in 0, 1, 2, ..., 10 we compute 
+ * the distance a vehicle will have travelled at 
+ * a constant speed of 30 m/s.
+ */
+
+var v = 30;
+var t;
+var x;
+var msg;
+
+for (t = 0; t &lt;= 10; t++)
+{
+    x   = v * t;
+    msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+    console.log (msg);
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0100 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                <p>
+                    As we have seen, it's not always helpful to restrict a program to linear control flow. 
+                    Often it's necessary to break the flow of execution up, by using decision making 
+                    or looping. The <tt>for</tt> loop is one example of a special group of statements that 
+                    change the control flow of a program. Such statements are called <em>control flow 
+                    statements</em>.
+                </p>
+                
+                <h2>Conditions</h2>
+                <p>
+                    Control flow statements operate on <em>logical conditions</em>. A logical condition
+                    is a term which evaluates to a boolean value, i.e. either <tt>true</tt> or <tt>false</tt>.
+                    The logical condition must always be enclosed by brackets <tt>()</tt>.
+                    Here are a few examples of logical conditions:
+                </p>
+<pre class="prettyprint">
+a &gt;= 10                 // true if a is at least 10
+a &gt;= 5  &amp;&amp;  a &lt;= 10     // true if a is between 5 and 10
+a % 2 == 0              // true if a is even
+</pre>
+                <div class="related-info">For more on logical terms, see the chapter on <a href="05.html">Operators and expressions</a>.</div>
+                
+                <h2>Statement blocks</h2>
+                <p>
+                    A control flow statement executes single statements or whole blocks. Statement blocks need 
+                    to be enclosed in braces <tt>{}</tt>.
+                </p>
+<pre class="prettyprint linenums">
+if (a == 0)
+<font class="emphasize-chars">{</font>
+    b = "here is ";
+    c = "a block ";
+    d = "of statements.";
+    console.log ("a is 0, so " + b + c + d);
+<font class="emphasize-chars">}</font>
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0110 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                <p>
+                    No braces are needed if there's just one statement to be executed.
+                </p>
+<pre class="prettyprint linenums">
+b = 0;
+if (a == 0)
+    b = 5;
+</pre>
+                <p>
+                    However, the variant without braces can be unsafe. For example when adding more 
+                    statements later, it's easy to forget the braces.
+                </p>
+<pre class="prettyprint linenums">
+b = 0;
+if (a == 0)
+    b = 5;
+    console.log ("b has changed to " + b); // This will ALWAYS execute (why?)
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0120 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                <p>
+                    Since nothing is lost by using braces, it's recommendable 
+                    to always use braces - even if a block contains just one statement.
+                </p>
+<pre class="prettyprint linenums">
+b = 0;
+if (a == 0)
+{
+    b = 5;
+}
+</pre>
+                <div class="note">
+                    In this course we will <i>always</i> use statement blocks (i.e. code in braces) 
+                    for control flow statements.
+                </div>
+                
+                <h2>Semicolon</h2>
+                <p>
+                    Take <i>great care</i> with semicolons in control statements! 
+                    With control statements, a semicolon in the wrong place can have unwanted side effects! 
+                </p>
+<pre class="prettyprint linenums">
+a = 5;
+if (a == 0)<font class="emphasize-chars">;</font>
+{
+    window.alert ("Yayy, a is zero!");
+    /* Oops! Message box will ALWAYS show! */
+    /* Even when  a  isn't zero!           */
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0130 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                <p>
+                    The reason why the program shows the message box is that the semicolon after the 
+                    <tt>if</tt> clause is seen as an empty statement (meaning: "do nothing"). 
+                    In plain english, the example means:
+                </p>
+<pre class="prettyprint">
+Line       1: Set a to 5.
+Line       2: If a is zero, then do nothing.
+Lines 3 to 5: Show message box with text "Yayy, a is zero!"
+</pre>
+                <div class="note">For most control statements, avoid semicolons after the control clause!</div>
+
+                <h2>Decisions</h2>
+                <p>
+                    Decisions change the flow of execution depending on some condition.
+                </p>
+                
+                <dl>
+                    <dt><tt>if ... else ...</tt></dt>
+                    <dd>
+                        <p>
+                            The <tt>if</tt> statement executes a block of statements if a condition evaluates to <tt>true</tt>. 
+                        </p>
+<pre class="prettyprint linenums">
+if (a == 0)
+{
+    b = "here is ";
+    c = "a block ";
+    d = "of statements.";
+    console.log ("a is 0, so " + b + c + d);
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0140 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            Optionally, an else clause can be added to execute another block of statements when the condition 
+                            evaluates to <tt>false</tt>.
+                        </p>
+<pre class="prettyprint linenums">
+if (a == 0)
+{
+    b = "here is ";
+    c = "a block ";
+    d = "of statements.";
+    console.log ("a is 0, so " + b + c + d);
+}
+else
+{
+    b = "here is ";
+    c = "another block ";
+    d = "of statements.";
+    console.log ("a is NOT 0, so " + b + c + d);
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0150 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                    <p>
+                        It's possible to chain several <tt>else if</tt> statements. This will execute the satement block 
+                        where the condition matches.
+                    </p>
+<pre class="prettyprint linenums">
+a = 1;
+if (a == -1)
+{
+    // this will not execute
+}
+else if (a == 0)
+{
+    // this won't execute either
+}
+else if (a >= 1)
+{
+    // bingo!
+}
+else
+{
+    // the fallback case whan nothing matches
+}
+</pre>                    
+<div class="tryitout">
+    <button onclick="Exec_0160 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                    </dd>
+                    
+                    <dt><tt>switch</tt></dt>
+                    <dd>
+                        <p>
+                            The <tt>switch</tt> statement executes a different statement block
+                            depending on the result of one term. Here's an example of
+                            a switch statement as it would be used in most situations:
+                        </p>
+<pre class="prettyprint linenums">
+a = 1;
+switch (a)
+{
+    case 0:
+        console.log ("Zero");
+        break;
+    case 1:
+        console.log ("One");
+        break;
+    case 5:
+        console.log ("Five");
+        break;
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0170 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            In this example, 
+                            <ul>
+                                <li>
+                                    the <tt>switch</tt> statement matches the value of the variable 
+                                    <tt>a</tt> against the values in three test cases: <tt>0</tt>, 
+                                    <tt>1</tt>, and, <tt>5</tt> (lines 4, 7, 10).
+                                </li>
+                                <li>
+                                    <tt>a</tt> happens to be <tt>1</tt>, therefore <tt>case 1</tt> 
+                                    matches (line 7).
+                                </li>
+                                <li>
+                                    This will execute the code piece inside <tt>case 1</tt>. (lines 8 to 9).
+                                </li>
+                            </ul>
+                            
+                            The example code is equivalent to the following <tt>if</tt> ... <tt>else if</tt> 
+                            construct:
+                        </p>
+<pre class="prettyprint linenums">
+a = 1;
+if (a === 0)
+{
+    console.log ("Zero");
+}
+else if (a === 1)
+{
+    console.log ("One");
+}
+else if (a === 5)
+{
+    console.log ("Five");
+}    
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0180 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <h3>fall-through</h3>
+                        <p>
+                            In most situations, the code in each <tt>case</tt> clause ends with the 
+                            <tt>break</tt> statement. Without the <tt>break</tt> statement, we would get 
+                            <em>fall through</em>. In the following example, <tt>a</tt> matches 
+                            <tt>case 1</tt>, but the execution "falls through" into <tt>case 2</tt>.
+                            This means, <tt>case 1</tt> and <tt>case 2</tt> are both handled.
+                        </p>
+<pre class="prettyprint linenums">
+a = 1;
+switch (a)
+{
+    case 0:
+        console.log ("zero");
+        break;
+    case 1:
+    case 2:
+        console.log ("one or two");
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0190 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            This code is equivalent to:
+                        </p>
+<pre class="prettyprint linenums">
+a = 1;
+if (a === 0)
+{
+    console.log ("zero");
+}
+else if ((a === 1)  ||  (a === 2))
+{
+    console.log ("one or two");
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0200 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            Fall-through would fully handle all cases after a matching case. 
+                            In the following example, <tt>case 1</tt>, <tt>case 2</tt>, and, 
+                            <tt>case 3</tt> would be fully handled, i.e. the console would 
+                            show "one", "two, and, "three".
+                        </p>
+<pre class="prettyprint">
+a = 1;
+switch (a)
+{
+    case 0:
+        console.log ("zero");
+    case 1:
+        console.log ("one");
+    case 2:
+        console.log ("two");
+    case 3:
+        console.log ("three");
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0210 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            Fall-through can be a powerful tool, but it can make it hard to fully 
+                            understand what such a <tt>switch</tt> statement does. Try to guess 
+                            what the console log will show:
+                        </p>
+<pre class="prettyprint linenums">
+a = 1;
+switch (a)
+{
+    case 0:
+        a++;
+    case 1:
+        a--;
+    case 2:
+        a++;
+    case 3:
+        a--;
+}
+
+switch (a)
+{
+    case 0:
+        a--;
+    case 1:
+        a++;
+    case 2:
+        a--;
+    case 3:
+        a++;
+}
+console.log (a); // Make your guess...
+</pre>
+                        <div class="note">Use fall-through with caution!</div>
+                        
+                        <h3>When nothing matches...</h3>
+                        <p>
+                            There are situations when you want to handle the nothing-matches situation. There's
+                            a special case for this purpose, the <em>default</em> case. The default case will 
+                            execute when all other cases fail.
+                        </p>
+<pre class="prettyprint linenums">
+a = 10;
+switch (a)
+{
+    case 0:
+        console.log ("zero");
+        break;
+    case 1:
+        console.log ("one");
+        break;
+    case 2:
+        console.log ("two");
+        break;
+    case 3:
+        console.log ("three");
+        break;
+    default:
+        console.log ("unknown number");
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0220 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <p>
+                            In this example, the value of <tt>a</tt> does not match any of the given cases. 
+                            The only case which matches is the <tt>default</tt> case. Therefore the program
+                            will log the message "unknown number".
+                        </p>
+                        <p>
+                            There's no need to put a <tt>break</tt> statement at the end of the <tt>default</tt>
+                            case.
+                        </p>
+<pre class="prettyprint linenums">
+a = 10;
+switch (a)
+{
+    case 0:
+        ...
+    case 1:
+        ...
+    default:
+        console.log ("unknown number");
+        break;          // Unecessary (Why?)
+}
+</pre>
+                        <p>
+                            It's always a good idea to include a <tt>default</tt> case in your <tt>switch</tt> 
+                            statements, even if that case is empty. This can make later modifications easier.
+                        </p>
+                        <div class="note">
+                            Always include a <tt>default</tt> case, even if there's nothing in it.
+                        </div>
+
+                        <h3>Syntax specialities</h3>
+                        <p>
+                            The <tt>switch</tt> statement has a unique syntax in that all <tt>case</tt>
+                            clauses and the <tt>default</tt> clause must end with a colon '<tt>:</tt>'.
+                        </p>
+<pre class="prettyprint linenums">
+switch (x)
+{
+    case 1<font class="emphasize-chars">:</font>
+        // do something
+        break;
+    case 2<font class="emphasize-chars">:</font>
+        // do something
+        break;
+    default<font class="emphasize-chars">:</font>
+        // do something
+}
+</pre>                        
+                    </dd>
+                </dl>
+                
+                <h2>Loops</h2>
+                <p>
+                    Loops repeat a section of code whilst a condition holds <tt>true</tt>. Each repetition 
+                    is called an <em>iteration</em> of the code to be repeated.
+                </p>
+                <dl>
+                    <dt><tt>for</tt> loop</dt>
+                    <dd>
+                        <p>
+                            A <tt>for</tt> loop executes a piece of code a number of times. It's 
+                            most useful when running the code with a different value with each iteration.
+                            In it's general form, the <tt>for</tt> loop contains two expressions, a 
+                            logical term and a block of statements.
+                        </p>
+<pre class="prettyprint">
+for (initial-expression; continue-condition; iteration-expression)
+{
+    /* block of statements */
+}
+</pre>
+                        <dl>
+                            <dt>initial-expression</dt>
+                            <dd>
+                                An expression to set an initial state (e.g. initializing a counter variable).
+                            </dd>
+                            <dt>continue-condition</dt>
+                            <dd>
+                                A logical term to be evaluated <i>before</i> each loop iteration. If the
+                                term evaluates to <tt>true</tt> then the block of statements is being 
+                                executed. Otherwise the loop exits, and control continues with the code after the 
+                                <tt>for</tt> statement.
+                            </dd>
+                            <dt>iteration-expression</dt>
+                            <dd>
+                                An expression to be evaluated <i>after</i> each loop iteration (e.g. incrementing 
+                                a counter variable).
+                            </dd>
+                            <dt>Block of statements</dt>
+                            <dd>
+                                The statements to be executed during each loop iteration.
+                            </dd>
+                        </dl>
+                        <h3>How it works</h3>
+                        <p>
+                            The scenario below demonstrates how the <tt>for</tt> statement works. We'll look 
+                            into the execution sequence step by step.
+                        </p>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+for (x = 1; x &lt;= 3; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0230 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <ol class="sequence">
+                            <li>
+<pre class="prettyprint">
+for (<font class="emphasize-chars">x = 1</font>; x &lt;= 3; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Set <tt>x</tt> to <tt>1</tt><br/>
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; <font class="emphasize-chars">x &lt;= 3</font>; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; x++)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>}    
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>1</tt>. Console will
+                                show "x = 1, y = 1"
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; <font class="emphasize-chars">x++</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>2</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; <font class="emphasize-chars">x &lt;= 3</font>; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; x++)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>}
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>2</tt>. Console will
+                                show "x = 2, y = 4"
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; <font class="emphasize-chars">x++</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>3</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; <font class="emphasize-chars">x &lt;= 3</font>; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; x++)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>}
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>3</tt>. Console will
+                                show "x = 3, y = 9"
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; x &lt;= 3; <font class="emphasize-chars">x++</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>4</tt>.
+                            </li> 
+                            <li>
+<pre class="prettyprint">
+for (x = 1; <font class="emphasize-chars">x &lt;= 3</font>; x++)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+}    
+</pre>
+                                Evaluate condition. Condition returns <tt>false</tt>, therefore 
+                                do <b>not</b> execute statement block, but <b>exit</b> the 
+                                <tt>for</tt> statement.
+                            </li> 
+                        </ol>
+                        <h3>Example application</h3>
+                        <p>
+                            One situation where <tt>for</tt> loops are often used is when doing bulk operations
+                            on all elements within an array. Here's an example where we calculate the average
+                            value of a series of numbers:
+                        </p>
+<pre class="prettyprint">
+var x = [15, 20, 13, 25, 7, 9, 18];
+var i;
+var n;
+var sum;
+var avg;
+
+n   = x.length;
+sum = 0;
+for (i = 0; i &lt; n; i++)
+{
+    sum += x [i];
+}
+avg = sum / n;
+
+console.log ("Average value: " + avg);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0240 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                    </dd>
+                    
+                    <dt><tt>while</tt></dt>
+                    <dd>
+                        <p>
+                            A <tt>while</tt> loop repeats a section of code as long as a condition holds 
+                            <tt>true</tt>. In it's general form, the <tt>while</tt> loop contains a 
+                            logical term and a block of statements.
+                        </p>
+<pre class="prettyprint">
+while (continue-condition)
+{
+    /* block of statements */
+}
+</pre>
+                        <dl>
+                            <dt>continue-condition</dt>
+                            <dd>
+                                A logical term to be evaluated <i>before</i> each loop iteration.
+                                If the term evaluates to <tt>true</tt> then the block of statements
+                                will be executed. Otherwise, the loop exits and control continues with the 
+                                code after the <tt>while</tt> statement.
+                            </dd>
+                            <dt>Block of statements</dt>
+                            <dd>
+                                The statements to be executed during each loop iteration.
+                            </dd>
+                        </dl>
+                        <h3>How it works</h3>
+                        <p>
+                            The following scenario shows the inner workings of the <tt>while</tt> loop, 
+                            unwinding it step by step. The program solves the same problem as the one 
+                            in the <tt>for</tt> loop scenario, this time with a <tt>while</tt> loop.
+                        </p>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+while (x &lt;= 3)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0250 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <ol class="sequence">
+                            <li>
+<pre class="prettyprint">
+var <font class="emphasize-chars">x = 1</font>;
+while (x &lt;= 3)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+                                Set <tt>x</tt> to <tt>1</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (<font class="emphasize-chars">x &lt;= 3</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>1</tt>. Console will show
+                                "x = 1, y = 1"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be 2.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (<font class="emphasize-chars">x &lt;= 3</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>2</tt>. Console will show
+                                "x = 2, y = 4"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be 3.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (<font class="emphasize-chars">x &lt;= 3</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>3</tt>. Console will show
+                                "x = 3, y = 9"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (x &lt;= 3)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be 4.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+var x = 1;
+while (<font class="emphasize-chars">x &lt;= 3</font>)
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+</pre>
+                                Evaluate condition. Condition returns <tt>false</tt>, therefore do <b>not</b>
+                                execute statement block, but exit the <tt>while</tt> loop.
+                            </li>
+                        </ol>
+                        <h3>Example application</h3>
+                        <p>
+                        This program converts a number into its binary representation.
+<pre class="prettyprint">
+var num = 6;
+var out;
+
+out = "";
+while (num >= 1)
+{
+    bit  = num & 1;
+    num = num >>> 1;
+    out  = "" + bit + out;
+}
+console.log (out);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0260 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        </p>
+                    </dd>
+                    
+                    <dt><tt>do...while</tt></dt>
+                    <dd>
+                        <p>
+                            A <tt>do...while</tt> loop repeats a section of code until a condition holds <tt>true</tt>. In it's 
+                            general form, the <tt>do...while</tt> loop contains a block of statements enclosed by 
+                            <tt>do</tt> and <tt>while</tt>.
+                        </p>
+<pre class="prettyprint">
+do
+{
+    /* block of statements */
+}
+while (continue-condition);
+</pre>
+                        <dl>
+                            <dt>continue-condition</dt>
+                            <dd>
+                                A logical term to be evaluated <i>after</i> each loop iteration.
+                                If the term evaluates to <tt>true</tt> then the execution flow 
+                                jumps back to executing the the statement block again. Otherwise, 
+                                the loop exits and control continues with the code after the 
+                                <tt>do...while</tt> statement.
+                            </dd>
+                            <dt>Block of statements</dt>
+                            <dd>
+                                The statements to be executed during each loop iteration.
+                            </dd>
+                        </dl>
+                        <div class="note">
+                            When using the <tt>do...while</tt> loop, remember to put a semicolon after 
+                            the <tt>while</tt> clause.
+                        </div>
+                        <h3>How it works</h3>
+                        <p>
+                            A <tt>do...while</tt> works in a very similar way to a <tt>while</tt> loop. 
+                            The only difference to the <tt>while</tt> loop is...
+                        </p>
+                        <ul>
+                            <li>
+                                ... that the continue-condition comes <i>after</i> the block of statements,
+                            </li>
+                            <li>
+                                ... hence is evaluated <i>after</i> each loop iteration, and not before 
+                                    as in the case of the <tt>while</tt> loop.</li>
+                        </ul>
+                        <p>
+                            The following scenario shows the inner workings of the <tt>do...while</tt> loop
+                            step by step. The program solves the same problem as the one in the <tt>while</tt> 
+                            loop scenario, this time with a <tt>do...while</tt> loop.
+                        </p>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+while (x &lt;= 3);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0270 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                        <ol class="sequence">
+                            <li>
+<pre class="prettyprint">
+
+/* Prints the squares of all values in [1, 3] to the console. */
+<font class="emphasize-chars">var x = 1</font>;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+while (x &lt;= 3);
+</pre>
+                                Set <tt>x</tt> to <tt>1</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+while (x &lt;= 3);
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>1</tt>. Console will show "x = 1, y = 1"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+while (x &lt;= 3);
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>2</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+while (<font class="emphasize-chars">x &lt;= 3</font>);
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+while (x &lt;= 3);
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>2</tt>. Console will show "x = 2, y = 4"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+while (x &lt;= 3);
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>3</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+while (<font class="emphasize-chars">x &lt;= 3</font>);
+</pre>
+                                Evaluate condition. Condition returns <tt>true</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+<div class="emphasize-chars">    y = x * x;
+    console.log ("x = " + x + ", y = " + y);</div>    
+    x++;
+}
+while (x &lt;= 3);
+</pre>
+                                Execute statement block with <tt>x</tt> set to <tt>3</tt>. Console will show "x = 3, y = 9"
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    <font class="emphasize-chars">x++</font>;
+}
+while (x &lt;= 3);
+</pre>
+                                Increment <tt>x</tt>. <tt>x</tt> will be <tt>4</tt>.
+                            </li>
+                            <li>
+<pre class="prettyprint">
+/* Prints the squares of all values in [1, 3] to the console. */
+var x = 1;
+do
+{
+    y = x * x;
+    console.log ("x = " + x + ", y = " + y);
+    
+    x++;
+}
+while (<font class="emphasize-chars">x &lt;= 3</font>);
+</pre>
+                                Evaluate condition. Condition returns <tt>false</tt>, therefore do <b>not</b>
+                                execute statement block, but exit the <tt>do...while</tt> loop.
+                            </li>
+                        </ol>
+                        <h3>Example application</h3>
+                        <p>
+                            This program creates a stream of random numbers between 
+                            0 and 32767 and counts the iterations until a number smaller
+                            than 1000 is created. The count is printed to console.
+                        </p>
+                        <div class="note">
+                            This random number generator isn't usable for secure random
+                            numbers.
+                        </div>
+<pre class="prettyprint">
+var seed = 5323;
+var rnd;
+var count;
+
+count = 0;
+do
+{
+    seed = 8253729 * seed + 2396403;
+    rnd  = seed % 32767;
+    count++;
+}
+while (rnd &gt;= 1000);
+console.log ("Number of iterations until rnd &lt;= 1000: " + count);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0280 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                    </dd>
+                    <dt><tt>break</tt></dt>
+                    <dd>
+                        <p>
+                            The <tt>break</tt> statement breaks out of a loop or <tt>switch</tt>. Control is 
+                            transferred to the code after the loop or <tt>switch</tt>.
+                        </p>
+<pre class="prettyprint">
+var a = 10;
+while (a &gt;= 1)
+{
+    a--;
+    if (a &lt;= 8)
+    {
+        break;
+    }
+}
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0290 ();">Try it<span class="tooltip">See Javascript debugger</span></button>
+</div>
+                    </dd>
+                </dl>
+                
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <ol>
+                        <li>
+                            <p>
+                                Write a program which converts a number into a weekday string and prints
+                                the weekday string to the console. Use the following mapping scheme:
+                            </p>
+                            <table class="general-table">
+                                <tr>
+                                    <td class="general-table-cell">1</td>
+                                    <td class="general-table-cell">Sunday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">3</td>
+                                    <td class="general-table-cell">Monday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">5</td>
+                                    <td class="general-table-cell">Tuesday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">2</td>
+                                    <td class="general-table-cell">Wednesday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">4</td>
+                                    <td class="general-table-cell">Thursday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">6</td>
+                                    <td class="general-table-cell">Friday</td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">7</td>
+                                    <td class="general-table-cell">Saturday</td>
+                                </tr>
+                            </table>
+                            <p>
+                                Write three version of this program, each using a different method!
+                            </p>
+                        </li>
+                        <li>
+                            <p>All about randomness</p>
+                            <ol>
+                                <li>
+                                    <p>
+                                        To create random numbers, computers use so-called Pseudo
+                                        Random Number Generators (PRNG). These produce a stream 
+                                        of random looking numbers. However, these numbers aren't 
+                                        really random. Here are some features which distinguish
+                                        a PRNG from a real random generator (such as an ideal dice, 
+                                        or, an ideal coin):
+                                    </p>
+                                    <ul>
+                                        <li style="margin-bottom: 20px;">
+                                            PRNGs have got a finite sequence length. This means, a PRNG 
+                                            generates a finite sequence of "random" numbers and will repeat 
+                                            this sequence infinitely (e.g. <tt>4, 2, 9, 4, 2, 9, 4...</tt>. 
+                                            The amount of numbers in the sequence is called the 
+                                            <em>sequence length</em> of the random generator. The smaller 
+                                            the sequence length the more predictable the generator. Good 
+                                            PRNGs have got a very large sequence length!
+                                        </li>
+                                        <li>
+                                            PRNGs don't produce all numbers with the same likelihood. Some 
+                                            numbers occur more often than others. In other words, a PRNG
+                                            has an skewed <em>number distribution</em>. A good PRNG
+                                            has got very little skew, i.e. it produces all its numbers 
+                                            with very much the same likelihood.
+                                        </li>
+                                    </ul>
+                                    
+                                    <p>
+                                        In this exercise we will study different random number generaters and 
+                                        assess their quality. We'll be using the following framework code for the
+                                        generators:
+                                    </p>
+<pre class="prettyprint linenums">
+var rnd = <font class="emphasize-chars">initial value</font>;
+
+do
+{
+    <font class="emphasize-chars">random generator expression</font>
+}
+while (<font class="emphasize-chars">continue-condition</font>);
+</pre>
+                                    <p>
+                                        We'll always set the initial value to <tt>5461</tt>.
+                                        For each random generator below, your task is to...
+                                    </p>
+                                    <ol>
+                                        <li>
+                                            Determine the sequence length.
+                                        </li>
+                                        <li>
+                                            Find out which number is produced how often.
+                                        </li>
+                                    </ol>
+                                    <p>
+                                        And here are your random generator expressions:
+                                    </p>
+                                    <ol>
+                                        <li>
+<pre class="prettyprint">
+rnd = (rnd &lt;&lt; 1) % 31
+</pre>
+                                            <p>
+                                                Simple shift and mod.
+                                            </p>
+                                        </li>
+                                        <li>
+<pre class="prettyprint">
+rnd = (rnd &gt;&gt;&gt; 1) ^ 43690
+</pre>
+                                            <p>
+                                                Simple shift and xor with fixed number.
+                                            </p>
+                                        </li>
+                                        <li>
+<pre class="prettyprint">
+rnd = (rnd * rnd) % 209
+</pre>
+                                            <p>
+                                                <a href="https://en.wikipedia.org/wiki/Blum_Blum_Shub">Blum blum shub</a>. 
+                                                We use it with small primes: p = 11, q = 19, hence pq = 209.
+                                            </p>
+                                        </li>
+                                        <li>
+<pre class="prettyprint">
+rnd = (rnd &lt;&lt; 3) ^ rnd
+</pre>
+                                            <p>
+                                                Simple <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift</a>.
+                                            </p>
+                                        </li>
+                                    </ol>
+                                </li>
+                                <li>
+                                    <p>
+                                        You may have found that your program got stuck whilst testing some 
+                                        of the random generators.
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            Find out why this happens.
+                                        </li>
+                                        <li>
+                                            Fix the problem!
+                                        </li>
+                                    </ul>                                    
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <p>
+                                A bank asked a junior programmer to create an app for the iphone which 
+                                helps customers to project how their finances will be doing each year 
+                                at a given interest rate - for the next ten years. The listing below 
+                                shows the program the junior came up with. His manager was so shocked, 
+                                he almost had all his hair fall out! With your superior knowledge 
+                                you should be able to shorten this program considerably! I'm sure you 
+                                can rewrite it in a jiffy!
+                            </p>
+                            <div class="hint">
+                                Please write the program in such a way that it produces <b>exactly</b> the
+                                same output as the program below!
+                            </div>
+<pre class="prettyprint linenums">
+var interest    = 5.5;
+var capital0    = 1000;
+var compound0   = 1 + interest / 100;
+var compound1;
+var capital1;
+
+console.log ("initial capital: " + capital0);
+
+compound1 = compound0;
+capital1  = capital0 * compound1;
+console.log ("Capital after one year: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after two years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after three years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after four years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after five years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after six years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after seven years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after eight years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after nine years: " + capital1);
+
+compound1 = compound1 * compound0; 
+capital1  = capital0 * compound1;
+console.log ("Capital after ten years: " + capital1);
+</pre>                                    
+                        </li>
+                        <li>
+                            Change the following program so it shows all the distances 
+                            for all times between 0 (zero) to 10000 seconds.
+<pre class="prettyprint linenums">
+/*
+ * For each second in 0, 1, 2, ... we compute 
+ * the distance a vehicle will have travelled at 
+ * a constant speed of 30 m/s.
+ */
+
+var v = 30;
+var t;
+var x;
+var msg;
+
+for (t = 0; t &lt;= 10; t++)
+{
+    x   = v * t;
+    msg = "After " + t + " seconds, the vehicle will have travelled " + x + " meters.";
+    console.log (msg);
+}
+</pre>
+                        </li>
+                        <li>
+                            <p>
+                                Fido the bus driver has always the same route. His prices between stops 
+                            </p>
+                            <ul>
+                                <li>... never exceed five pounds</li>
+                                <li>... are always cleanly divisable by 10p (i.e. &pound;2.60, but not &pound;2.62).</li>
+                            </ul>
+                            <p>
+                                Unfortunately, loads of customers pay in ten pound notes! He always tries 
+                                to give the return money with as few coins as possible, but it's really 
+                                hard for him to work out how to get the right mix of coins for each 
+                                customer!<br/><br/>
+                                Can you help poor Fido and write a program which computes the minimum amount of 
+                                &pound;1, 50p, 20p, and, 10p coins he needs to give when a customer pays his fare?
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

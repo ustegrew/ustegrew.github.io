@@ -1,0 +1,372 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_02</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/00common/easteregg.js"></script>
+    <script src="scripts/02/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; The Javascript language</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>A tour of the Javascript language</h1>
+                <p>
+                    Javascript is a scripting computer language, most commonly used within web browsers. It
+                    is a dynamic language which means that it performs many tasks during runtime (dynamically) 
+                    which static languages perform during compile time. For example, a Javascript program
+                    can change itself which is very difficult to do with static languages. The Javascript
+                    syntax is influenced by the C language, and it supports many features of other programming 
+                    languages.<br/>                    
+                    Javascript runs mostly within a web browser, but it also is used in PDF documents and 
+                    even as part of server side web applications.<br/>
+                </p>
+                <h2>Concepts</h2>
+                <p>
+                    Javascript supports many of the concepts that underlie modern programming languages: 
+                    <dl>
+                        <dt>Statements</dt>
+                        <dd>
+                            A <em>statement</em> expresses some action to be carried out. It will often change the 
+                            internal state of a program, e.g. when a variable value is changed. There are different 
+                            kinds of statements, for example assignments, or, function calls.<br/>
+                            Here are some example statements:
+<pre class="prettyprint">
+var n;                          /* Variable declaration                  */
+var r = 20;                     /* Variable declaration and definition   */
+n = 100;                        /* Simple assignment                     */
+n = 2 * r;                      /* Assignment with multiplication term   */
+r = Math.sqrt (16)              /* Assignment with function call         */
+if (r == 10) r = 0;             /* Control flow statement                */
+window.alert ("Hello World");   /* Show message box                      */
+</pre>
+                            <div class="tryitout">
+                                <button onclick="Exec_01 ();">
+                                    Try it
+                                    <span class="tooltip">
+                                        See Javascript debugger
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="03.html">statements</a>.
+                            </div>
+                        </dd>
+                    
+                        <dt>Variables</dt>
+                        <dd>
+                            A <em>variable</em> is a container for a value. That value might be a number, a string, or 
+                            some other object. A variable always has a particular <em>variable type</em>. This is
+                            the kind of data held by that variable. For example, a variable of type <tt>integer</tt>
+                            holds a whole number whilst a variable of type <tt>string</tt> holds a sequence of
+                            characters.
+<pre class="prettyprint">
+a = 5;          /* a will be of type integer and hold the value 5       */
+b = "Hello";    /* b will be of type string  and hold the value "Hello" */
+</pre>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="04.html">variables</a>.
+                            </div>
+                        </dd>
+
+                        <dt>Operators and terms</dt>
+                        <dd>
+                            Like in mathematics, an <em>operator</em> indicates a specific operation on one or more
+                            operands. A <em>term</em> is a combination of one or more operations. For example, in the 
+                            term <tt>2 + 3</tt> the addition operator '+' denotes the addition of the two operands, 
+                            <tt>2</tt> and <tt>3</tt> yielding the result <tt>5</tt>.
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="05.html">operators and expressions</a>.
+                            </div>
+                        </dd>
+                        
+                        <dt>Expressions</dt>
+                        <dd>
+                            An <em>expression</em> is a combination of values, operators and functions producing 
+                            a value. For example, the expression <tt>y=2*a</tt> would double the value stored in the
+                            variable <tt>a</tt> and store the result in the variable <tt>y</tt>. The concept of 
+                            expressions is borrowed from algebra. Examples:
+<pre class="prettyprint">
+x = 10;                     /* Assign value 10 to variable x             */
+t = "SomeString";           /* Assign value "SomeString" to variable t   */
+y = 2 * x * x  +  32;       /* Compute polynomial value 2*x^2 + 32,      */
+                            /* store result in variable y                */
+z = computemyvalue (23);    /* Call user defined function computemyvalue */
+                            /* passing 23 as parameter and assign result */
+                            /* to variable z                             */
+</pre>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="05.html">operators and expressions</a>.
+                            </div>
+                        </dd>
+
+                        <dt>Control flow</dt>
+                        <dd>
+                            The <em>control flow</em> of a program refers to the order in which the individual 
+                            statements are executed. A program may just contain a list of statements; these will be 
+                            executed in the order they are written. Most times a program will contain statements which 
+                            change the execution sequence. For example, the <tt>if</tt> statement changes the execution 
+                            sequence, depending on a condition.  There are other statements which change the flow of 
+                            execution, such as loops or breaks.
+<pre class="prettyprint">
+a = 10;
+b =  0;
+
+/* Conditional execution */
+if (a &lt; 5)
+    b = 1;
+else
+    b = 2;
+
+/* b will be 2 */   
+window.alert ("b = " + b);
+</pre>
+                            <div class="tryitout">
+                                <button onclick="Exec_05 ();">
+                                    Try it
+                                    <span class="tooltip">See Javascript debugger</span>
+                                </button>
+                            </div>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="06.html">flow control</a>.
+                            </div>
+                        </dd>
+                        
+                        <dt>Structured programming</dt>
+                        <dd>
+                            <em>Structured programming</em> organizes a program into blocks of code. This 
+                            increases clarity and readability of the program's source code. For example, consider 
+                            this program written in unstructured code in BASIC:
+<pre class="prettyprint">
+a=1000
+point1:
+if a&lt;=1 then goto end
+if (a/2)=int(a/2) then goto point2
+a=3*a+1
+goto point1
+point2:
+a=a/2
+goto point1
+end:
+print "Finished!"
+</pre>
+                            Rather humorously, this kind of code is also called "spaghetti code". Compare it with 
+                            this equivalent structured BASIC code:
+<pre class="prettyprint">
+a=1000
+while a >= 2
+    if (a/2) = int(a/2) then
+        a=a/2
+    else
+        a=3*a+1
+    end if
+wend
+print "Finished!"
+</pre>
+                        </dd>
+
+                        <dt>Functions</dt>
+                        <dd>
+                            A <em>function</em> is a unit of code which performs a specific task. This unit 
+                            can then be used in programs wherever that particular task needs to be performed. Often a 
+                            function can also be used to compute some value and make it available to the 
+                            program using the function. Without the programming tool of functions there would be much
+                            repetition of code (and errors), resulting in much extra work. The use of functions 
+                            can significantly reduce the cost of developing and maintaining computer programs. Example:
+<pre class="prettyprint">
+function CheckValue (x)
+{
+    if (x &lt; 10)
+        window.alert ("Love the number " + x + "!");
+    else
+        window.alert ("You doofus! I hate the number " + x + "!");
+}
+
+CheckValue (5);       /* Bring up message box showing 'Love the number 5!'                */
+CheckValue (20);      /* Bring up message box showing 'You doofus! I hate the number 20!' */
+</pre>
+                            Without function, the program would have looked like this:
+<pre class="prettyprint">
+x = 5;
+if (x &lt; 10)
+    window.alert ("Love the number " + x + "!");
+else
+    window.alert ("You doofus! I hate the number " + x + "!");
+
+x = 20;
+if (x &lt; 10)
+    window.alert ("Love the number " + x + "!");
+else
+    window.alert ("You doofus! I hate the number " + x + "!");
+</pre>
+                            <div class="tryitout">
+                                <button onclick="Exec_07 ();">
+                                    Try it
+                                    <span class="tooltip">See also: Javascript debugger</span>
+                                </button>
+                            </div>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="07.html">functions</a>.
+                            </div>
+                        </dd>
+                    </dl>
+                    
+                    Javascript has got some additional features found in fewer programming languages:
+                    <dl>
+                        <dt>Dynamic types</dt>
+                        <dd>
+                            Like in most scripting languages, Javascript uses <em>dynamic data types</em>. 
+                            For example, a variable <tt>x</tt> can be defined as a number and later rebound 
+                            to a string:
+<pre class="prettyprint">
+var a = 3;          /* a will be an integer                                */
+a = 3.54;           /* Now it's a floating point variable!                 */
+a = "Hello"         /* Whoopsie! Now it's a string 'This is my number: 15' */
+</pre>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="04.html">variables</a>.
+                            </div>
+                        </dd>
+
+                        <dt>Classes and objects</dt>
+                        <dd>
+                            Classes and objects touch the area of <em>object oriented programming</em>. An 
+                            <em>object</em> is a structure loaded into the computer's memory which combines data 
+                            and behaviour in one unit. It's a "piece of data which can do things." A <em>class</em>
+                            is the recipe which tells the computer how to create a particular object in memory. 
+                            It's a construct which contains variables and functions. A class is to an object what
+                            a cooking recipe is to a meal.
+                        </dd>
+
+                        <dt>Interpreted language</dt>
+                        <dd>
+                            Javascript always runs as an <em>interpreted language</em> which means that 
+                            Javascript source code is directly executed by an interpreter without being compiled
+                            beforehand.
+                        </dd>
+                    </dl>
+                </p>
+                <h2>Syntax</h2>
+                <p>
+                    Like any language, Javascript has rules what to write where. These rules are called 
+                    the <em>syntax</em> rules of the language. Even more than in written natural languages it 
+                    is important that these rules are followed carefully if we want the program to work
+                    as intended. The computer doesn't have the intelligence to guess what some code means
+                    if the code isn't written properly! If Javascript code doesn't follow the syntax rules 
+                    then the program will either fail completely or show unexpected behaviour. Here's an 
+                    example of good and faulty syntax:
+<pre class="prettyprint">
+/* Syntax correct */
+a = 3;
+
+/* Faulty syntax (missing semicolon at the line end) */
+a = 3
+</pre>
+                    <div class="related-info">
+                        For more info on syntax, see the chapter on <a href="03.html">statements</a>.
+                    </div>
+                </p>
+                <h2>Practically...</h2>
+                <p>
+                    Javascript is very easy to use! All that is needed is a text editor to write the 
+                    program code and a web browser to execute it. The setup for this course is a bit
+                    more elaborate, but that is not a requirement to produce Javascript programs.
+                </p>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <p>
+                        <ol>
+                            <li>
+                                Which programming concepts can you spot in the following code snippets?
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+a = 15;    
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var b;  
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var c = 21;
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x;
+var y;
+
+x = 12;
+y = 2 * x + 5;
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+function PrintSquare (x)
+{
+    var y;
+    y = x * x;
+    console.log (y);
+}
+
+PrintSquare (5);
+PrintSquare (10);
+</pre>                                    
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                Find out what the following program does.
+                                <div class="hint">
+                                    If in doubt, consult the 
+                                    <a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a>,
+                                    especially the 
+                                    <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript.1.html">Javascript</a>
+                                    section.
+                                </div>
+<pre class="prettyprint">
+var a = 3;
+var b = 4;
+var c;
+
+c = Math.sqrt (a * a  +  b * b);
+
+window.alert (c);
+</pre>                                    
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

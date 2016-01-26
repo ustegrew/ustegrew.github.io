@@ -1,0 +1,554 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_03</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/03/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Statements</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Statements</h1>
+                <p>
+                    A statement is an instruction to the computer, it makes the computer "do" something. Statements are the 
+                    individual instructions in the program, and they are executed in the order in which they appear. This order
+                    is called the <em>flow of execution</em>. Programs aren't limited to a linear flow. Javascript 
+                    provides <em>flow control</em> statements which change the execution order.
+                    <div class="note">
+                        A computer program is a list of statements. 
+                    </div>
+                </p>
+                <h2>Kinds of statements</h2>
+                <p>
+                    There are different kinds of statements, mainly for manipulation of data, in/output and and flow control.
+                    <dl>
+                        <dt>Declaration/Definition</dt>
+                        <dd>
+                            A <em>declaration</em> announces the existence of a variable to the system, and a <em>definition</em> 
+                            assigns a value to the variable. Once a variable is declared <i>and</i> defined it can be used.
+<pre class="prettyprint">
+/* Variable x has not been declared yet. */
+console.log ("Variable x before declaration: " + x);
+
+/* Variable x is declared. */
+var x;
+console.log ("Variable x after declaration: " + x);
+
+/* Variable x is defined. */
+x = 3;
+console.log ("Variable x after definition: " + x);
+</pre>
+<div class = "tryitout">
+    <button onclick="Exec_01 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                            <div class="related-info">
+                                For more info, see the chapter on <a href="04.html">variables</a>.<br/>
+                            </div>
+                        </dd>
+                        
+                        <dt>Expression</dt>
+                        <dd>
+                            Like with a mathematical formula an <em>expression</em> is a statement which calculates some value and stores
+                            the result in a variable. An expression has an equal sign <tt>=</tt> with a variable to its left and a 
+                            term to its right:
+<pre>
+{variable} = {term}
+</pre>
+                            This allows for calculations with a notation similar to the one used in mathematics.
+<pre class="prettyprint">
+var x = 0;
+var y = 0;
+
+/* Expression for a parabole f(x) = 3*x*x + 2 with x = 23 */
+x = 23;
+y = 3 * x * x + 2; /* The expression */
+
+console.log ("f(x) =  3*x*x + 2     ---->     f (" + x + ") = " + y);
+</pre>                            
+<div class = "tryitout">
+    <button onclick="Exec_02 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                            <div class="related-info">
+                                For more info, see the chapters on <a href="05.html">operators and expressions</a>.
+                            </div>
+                        </dd>
+                        
+                        <dt>Function call</dt>
+                        <dd>
+                            A function call is an instruction which passes control to a sub program (the <em>function</em>). 
+                            Control returns to the calling program once the sub program has finished. Along with the function call 
+                            the <em>caller</em> can pass <em>arguments</em>, i.e. data needed by the sub program. The sub program 
+                            can <em>return</em> a value back to the caller. 
+<pre class="prettyprint">
+function a ()
+{
+    console.log ("Executing function a ()");
+}
+
+console.log ("About to call function a ()");
+a ();
+console.log ("Returned from function a ()");
+</pre>                        
+<div class = "tryitout">
+    <button onclick="Exec_03 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                            <div class="related-info">
+                                For more info, see the chapter on <a href="07.html">functions</a>.
+                            </div>
+                        </dd>
+                        
+                        <dt>Control flow</dt>
+                        <dd>
+                            A program executes statements in the order in which they appear in the program, unless the order 
+                            of execution is changed by <em>flow control</em> statements. Flow control statements are what 
+                            enables the program to react appropriately to given conditions.
+<pre class="prettyprint">
+var x = 10;
+var b =  0;
+
+if (x >= 5)
+{
+    b = 1;
+}
+else
+{
+    b = 2;
+}
+
+console.log (b);
+</pre>
+<div class = "tryitout">
+    <button onclick="Exec_04 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                            <div class="related-info">
+                                For more info, see the chapter on <a href="06.html">control flow</a>.
+                            </div>
+                        </dd>
+                        
+                        <dt>Comment</dt>
+                        <dd>
+                            Comments are used to convey information for the developers to make the source code
+                            easier to understand. Comments will be ignored when the program is executed.<br/>
+                            Comments come in two flavours - the one line comment and the multiline comment. 
+                            The one line comment starts with a double slash <tt>//</tt> and is valid from the
+                            double slashes to the end of the line. Code to the left of the double slashes will 
+                            be executed.
+<pre class="prettyprint">
+// This is a one line comment
+
+var a = 3;
+// var b = 4;   Commenting out a line is a great debugging tool!
+
+console.log ("Type of a: " + typeof (a));
+console.log ("Type of b: " + typeof (b));
+</pre>
+<div class = "tryitout">
+    <button onclick="Exec_10 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                            The multiline comment starts with one forward slash followed by an asterisk <tt>/*</tt>
+                            and ends with an asterisk followed by a slash <tt>*/</tt>. Everything in between will be 
+                            ignored when the program is executed. Multiline comments can span any number of lines, 
+                            from a single line to as many as there are in between the start symbol <tt>/*</tt> and 
+                            the end symbol <tt>*/</tt>. This makes multiline comments more flexible than single line
+                            comments.
+<pre class="prettyprint">
+/* A multiline comment used on one line */
+
+/* A multiline comment
+   spanning
+   several
+   lines
+ */
+
+var a = 3; /* This will execute */
+
+/*
+Commenting out a chunk of code is a great debugging tool!
+ 
+var b = 4;
+var iWantThisVariable = 5;
+ */
+
+console.log ("Type of a: " + typeof (a));
+console.log ("Type of b: " + typeof (b));
+console.log ("Type of iWantThisVariable: " + typeof (b));
+</pre>
+<div class = "tryitout">
+    <button onclick="Exec_11 ();">
+        Try it
+        <span class="tooltip">See Javascript console</span>
+    </button>
+</div>
+                        </dd>
+                    </dl>
+                </p>
+                <h2>Blocks</h2>
+                <p>
+                    Statements can be grouped inside a <em>block</em>. Blocks are enclosed
+                    in braces <tt>{</tt> <tt>}</tt> and usually span multiple lines.
+                    It's good practice to indent all statements within the braces
+<pre class="prettyprint">
+{ /* Start of statement block */
+    b = 5;
+    c = 6;
+    console.log ("hello");
+} /* End of statement block */
+</pre>
+                    Statement blocks are commonly used with control flow statements.
+<pre class="prettyprint">
+if (a == 5)
+{   /* Start of statement block */
+    b = 6;
+    c = 6;
+    console.log ("hello");
+}   /* End of statement block */
+</pre>
+                </p>
+                <h2>Syntax</h2>
+                <p>
+                    Like any language, Javascript has a few rules when it comes to the way we have to write statements. Those
+                    rules are called the <em>syntax</em> of the language. Even more than in written natural languages it is important that these 
+                    rules are followed carefully if we want the program to work. The computer doesn't have the intelligence to 
+                    guess what some code means if the code isn't written properly!
+                    <ul>
+                        <li>
+                            <h3>The semicolon</h3>
+                            Statements must end with a semicolon (otherwise you get a syntax error and the program will not work):<br/>
+                            <table class="general-table">
+                                <tr>
+                                    <td class="general-table-cell" style="width: 200px;">Expression</td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+a = 10;
+y = x + 28;
+z = Math.sin (y);
+n = 28 * Math.random ();
+</pre>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">Declaration</td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+/* Declaration */
+var a;
+
+/* Definition */
+var b = 3;
+</pre>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell"><tt>do</tt>... <tt>while</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+do
+{
+    /* do something */
+}
+while (someCondition);
+</pre>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell"><tt>break</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+if (a == 5)
+    break;
+</pre>                                    
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            Clauses end without semicolon. A clause always has to be followed by a statement
+                            or block. For example, the <tt>if</tt> statement starts as an <tt>if</tt> clause 
+                            containing the condition and is followed by a statement or block (which is the stuff
+                            done when the condition is fulfilled).<br/>
+                            <table class="general-table">
+                                <tr>
+                                    <td class="general-table-cell" style="width: 200px;"><tt>if</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+if (someCondition)
+    /* Followed by a statement or block */
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell"><tt>else</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+if (someCondition)
+    /* Followed by a statement or block */
+else
+    /* Followed by a statement or block */
+</pre>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell"><tt>for</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+for (i = 1; i &lt;= n; i++)
+    /* Followed by a statement or block */
+</pre>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell"><tt>while</tt></td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+while (someCondition)
+    /* Followed by a statement or block */
+</pre>                                    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">Blocks</td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+if (someCondition)
+{               /* No semicolon after opening brace */
+    a = 3;
+    b = 5;
+    c = 7;
+}               /* No semicolon after closing brace */
+</pre>                                    
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            A few clauses end on a colon. These are the <tt>case</tt> and <tt>default</tt> clause
+                            in a <tt>switch</tt>.<br/>
+                            <table class="general-table">
+                                <tr>
+                                    <td class="general-table-cell" style = "width: 200px;">
+                                        <tt>switch</tt> and friends
+                                    </td>
+                                    <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+switch (i)
+{
+    case 0:
+        /* Do something */
+    default:
+        /* Do something else */
+}
+</pre>                                    
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="related-info">For more specifics on the different clauses, see <a href="06.html">control flow</a>.</div>
+                        </li>
+                        <li>
+                            <h3>Case sensitive</h3>
+                            Javascript is a <em>case sensitive</em> language. This means that identifiers are
+                            different if their capitalization is different. This concerns <i>all</i> identifiers - 
+                            Javascript keywords, variables, functions and so on. Examples of non working code due 
+                            to wrong capitalization:
+<pre class="prettyprint">
+/* Wrong capitalization when using variable 'myVariable' */
+/* Message box will show "undefined"                     */
+var myVariable = 10;
+console.log (Myvariable);
+
+
+/* Wrong capitalization on 'console' */
+Console.log ("Hello World");
+
+
+/* Wrong capitalization when calling function 'Print' */
+function Print (message)
+{
+    console.log (message);
+}
+print ("Hello World");
+
+
+/* Mispelled keyword 'var', leads to syntax error */
+vAr x;
+</pre>
+                        </li>
+                        <li>
+                            <h3>Whitespace</h3>
+                            <p>
+                                Whitespace is the term for all spaces, tabs and newlines outside string constants. Javascript
+                                ignores whitespace in most cases. These statements all do the same:
+<pre class="prettyprint">
+b = 3;              /* This line does the same as the next line */
+b    = 3;
+</pre>
+                                Statements can be broken up into several lines (e.g. to increase readability),
+                                but this should be done with caution. This example will fail with a syntax error,
+                                on the first line, because <tt>"this is my</tt> is seen as an unterminated string 
+                                constant:
+<pre class="prettyprint">
+var a = "This is my 
+very
+very
+long sentence";
+</pre>
+                                If the string has to be broken up by newlines, it's better to write:
+<pre class="prettyprint">
+var a = "This is my " +
+        "very " +
+        "very " +
+        "long sentence";
+</pre>
+                                Line breaks can have unwanted side effects:
+<pre class="prettyprint">
+function a()
+{
+    return
+            15;
+}
+
+var b = a ();
+console.log (b);
+</pre>
+                                This will show a message box saying "undefined", not the expected "15". The program will work when we
+                                remove the newline after <tt>return</tt>:
+<pre class="prettyprint">
+function a()
+{
+    return 15;
+}
+
+var b = a ();
+console.log (b);
+</pre>
+                            </p>
+                        </li>
+                    </ul>
+                </p>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <p>
+                        <ol>
+                            <li>
+                                What's wrong with these code snippets? What errors (if any) will the 
+                                Javascript engine show when running the resp. code snippet?
+                                <div class="hint">
+                                    Use your workspace and Javascript debugger!
+                                </div>
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+var a = 5;
+console.log (b);
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var a = 3;
+var c = a * a  +  b * b;
+</pre>                                
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = 2 + (3 * 5);
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var = 5;
+console.log (a);
+</pre>                                    
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var sideA = 10;
+var sideB = 20;
+var sideC = 15;
+var volume;
+
+Volume = sideA * sideB * sideC;
+console.log (volume);
+</pre>                                    
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                What will be the output of this program?
+<pre class="prettyprint">
+var a = 1;
+var b = 3;
+var c = 2;
+var d;
+
+d = a;
+a = b;
+b = d;
+
+console.log (a);
+</pre>                                    
+                            </li>
+                            <li>
+                                What will be the output of this program?
+<pre class="prettyprint">
+var a = 0;
+var b = 0;
+
+a = 20 // a = 10;
+if (a &lt; 15)
+{
+    b = 100;
+}
+else
+{
+    b = 101;
+}
+
+console.log (b);
+</pre>                                        
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

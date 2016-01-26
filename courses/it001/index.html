@@ -1,51 +1,56 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <link rel="shortcut icon" href="favicon.ico">
-        <title>
-            Courses
-        </title>
-        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/claro.css"        type="text/css">
-        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/document.css"     type="text/css">
-        <link rel="stylesheet"  href="lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css">
-        <script type="text/javascript" src="lib/esprima/esprima.js"></script>
-        <script type="text/javascript">
-            /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
-            var dojoConfig =
-            {
-                has:
-                {
-                    "dojo-firebug":         true,
-                    "dojo-debug-messages":  true
-                },
-                locale:             'en',
-                baseUrl:            'lib/',
-                tlmSiblingsOfDojo:  false,
-                packages:
-                [
-                    {name: 'ace',                   location: 'ace'},
-                    {name: 'dojo',                  location: 'dojo/dojo'},
-                    {name: 'dijit',                 location: 'dojo/dijit'},
-                    {name: 'dojox',                 location: 'dojo/dojox'},
-                    {name: 'gridx',                 location: 'dojo/gridx'},
-                    {name: 'jsdemo',                location: 'jsdemo'},
-                    {name: 'courseware',            location: 'courseware'},
-                    {name: 'google-code-prettify',  location: 'google-code-prettify'},
-                    {name: 'course',                location: '../course'}
-                ]
-            };
-        </script>
-        <script type             = "text/javascript"
-                src              = "lib/dojo/dojo/dojo.js"
-                data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
-            /* Integrate dojo toolkit */
-        </script>
-        <script type="text/javascript" src="app.js">
-            /* Application specific program */
-        </script>
-    </head>
-    <body class="claro">
-        <div id="pnlMain" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;"></div>
-    </body>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_intro</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Programming with Javascript</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Programming with Javascript</h1>
+                <p>
+                    This short course offers an introduction into programming in general, using Javascript 
+                    as vehicle. Even though Javascript runs within a web browser we won't attempt to talk 
+                    much about web design, HTML pages etc. This would go beyond the scope of the course.
+                    Instead we will concentrate on concepts which Javascript is based on. These concepts 
+                    are shared by many other programming languages. Hopefully this will make it easier 
+                    to venture out into the open and to learn programming in other languages.
+                </p>
+                <h2>Your system requirements</h2>
+                <p>
+                    You will need access to a computer with a Google Chrome (version 30 and above) installed. 
+                    You will use Google Chrome to test and debug the Javascript code you work on. For a guide 
+                    on how to use the Google Chrome debugger, please read the
+                    <a href="https://developers.google.com/chrome-developer-tools/">guide</a>.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
 </html>

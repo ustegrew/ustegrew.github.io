@@ -1,0 +1,179 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_{page-num}</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; {Page-title}</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators / Expressions</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Errors</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Appendix</h1>
+                <a name="discuss_expression"></a>
+                <h2>Excursion: Re. chapter 7: Use of the words "expression" and "term"</h2>
+                <p>
+                    Be aware that the understanding on expressions in this course is deviating from the understanding 
+                    in computer science. In computer science, an expression is 
+                </p>
+                <div class="quote">
+                    a combination of explicit values, constants, variables, operators, and functions that are 
+                    interpreted according to the particular rules of precedence and of association for a particular 
+                    programming language, which computes and then produces (returns, in a stateful environment) 
+                    another value. 
+                    (<a href="https://en.wikipedia.org/wiki/Expression_(programming)">https://en.wikipedia.org/wiki/Expression_(programming)</a>).
+                </div>
+                <p>
+                    The official definition of an "expression" also resembles the definition of "expression" in 
+                    mathematics which is
+                </p>
+                <div class="quote">
+                    a finite combination of symbols that is well-formed according to rules that depend on the context.
+                    (<a href="https://en.wikipedia.org/wiki/Expression_(mathematics)">https://en.wikipedia.org/wiki/Expression_(mathematics)</a>)
+                </div>
+                <p>
+                    Also, our understanding of the word "term" is a little bit different from the understanding in mathematics. 
+                    Unfortunately, the mathematical understanding of "term" does not have much practical relevance in programming.
+                    In mathematics, a "term" is
+                </p>
+                <div class="quote">
+                    parts of an expression or series separated by <tt>+</tt> or <tt>-</tt> signs, or the parts of a sequence separated by commas.
+                    (<a href="http://www.mathwords.com/t/term.htm">http://www.mathwords.com/t/term.htm</a>)
+                </div>
+                <p>
+                    In this course, when we talk of an "expression" we really mean an <i>assignment</i>, and when we talk of a "term" 
+                    then we mean the construct to the right hand side of the <tt>=</tt> sign. When talking about the more mathematical 
+                    side of programming we purposely use "expression", and not "assignment". "Expression" has a closer connotation 
+                    with "a mathematical operation" whilst "assignment" is more related to "an instruction to be executed". 
+                    The area of expressions deals more with the mathematical concepts of programming than with instructions and 
+                    what they do.
+                </p>
+                <table style="border: 2px solid darkgray; border-radius: 10px; padding: 10px;">
+                    <tr>
+                        <td style="text-align: center; padding-bottom: 10px;">Our definition</td>
+                        <td style="text-align: center; padding-bottom: 10px;"><b>vs</b></td>
+                        <td style="text-align: center; padding-bottom: 10px;">Official definition</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><img src="img/90/01.png"/></td>
+                        <td>&nbsp;</td>
+                        <td style="text-align: center;"><img src="img/90/02.png"/></td>
+                    </tr>
+                </table>
+                <p>
+                    As per official definitions, "expression" and "term" isn't easy to distinguish. 
+                    In mathematics, a term is part of an expression, but also is an expression 
+                    in itself. It's not so problematic in mathematics, because there we use equations, 
+                    not just assignments. In an equation it's legal to have operators and terms on both 
+                    sides of the <tt>=</tt> sign:
+                </p>
+<pre class="prettyprint">
+    3b + 1 = b + 15
+&lt;=&gt; b = 7
+</pre>
+                <p>
+                    However, in programming we don't have equations, only assignments! And it's important to 
+                    distinguish between the entire assignment (here called "expression") and the right hand side 
+                    of the assignment (here called "term"). This distinction is important, because we strongly
+                    discourage the use of expressions where terms should be used. This practice can lead to side effects 
+                    and produce hard-to-maintain code. Here are a few examples:
+                </p>
+                <ul>
+                    <li>
+                        <p>
+                            <b>Chained expressions</b> - avoid these, as they have hidden side effects, especially when
+                            using them as part of a variable declaration:
+                        </p>
+<pre class="prettyprint">
+var a = b = 5;
+</pre>
+                        <p>
+                            Whilst this is a great shorthand syntax, it creates implicit global variables. Consider this:
+                        </p>
+<pre class="prettyprint">
+var bar = 'funky';
+var baz = 'disco';
+
+(function helloworld() {
+    var foo = bar = baz = 'local';
+    console.log(foo); // local
+    console.log(bar); // local
+    console.log(baz); // local
+}());
+
+console.log(bar);// local, I thought it would be funky
+console.log(baz);// local, I thought it would be disco
+</pre>
+                        <p>
+                            We discourage chained expressions. They should be split up in separate expressions with just 
+                            terms on the right hand side.
+                        </p>
+                        <div class="related-info">Example courtesy of this 
+                            <a href="http://davidshariff.com/blog/chaining-variable-assignments-in-javascript-words-of-caution/">article</a>
+                        </div>
+                    </li>
+                    <li>
+                        <p>
+                            <b>Expressions instead of terms</b> - Leading to some monstrocities such as these:
+                        </p>
+<pre class="prettyprint">
+a = 3 + (b = 5);
+</pre>
+<pre class="prettyprint">
+b = (a > 5)  ?  c = 3; c = 4;
+</pre>
+<pre class="prettyprint">
+if (b = 4) 
+{
+    /* do something */ 
+};
+</pre>
+                        <p>
+                            These are notoriously bad, because they have side effects and make the code harder to 
+                            understand - potentially leading to buggy and unmaintainable code. Therefore we simply 
+                            cut through these issues by making a distinction between terms and expressions and 
+                            saying: "Don't use expressions where terms should be used!" This gives students just 
+                            that bit better foundation to write safer and more maintainable code!
+                        </p>
+                    </li>
+                </ul>
+                <h3>In summa...</h3>
+                <p>
+                    Whilst it's unfortunate that our understanding of "expression" and "term" in this course deviates 
+                    from the official definitions, we hope that the redefinitions help the student to better know how 
+                    to use terms and expressions.
+                </p>
+                <p>
+                    We hope that there will be the positive net effect of a better understanding of the <i>concepts</i> 
+                    behind expressions and terms in programming, helping the student to write better 
+                    (i.e. less error prone and more maintainable) code.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

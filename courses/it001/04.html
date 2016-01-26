@@ -1,0 +1,732 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_04</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/04/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Variables</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item">
+                        <a href="https://developers.google.com/chrome-developer-tools/">Google dev
+                        tools</a>
+                    </li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Variables</h1>
+                <p>
+                    In mathematics, a variable is a <i>named placeholder</i> for some quantity. 
+                    In computing, a variable is a <i>named container</i> for information. In 
+                    most cases, this information is simply data such as numbers or text. A variable 
+                    is like a bucket with a name written on it (<em>variable name</em>) and 
+                    something in it (<em>value</em>).
+                    <table class="image-table">
+                        <tr>
+                            <td><img src="img/04/01.png"/></td>
+                        </tr>
+                        <tr>
+                            <td><i>fig. 01: </i>A variable</td>
+                        </tr>
+                    </table>
+                    <div class="hint">
+                        Variables store the information needed by the program. 
+                    </div>
+                </p>
+                <h2>Variable names</h2>
+                <p>
+                    As a variable is a named container we need to note the rules applying to variable names. 
+                    These rules apply to names in other contexts - most notably, <a href="07.html">function</a> 
+                    names. We won't get into all the details of proper names in Javascript, but present a 
+                    rule of thumb which represents good practice across several programming languages:<br/>
+                    A name should
+                </p>
+                <table>
+                    <tr>
+                        <td style="padding-left: 20px; padding-right: 20px;">
+                            Start with a letter or underscore
+                        </td>
+                        <td>
+                            <tt>a</tt> .. <tt>z</tt>, <tt>A</tt> .. <tt>Z</tt>, <tt>_</tt>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 20px; padding-right: 20px;">
+                            Followed by a sequence of letters, digits and underscores
+                        </td>
+                        <td>
+                            <tt>a</tt>..<tt>z</tt>, <tt>A</tt>..<tt>Z</tt>, <tt>0</tt>..<tt>9</tt>, <tt>_</tt>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    Thus, valid identifiers are: <tt>x</tt>, <tt>freezeLevel</tt>, <tt>OppositeCorner</tt>, <tt>hello2</tt>, 
+                    <tt>_key</tt> whilst invalid identifiers are: <tt>5Elements</tt> (starts with digit '5'), 
+                    <tt>node-length</tt> (illegal character '<tt>-</tt>'), <tt>delete new node</tt> (contains space[s]).
+                </p>
+                <h2>Declaration and definition</h2>
+                <p>
+                    Before a variable can be used it must be <em>declared</em> and 
+                    <em>defined</em>.
+                </p>
+                <ul>
+                    <li>
+                        <h3>Declaration</h3>
+                        <p>
+                            The <em>declaration</em> announces the existence of the variable
+                            to the Javascript system. As soon as the Javascript system finds a 
+                            declaration it sets storage aside for the resp. variable. This is 
+                            like getting the bucket out of the cupboard. There are two ways of 
+                            declaring a variable:
+                        </p>
+                        <ul>
+                            <li>
+                                With the keyword <tt>var</tt> followed by the variable name.
+<pre class="prettyprint">
+var x;
+</pre>                                
+                            </li>
+                            <li>
+                                By simply assigning it a value.
+<pre class="prettyprint">
+x = 3;
+</pre>                                
+                                <div class="hint">
+                                    Whilst this variant makes things easier, it can
+                                    introduce problems and should not be used.
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <h3>Definition</h3>
+                        <p>
+                            A variable can't be used if it's just declared. We say that the
+                            variable is <i>undefined</i>. Just declaring an variable is like 
+                            getting an empty bucket out. An empty bucket offers no useful 
+                            content. To make the variable useable we need to set it to some 
+                            initial value. This setting to some initial value is called the
+                            <em>definition</em>. 
+                        </p>
+                        <table class="image-table">
+                            <tr>
+                                <td 
+                                    style="vertical-align: bottom; border-right: 1px 
+                                    solid darkgray; padding-right: 10px;">
+                                    <img src="img/04/02.png"/>
+                                </td>
+                                <td style="padding-left: 10px;">
+                                    <img src="img/04/03.png"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: bottom; border-right: 1px 
+                                solid darkgray; padding-right: 10px;">
+                                    <i>fig. 02: </i>Just declared
+                                </td>
+                                <td style="padding-left: 10px;">
+                                    <i>fig. 03: </i>Defined
+                                </td>
+                            </tr>
+                        </table>
+<pre class="prettyprint">
+/* Declare variable x. */
+var x;
+
+
+/* 
+ * At this point, the variable x is just declared, 
+ * but not yet defined.
+ */
+console.log ("x: " + x);
+
+
+/* Define variable x to have the value 3 */
+x = 3;
+
+
+/* 
+ * Now the variable x is defined.
+ */
+console.log ("x: " + x);
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_01 ();">Try it</button>
+</div>
+                        <p>
+                            Variable declaration and definition can also be done in one
+                            statement.
+                        </p>
+<pre class="prettyprint">
+var x = 3;
+
+/* Variable x is declared AND defined. */
+console.log ("x: " + x);
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_02 ();">Try it</button>
+</div>
+                        <div class="note">
+                            Always declare <b>and</b> define variables before you use 
+                            them. 
+                        </div>
+                    </li>
+                </ul>
+                <h2>Literals</h2>
+                <p>
+                    A <em>literal</em> is a fixed value in source code. Such fixed data is needed
+                    very often. Example uses would be definitions, or, calculations.
+<pre class="prettyprint">
+x = 3;                              /* number literal in assignment     */
+</pre>
+                </p>
+                <h2>Variable types</h2>
+                <p>
+                    Variables are classified by their <em>variable type</em>, depending on which
+                    data they hold.
+                    <ul>
+                        <li>
+                            <h3>Primitive types</h3>
+                            <p>
+                                Most programming languages provide basic, inbuilt data types. Such
+                                types are called <em>primitive</em> types. Javascript has got five
+                                primitive types.<br/>
+                            </p>
+                            <table class="general-table">
+                                <tr>
+                                    <td class="general-table-cell">
+                                        Numbers
+                                    </td>
+                                    <td class="general-table-cell">
+                                        Integers such as <tt>-5</tt>, <tt>10</tt>, or,
+                                        floating point numbers such as <tt>-4.2</tt>, <tt>3.14</tt>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">
+                                        String
+                                    </td>
+                                    <td class="general-table-cell">
+                                        Textual data, such as <tt>"Hello World"</tt>. The textual
+                                        data is always delimited by double quotes <tt>"</tt>.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">
+                                        Logical
+                                    </td>
+                                    <td class="general-table-cell">
+                                        Boolean values, either <tt>true</tt> or <tt>false</tt>.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">
+                                        <tt>null</tt>
+                                    </td>
+                                    <td class="general-table-cell">
+                                        A special keyword denoting an empty value, A variable can
+                                        be emptied by assigning it the value <tt>null</tt>.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="general-table-cell">
+                                        <tt>undefined</tt>
+                                    </td>
+                                    <td class="general-table-cell">
+                                        A special value reserved for variables that have not 
+                                        been defined.
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                        <li>
+                            <h3>Composite types</h3>
+                            <p>
+                                Many language provide data types in which one or more primitive 
+                                elements are bound together in one unit. Such types are called 
+                                <em>composite</em> types. The area of composite types has a lot 
+                                to do with the area of <em>object oriented programming</em>. 
+                                This area is beyond the scope of this course.
+                            </p>
+                        </li>
+                    </ul>
+                </p>
+                <h2>Weakly typed</h2>
+                <p>
+                    Javascript does not fix any variable as to which type it has. The 
+                    type of a variable depends on its content. This means, when we 
+                    change a variable's content during run time it may change it's 
+                    type with it. This makes Javascript a <em>weakly typed</em> language.
+<pre class="prettyprint">
+var x = 3;
+console.log ("x = 3,         type of x is: " + typeof (x));
+
+x = 3.2;
+console.log ("x = 3.2,       type of x is: " + typeof (x));
+
+x = "Hello";
+console.log ("x = 'Hello',   type of x is: " + typeof (x));
+
+x = true;
+console.log ("x = true,      type of x is: " + typeof (x));
+
+x = undefined;
+console.log ("x = undefined, type of x is: " + typeof (x));
+
+x = null;
+console.log ("x = null,      type of x is: " + typeof (x));
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_03 ();">Try it</button>
+</div>
+                </p>
+                <p>
+                    The weak types feature is particular to the Javascript language. There are
+                    other languages which are <em>strongly typed</em>, such as C++. In C++, 
+                    trying to assign a string to an integer variable will result in a compiler 
+                    error:
+<pre class="prettyprint">
+void TestFunc ()
+{
+    int x;
+
+    /* Compiler error: invalid conversion from 'const char*' to 'int' */
+    x = "Hello";
+}
+</pre>                    
+                </p>
+                <h2>Arrays</h2>
+                <p>
+                    <p>
+                        There are tasks for which simple variables aren't sufficient. 
+                        Here some example tasks:
+                    </p>
+                    <p>
+                        <ul>
+                            <li>Sorting a list of integers.</li>
+                            <li>Finding the average over a number of measurements.</li>
+                            <li>Searching for an entry in a list of names.</li>
+                            <li>Finding the shortest route between two cities.</li>
+                        </ul>
+                    </p>
+                    <p>
+                        All these tasks have in common that they need to perform a particular 
+                        operation on a group of related data items (e.g. a list of numbers). 
+                        The resp. task becomes even harder to solve when the number of 
+                        items is unknown at programming time!
+                        One of the structures which makes group operations possible is 
+                        the <em>array</em>.
+                    </p>
+                    <h3>An array is...</h3>
+                    <p>
+                        An array is an ordered, named, indexable collection of elements with
+                        a finite amount of data. In detail:
+                        <dl>
+                            <dt>A collection</dt>
+                            <dd>
+                                An array is a group of unique elements.
+                            </dd>
+                            <dt>Ordered</dt>
+                            <dd>
+                                Elements stay in the same sequence for the lifetime of the array,
+                                unless changes are done programmatically.
+                            </dd>
+                            <dt>Named</dt>
+                            <dd>
+                                The whole group has one name which is shared by all its elements.
+                            </dd>
+                            <dt>Indexed</dt>
+                            <dd>
+                                Each element in the array has a unique index. 
+                            </dd>
+                            <dt>Finite</dt>
+                            <dd>
+                                There is always a finite number of elements in an array.
+                            </dd>
+                        </dl>
+                    </p>
+                    <p>
+                        All elements in an array have got the same variable name, and each 
+                        element has a unique index.
+                        <table class="image-table">
+                            <tr>
+                                <td><img src="img/04/04.png"/></td>
+                            </tr>
+                            <tr>
+                                <td><i>fig. 04: </i>An array</td>
+                            </tr>
+                        </table>
+                    </p>
+                    <p>
+                        This bucket array would be...
+                        <table style="margin-left: 20px;">
+                            <tr>
+                                <td style="width: 100px;"><em>A&nbsp;collection</em></td>
+                                <td>There are multiple buckets in one lot.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Named</em></td>
+                                <td>The whole lot is called <tt>x</tt>.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Indexed</em></td>
+                                <td>Each bucket has a unique integer index.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Ordered</em></td>
+                                <td>The buckets stay in the order they've been put.</td>
+                            </tr>
+                            <tr>
+                                <td><em>Finite</em></td>
+                                <td>There's always a countable number of buckets.</td>
+                            </tr>
+                        </table>
+                    </p>
+                    
+                    <div class="hint">
+                        Another comparison to an array would be a street: The street is a 
+                        <b>collection</b> of houses (the elements), it is <b>named</b> 
+                        (has a street name), <b>indexed</b> (each house has a number), 
+                        <b>ordered</b> (houses don't normally get up and walk) and 
+                        <b>finite</b> (there's no street with an infinite 
+                        number of houses).
+                    </div>
+                    
+                    <h3>Creating an array</h3>
+                    <p>
+                        Like all variables, arrays need to be declared <i>and</i> defined. There are
+                        different ways of defining arrays in Javascript, but we won't handle them
+                        all. The notation we will use here is the square bracket notation. Here we
+                        create the Javascript equivalent of the above array of buckets:
+                    </p>
+<pre class="prettyprint">
+var x = [10, 25, 16, 45];
+</pre>
+                    <p>
+                        This creates a new array called <tt>x</tt> and fills it with four elements
+                        in the order in which they appear inside the brackets: <tt>10</tt>,
+                        <tt>25</tt>, <tt>16</tt>, <tt>45</tt>. This order will not change, unless 
+                        explicitly done by programming.
+                    </p>
+                    <p>
+                        Array elements don't all need to be of the same type. It's possible to mix
+                        variable types in an array.
+<pre class="prettyprint">
+var x = [15, true, "I am element #2", null];
+console.log ("x: " + typeof (x[0]) + ", " + typeof (x[1]) + ", " + 
+                     typeof (x[2]) + ", " + typeof (x[3])          );
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_04 ();">Try it</button>
+</div>
+                    </p>
+                    <p>
+                        It's also possible to create empty array elements by using an empty comma <tt>,</tt>.
+                        The empty element will be set to <tt>undefined</tt>.
+<pre>
+var x = [1, , 2];
+console.log (x [1]);
+</pre>                        
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_042 ();">Try it</button>
+</div>
+                    </p>
+
+                    <h3>Array literals</h3>
+                    <p>
+                        An Array is defined using an array literal. The literal is a list of values enclosed 
+                        in square brackets <tt>[]</tt>. 
+<pre class="prettyprint">
+var a = [];                 /* Empty array                                          */
+var b = [20];               /* Array with  one element                              */
+var c = [1, "Hello"]        /* Array with two elements, each of a different type    */
+var d = [ [1, 2], [5, 6] ]  /* Array with two sub arrays as elements (table)        */
+console.log (a);
+console.log (b);
+console.log (c);
+console.log (d);
+</pre>                        
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console or debugger</span>
+    <button onclick="Exec_045 ();">Try it</button>
+</div>
+                    </p>
+
+                    <h3>Accessing array elements</h3>
+                    <p>
+                        Array elements can be accessed by index. The index is an integer number 
+                        and has to be written in square brackets <tt>[]</tt>. The first element
+                        has the index <tt>0</tt> (zero), the second index has the value <tt>1</tt>
+                        and so on. The last element has the index of one less than the number 
+                        of elements stored in the array. 
+<pre class="prettyprint">
+var x = [10, 25, 16, 45];
+console.log ("x: " + x [0] + ", " + x [1] + ", " + x [2] + ", " + x [3]);
+
+x [0] = 98765432;
+console.log ("x: " + x [0] + ", " + x [1] + ", " + x [2] + ", " + x [3]);
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_05 ();">Try it</button>
+</div>
+                    </p>
+                    
+                    <h3>Getting the size of the array</h3>
+                    <p>
+                        One often needed piece of information about an array is how many elements
+                        it has stored. This is provided by the <tt>length</tt> property.
+<pre class="prettyprint">
+var x = [5, 1, 3, 7, 2, 9, 3];
+console.log ("number of elements stored in array x: " + x.length);
+</pre>                        
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_06 ();">Try it</button>
+</div>
+                    </p>
+                    <div class="related-info">
+                        There's much more to Javascript arrays than described in this chapter.
+                        See the 
+                        <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array.1.html">MDN</a>
+                        for more.
+                    </div>
+                </p>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <p>
+                        <div class="hint">
+                            Before asking me for help, do your own research in the 
+                            <a href="/docs/mdn/developer.mozilla.org/en-US/index.html">MDN</a>
+                            and by writing test programs in your workspace!
+                        </div>
+                        <ol>
+                            <li>
+                                Which of these literals is faulty? If a literal is ok, what's the value?
+                                <ol>
+                                    <li><tt>3</tt></li>
+                                    <li><tt>.3</tt></li>
+                                    <li><tt>'"myString'"</tt></li>
+                                    <li><tt>0.8</tt></li>
+                                    <li><tt>-.5</tt></li>
+                                    <li><tt>"hello"</tt></li>
+                                    <li><tt>"2.5</tt></li>
+                                    <li><tt>"'qwe'"</tt></li>
+                                    <li><tt>-"29"</tt></li>
+                                </ol>
+                            </li>
+                            <li>
+                                Explain the following items <b>in your own words</b> 
+                                (aka: Don't parrot the text in this web page!)
+                                <ol>
+                                    <li>array</li>
+                                    <li>literal</li>
+                                    <li>weakly typed language</li>
+                                    <li>definition</li>
+                                    <li>primitive type</li>
+                                </ol>
+                            </li>
+                            <li>
+                                 Which of the the following statements is correct?
+                                <ol>
+                                    <li>Once a number, always a number.</li>
+                                    <li>Arrays are ordered collections.</li>
+                                    <li>Variables must be declared before they can be used.</li>
+                                    <li>Strings can only hold integer values.</li>
+                                </ol>
+                            </li>
+                            <li>
+                                For each program, what's the type of variable x? why?
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+var x = 3.2;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = 5;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = "x";
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = [];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = "true";
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = Null;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = "Undefined";
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var x = x;
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                What's wrong with the following programs?
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+var a;
+var b = [a, 25, 3];
+console.log (b);
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var a = 3;
+var b = a [0];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var a = [1, 4, 17];
+var b;
+console.log (a [1]);
+b = a [3];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+var a = [15, 2, 10];
+var b;
+a = a [2];
+b = a [3];
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                How many elements are in these arrays?
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+x = [23, 1, 15, 27, 63, 126];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+x = [];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+x = [[], 2];
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                In array x, what's the value of the element with the given index?
+                                <ol>
+                                    <li>
+                                        index: 1
+<pre class="prettyprint">
+x = [1, 2, 3, 4, 5]
+</pre>
+                                    </li>
+                                    <li>
+                                        index: 6
+<pre class="prettyprint">
+x = [26, 32, 16, 5, 7, 1];
+</pre>
+                                    </li>
+                                    <li>
+                                        index: 3
+<pre class="prettyprint">
+x = [14,, 21, 16, 123];
+</pre>
+                                    </li>
+                                    <li>
+                                        index: 1
+<pre class="prettyprint">
+x = [5, [3, 2], 8, [], 2, 19];
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                What's the highest index in this array?
+<pre class="prettyprint">
+s = ["tente", "tion", "holde", "outs", "ipsyc", "erbed", "tiog", "gloa", "hamme", "okil"];
+</pre>
+                            </li>
+                            <li>
+                                Which data types can you identify in these arrays?
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+s = ["gust", 10, "joli", "ones", null, "ssco", "true", "naid", true];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+s = [1, 5.3, "2", undefined, "hello"];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+s = [12,, 3, 4, 5];
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+s = [5, 2, [32, 1]];
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

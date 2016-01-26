@@ -1,0 +1,274 @@
+body
+{
+    font-family:                sans-serif;
+}
+
+h1
+{
+    font-size:                  30px;
+}
+
+h2
+{
+    font-size:                  25px;
+}
+
+h3
+{
+    font-size:                  15px;
+}
+
+h4
+{
+    font-size:                  12px;
+    font-weight:                bold;
+}
+
+p
+{
+    text-align:                 justify;
+}
+
+tt
+{
+    color:                      #702020;
+    font-weight:                bold;
+}
+
+dl
+{
+    padding-left:               50px;
+}
+
+dt
+{
+    color:                       #404040;
+    font-weight:                bold;
+    margin-bottom:              5px;
+}
+
+dd
+{
+    color:                      #0f0f0f;
+    text-align:                 justify;
+    margin-bottom:             20px;
+}
+
+ul
+{
+    margin-bottom:              20px;
+}
+
+em
+{
+    color:                      maroon;
+}
+
+br
+{
+    margin-bottom:              20px;
+}
+
+.header
+{
+    font-size:                  15px;
+    color:                      gray;
+    border-bottom:              2px solid lightgray;
+}
+
+.pagecont
+{
+    width:                      100%
+}
+
+.toc
+{
+    background-color:           #ffffcc;
+    font-size:                  16px;
+    width:                      200px;
+    border-right-style:         solid;
+    border-right-width:         4px;
+    border-right-color:         #bbbbbb;
+    vertical-align:             top;
+    text-align:                 left;
+}
+
+.toc-item
+{
+    margin-bottom:             5px;
+}
+
+.cont
+{
+    vertical-align:             top;
+    text-align:                 left;
+    padding-left:               20px;
+    padding-right:              50px;
+}
+
+.exercises
+{
+    width:                      100%;
+    border-top:                 2px solid darkgray;
+}
+
+.note
+{
+    margin-top:                 20px;
+    padding:                    10px;
+    border:                     2px dotted orange;
+    border-radius:              8px;
+    text-align:                 justify;
+}
+
+.hint
+{
+    background-color:           #e0e0e0;
+    font-style:                 italic;
+    font-size:                  80%;
+    padding:                    10px;
+    border:                     2px dotted #a0a0a0;
+    border-radius:             8px;
+    text-align:                 justify;
+}
+
+.related-info
+{
+    margin-top:                 20px;
+    font-size:                  75%;
+    text-align:                 justify;
+}
+
+.instructions-table
+{
+    width:                      100%;
+}
+
+.instructions-text
+{
+    border:                     2px solid darkgrey;
+    text-align:                justify;
+    vertical-align:             top;
+    padding:                    10px;
+}
+
+.instructions-img
+{
+    width:                      500px;
+    border:                     2px solid darkgray;
+}
+
+.general-table
+{
+    border:                     2px solid darkgray;
+    border-radius:             5px;
+    width:                      100%;
+}
+
+.general-table-cell
+{
+    border:                     1px solid darkgray;
+    border-radius:              4px;
+    padding:                    5px;
+    text-align:                 left;
+    vertical-align:             top;
+}
+
+.image-table
+{
+    border:                     2px solid darkgrey;
+    border-radius:              5px;
+    padding:                    10px;
+    margin:                     10px;
+}
+
+.critique
+{
+    background-color:           lightgray;
+    border:                     2px solid red;
+}
+
+.emphasize-chars
+{
+    border:                     2px solid #ffa0a0;
+}
+
+.quote
+{
+    padding-left:               50px;
+    font-style:                 italic;
+}
+
+/* Styles for sequences. Idea from https://stackoverflow.com/questions/5080699/using-css-even-and-odd-pseudo-classes-with-list-items */
+.sequence
+{
+    /* Empty dummy class for the list wrapping the list elements */
+}
+
+ol.sequence li:nth-child(odd) {
+    border-radius:      10px;
+    border:              1px solid blue;
+    padding:             10px;
+    background-color:   #ffffff;
+}
+
+ol.sequence li:nth-child(even) {
+    border-radius:      10px;
+    border:              1px solid blue;
+    padding:             10px;
+    background-color:   #f0f0ff;
+}
+
+/* Tooltip styles. Idea from https://stackoverflow.com/questions/18359193/plain-javascript-tooltip, answer 2 */
+/* Tooltip, hosted by decorated element */
+.tryitout:hover .tooltip {
+    display:                    block;
+}
+
+/* Tooltip, hosted by unstyled element */
+.tryitout-plain:hover .tooltip {
+    display:                    block;
+}
+
+/* Style for tooltip - visible when user hovers mouse over parent element.
+ */
+.tooltip
+{
+    display:                    none;   /* Hides element when not hovering */
+    border:                     2px dotted #F59C23;
+    border-radius:              5px;
+    background:                 #e0e0e0;
+    margin-top:                 20px;
+    padding-left:               10px;
+    padding-right:              10px;
+    padding-top:                5px;
+    padding-bottom:             5px;
+    position:                   absolute;
+    z-index:                    1000;
+}
+
+/* Tryout field - hosting a tooltip giving some additional information 
+ * to the user such as "See console". Tooltip is normally invisible, 
+ * but becomes visible when mouse hovers over the tryout field.
+ * This field is decorated with an orange border.
+ */
+.tryitout
+{
+    border:                     4px solid #F59C23;
+    border-radius:              8px;
+    padding:                    5px;
+    width:                      80px;
+    text-align:                 center;
+}
+
+/* Tryout field - hosting a tooltip giving some additional information 
+ * to the user such as "See console". Tooltip is normally invisible, 
+ * but becomes visible when mouse hovers over the tryout field.
+ * This field is undecorated. Use it when you don't need any border or
+ * other decorations in that tryout field (e.g. only small space).
+ */
+.tryitout-plain
+{
+    /*  Dummy style, so the element remains plain, and 
+     *  we can define the hover class for the tooltip */
+}

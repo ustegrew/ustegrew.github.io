@@ -1,0 +1,884 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_07</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Functions</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Functions</h1>
+                <p>
+                    The concept of functions is leaning on an old definition of functions in mathematics. In 1748,
+                    Leonhard Euler defined a function such:
+                </p>
+                <div class="quote">
+                    A function of a variable quantity is an analytic expression composed in any way whatsoever 
+                    of the variable quantity and numbers or constant quantities.<br/>
+                    (Euler, Leonhard (1988). Introduction to Analysis of the Infinite. Book I. Springer-Verlag.)
+                </div>
+                <p>
+                    A function was seen as an analytic expression, and maybe the concept of functions in programming 
+                    leans on the idea that a usually long mathematical expression is substituted by a short name
+                    (plus parameters). For example, the function 
+                    <font style="font-family: serif; font-style: italic;">
+                        f&nbsp;(x)&nbsp;=&nbsp;2x<sup>3</sup>&nbsp;+&nbsp;5x<sup>2</sup>&nbsp;-&nbsp;8
+                    </font> 
+                    equates a short symbol 
+                    <font style="font-family: serif; font-style: italic;">
+                        f&nbsp;(x)
+                    </font> 
+                    with a longer expression 
+                    <font style="font-family: serif; font-style: italic;">
+                        2x<sup>3</sup>&nbsp;+&nbsp;5x<sup>2</sup>&nbsp;-&nbsp;8
+                    </font>.
+                </p>
+                <table>
+                    <tr>
+                        <td style="vertical-align: top;"><img src="img/07/01.png"/></td>
+                        <td style="vertical-align: top; padding: 10px;">
+                            <p>
+                                In programming a function is a sub program, i.e. a 'program within a program'. The program  
+                                uses the function by <em>calling</em> it (<em>function call</em>). The function call will 
+                                pass control to the function, and once the function has finished, control will <em>return</em>
+                                to the statement which called the function.
+                            </p>
+                            <p>
+                                Here is an example of a program using one function:
+                            </p>
+<pre class="prettyprint linenums">
+/* -  Function definition - */
+function LogStart ()
+{
+    console.log ("Starting!");
+}
+
+/* ----- Main program ----- */
+var i;
+var sum;
+
+sum = 0;
+
+/* Function call */
+LogStart ();
+
+for (i = 1; i &lt;= 10; i++)
+{
+    sum += i;
+}
+
+console.log (sum);
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top; padding: 10px;">
+                            <p>
+                                A function can be called from more than one place in a program, also from inside another function.
+                                Control will always return to the statement from where the function was called.
+                            </p>
+                            <p>
+                                Here's a silly little program with multiple function calls, partially from within another 
+                                function:
+                            </p>
+<pre class="prettyprint linenums">
+function PrintNumberTwo ()
+{
+    console.out ("Number 2");
+}
+
+function PrintNumberOne ()
+{
+    console.out ("1");
+    PrintNumberTwo ();
+}
+
+/* ---- Main program ---- */
+
+var a = "Hello";
+var b = "Hello World";
+
+PrintNumberOne ();
+console.log (a);
+PrintNumberOne ();
+console.log (b);
+PrintNumberTwo ();
+</pre>                            
+                        </td>
+                        <td style="vertical-align: top;"><img src="img/07/02.png"/></td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;"><img src="img/07/03.png"/></td>
+                        <td style="vertical-align: top; padding: 10px;">
+                            <p>
+                                A function can also be called as part of an expression. When the expression is being evaluated 
+                                the function will be called at the appropriate time during evaluation of the term. Values returned
+                                from the function will be used as if they had been directly put into the term. In the illustrated
+                                example, <tt>a</tt> is assigned the value 10.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top; padding: 10px;">
+                            <p>
+                                A term can contain several function calls. The resp. functions will be called at the appropriate time,
+                                and return values will be used for the calculation. In this illustrated example, <tt>a</tt> will
+                                be assigned the value 10 + 3 * 4 = 22.
+                            </p>
+                        </td>
+                        <td style="vertical-align: top;"><img src="img/07/04.png"/></td>
+                    </tr>
+                </table>
+                <h2>Advantages</h2>
+                <p>
+                    There are multiple advantages of using functions:
+                </p>
+                <ul>
+                    <li style="text-align: justify;">
+                        <b>Code savings</b>. As in algebra, once a function is defined it can be used over and over, 
+                        just by invoking its name. Since the function name is much shorter than the function itself, 
+                        using functions saves a great amount of coding. 
+                    </li>
+                    <li style="text-align: justify;">
+                        <b>More robust programs</b>. Once a function works as expected it will work correctly
+                        whenever it's called. A bug in a function has more impact on the program, but it just needs
+                        to be fixed in one place to remove the bug from the entire program.
+                    </li>
+                    <li style="text-align: justify;">
+                        <b>Clearer code</b>. Code using well written functions is much easier to understand and maintain.
+                    </li>
+                </ul>
+                <div class="hint">
+                    If functions are written well, they can be offered as libraries for other developers to use in their
+                    projects. For example, this website uses a library "prettify" which is used to format the source code 
+                    examples. 
+                </div>
+                <h2>Using functions</h2>
+                <p>
+                    Just like with <a href="04.html">variables</a>, a function needs to be declared and defined before 
+                    it can be used. Thankfully, Javascript brings both things together, so declaring and defining are done 
+                    in one step. But there are other languages (for example, C++) where declaration and definition can be  
+                    separated (even using separate files).
+                </p>
+                <h3>Function declaration / definition</h3>
+                <p>
+                    Before we can use a function we need to declare and define it. Javascript does both in one step. 
+                    A function declaration/definition...
+                </p>
+                <ul>
+                    <li>
+                        ... starts with the keyword <tt>function</tt>,
+                    </li>
+                    <li>
+                        ... followed by the <em>function name</em>,
+                    </li>
+                    <li>
+                        ... then by a comma separated list of <em>parameters</em>, enclosed in brackets,
+                    </li>
+                    <li>
+                        ... then followed by the <em>function body</em> which is a block of statements in braces <tt>{}</tt>. 
+                    </li>
+                </ul>
+                <p>
+                    Here's an example of a function declaration/definition:
+                </p>
+<pre class="prettyprint linenums">
+function LogMessage (time, message)
+{
+    var out;
+    
+    out = time + " - " + message;
+    console.log (out);
+}
+</pre>
+                <h4>Function name</h4>
+<pre class="prettyprint">
+function <font class="emphasize-chars">LogMessage</font> (time, message)
+</pre>
+                <p>
+                    In most programming languages, functions must have a name. This can be a mix of letters (a-z, A-Z), 
+                    digits (0-9) and the underscore ('_'). The first character in the function name must not be a digit. 
+                    Avoid any other characters such as whitespace. Examples of valid function names would be: 
+                    <tt>GetWindow</tt>, <tt>setID</tt>, <tt>computeCorner_1</tt>. Examples of invalid function names 
+                    would be: <tt>21SectionLog</tt> (starts with a digit), <tt>Get&nbsp;My&nbsp;Coordinates</tt> 
+                    (contains spaces), <tt>log-message</tt> (contains illegal character [hyphen '<tt>-</tt>']).<br/>
+                    In the above example, the function name is <tt>LogMessage</tt>.
+                </p>
+                <div class="note">
+                    Javascript allows for anonymous functions, i.e. functions without a name. This feature is often 
+                    used by Javascript developers and does have good benefits for Javascript programs. We won't handle 
+                    anonymous functions because they're not part of many other languages.
+                </div>
+                <h4>Parameter list</h4>
+<pre class="prettyprint">
+function LogMessage <font class="emphasize-chars">(time, message)</font>
+</pre>
+                <p>
+                    Often a function needs data for its work. This needs to be indicated in the function declaration 
+                    by providing a <em>parameter list</em> inside the brackets after the function name. A parameter 
+                    is very similar to a variable, so a parameter list consists of one or more variable identifiers 
+                    (comma separated if there's more than one variable). When the function is executed, the parameters 
+                    can be used just like regular variables.<br/>
+                    In the above example, the parameter list is (<tt>time, message</tt>). It contains two parameters, 
+                    <tt>time</tt> and <tt>message</tt>, separated by one comma '<tt>,</tt>'. Both parameters are used 
+                    inside the function body, in line 5. 
+                </p>
+                <div class="hint">Another name for 'parameter' is <em>argument</em>.</div>
+                <h4>Function body</h4>
+<pre class="prettyprint linenums">
+function LogMessage (time, message)
+<div class="emphasize-chars" style="width: 50%; margin: 0px;">{
+    var out;
+    
+    out = time + " - " + message;
+    console.log (out);
+}</div>
+</pre>
+                <p>
+                    The function body defines the 'business part' of the function. This is where 'stuff happens'. The 
+                    function body is executed whenever the function is called. Any arguments to the function can be used 
+                    like regular variables, and computed values can be returned to the calling party using the 
+                    <tt>return</tt> statement.
+                </p>
+                <h3>Function call</h3>
+                <p>
+                    Once the function has been declared/defined it can be used by calling it. A <em>function call</em> 
+                    consists of the function name followed by a list of values to be passed as parameters (as specified 
+                    in the function declaration). For example, to call the function <tt>LogMessage</tt> from the above 
+                    example, one could simply write
+                </p>
+<pre class="prettyprint">
+LogMessage ("10:45", "Oopsidaisy, my frobutron just grommicked!");
+</pre>
+                <p>
+                    anywhere in the program. When the Javascript engine executes the function call statement, 
+                    <ol>
+                        <li>
+                            control will pass to the function <tt>LogMessage</tt>,
+                        </li>
+                        <li>
+                            the values "10:45" and "Oopsidaisy, my frobutron just grommicked!" would be passed as parameters 
+                            <tt>time</tt> and <tt>message</tt> (as defined in the parameter list in the function declaration),
+                        </li>
+                        <li>
+                            the function would create the message "10:45 - Oopsidaisy, my frobutron just grommicked!"
+                            and print it to the Javascript console for the whole universe to behold (provided the universe 
+                            activates the developer tools and clicks on the console tab).
+                        </li>
+                    </ol>
+                </p>
+                <div class="hint">
+                    This course already makes extensive use of functions! Any time you click one of those "Try it" buttons, a 
+                    function in a linked Javascript file is being called.
+                </div>
+                <h4>Returning values (the <tt>return</tt> statement)</h4>
+                <p>
+                    When a function has finished it can <em>return</em> a value back to the caller. This makes functions a very 
+                    powerful tool to aid with computations, particularly when the same computations are needed in may places 
+                    in a program. Javascript (as well as other languages) provides the statement <tt>return</tt> which is an 
+                    instruction to end a function and to return a value back to the caller. Here's a function which computes
+                    the double value of a given parameter and returns it to the caller.
+                </p>
+<pre class="prettyprint linenums">
+/**
+ * Returns the double value of the given parameter.
+ * 
+ * @param   x       The value to be doubled.
+ * @return          The double value.
+ */
+function GetDoubleOf (x)
+{
+    var dbl;
+    
+    dbl = 2 * x;
+    
+    return dbl;
+}
+
+/* -------------------------------------------------------------- */
+var dblVal;
+
+dblVal = GetDoubleOf (2);
+console.log (dblVal);
+</pre>
+                <p>
+                    Note the <tt>return</tt> statement in line 13. In general, the <tt>return</tt> statement has 
+                    two purposes:
+                </p>
+                <ul>
+                    <li>
+                        <p>
+                            <b>It ends the enclosing function</b> which makes it a flow control statement. In our 
+                            example function, this is not very relevant, because that function ends anyway after 
+                            the <tt>return</tt> statement. However, a return statement can be placed anywhere inside 
+                            a function which will end that function immediately, even if the function has more 
+                            statement after the <tt>return</tt> instruction. We'll talk more about this below.
+                        </p>
+                    </li>
+                    <li>
+                        <p>
+                            <b>It specifies the value to be returned</b>. Whilst this gives the <tt>return</tt> 
+                            statement a dual purpose, it's a very convenient and logical place to pass a value back 
+                            to the caller! The little bit of increased complexity doesn't really hurt (At least, most 
+                            programmers can cope very well with it). In our example, the returned value is <tt>dbl</tt>, 
+                            which will be <tt>4</tt>. Therefore, when the function has finished, the value <tt>4</tt> 
+                            is being returned and assigned to the variable <tt>dblVal</tt> (line 19).
+                        </p>
+                    </li>
+                </ul>
+                <div class="note">
+                    A function can never return more than <i>one</i> value. For example, the square root of 25 has got 
+                    two solutions, +5 and -5. However, <tt>Math.sqrt (25)</tt> returns <tt>+5</tt> only.
+                </div>
+                <h2>Using functions in expressions</h2>
+                <p>
+                    Since functions can return values, they can be used as part of expressions. In fact, in our example 
+                    above we already used the function <tt>GetDoubleOf</tt> inside the expression 
+                    <tt>dblVal = GetDoubleOf (2)</tt> (in line 19). When executing this assignment the Javascript engine 
+                    calls the function at the appropriate time. The term could have been more complex. 
+                    For example, we could have called <tt>GetDoubleOf</tt> as part of a longer calculation
+                </p>
+<pre class="prettyprint">
+dblVal = 5 * GetDoubleOf (12); /* 5 * 24 =&gt; 120 */
+</pre>
+                <p>
+                    We could even have used GetDoubleOf twice in the term
+                </p>
+<pre class="prettyprint">
+dblVal = 5 * GetDoubleOf (12) + GetDoubleOf (3) /* 5 * 24 + 6 =&gt; 126 */
+</pre>
+                <p>
+                    which would have called this function twice - using the returned values as part of the calculation. 
+                </p>
+                <div class="note">
+                    When using function calls in expressions, all rules of computing arithmetics apply. For example, 
+                    multiplication will still come before addition. See the chapter on 
+                    <a href="05.html">Operators and Expressions</a>.
+                </div>
+                <h3>Javascript inbuilt functions</h3>
+                <p>
+                    Javascript offers many inbuilt functions, ready for your use. For example, there's a wealth 
+                    of Javascript functions to do mathematical operations. We won't handle the inbuilt functions 
+                    here, look them up in the 
+                    <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference.1.html">MDN</a>.
+                </p>
+                <h2>Nefarious techniques with functions: Recursion</h2>
+                <p>
+                    We learned that a function can be called from within another function. A function can even call 
+                    itself. This technique is called <em>recursion</em>. Recursion can be used to solve a complex 
+                    problem by subdividing it into simplified versions of itself. This sounds great, but what's it 
+                    useful for?
+                </p>
+                <h3>Trees, trees and more trees...</h3>
+                <p>
+                    One often used data structure is a <em>tree</em>. A tree consists of a number of nodes, 
+                    each holding a piece of data. One example of such a tree is a file structure with sub directories 
+                    and files - such as this one:
+                </p>
+                <img src="img/07/10.png"/>
+                <p>
+                    In this directory structure, each node is either a (sub) directory or a file. Here's a more
+                    tree like representation of our file structure:
+                </p>
+                <img src="img/07/11.png"/>
+                <p>
+                    The whole arrangement looks like an upside-down tree (that's why it's called a tree). The nodes 
+                    are linked to each other in such a way that each node has got a parent and zero or more child 
+                    nodes. Nodes with no children are called <em>leaves</em>. There's one node which doesn't have a 
+                    parent, that one is called the <em>root</em> of the tree. If you look closely you can see that
+                    all leaf nodes are files, all other nodes are (sub) directories, and the root node is the
+                    directory <tt>/doc</tt>.
+                </p>
+                <h4>Walking with the monkey</h4>
+                <p>
+                    Suppose, our directory tree has got a hungry monkey living in it, and the monkey wants to visit all of 
+                    the nodes in our tree to find the banana and destroy it! Thanks to recursion, the banana is already as good as dead!
+                </p>
+<pre class="prettyprint linenums">
+function Visit (node)
+{
+    var     i;
+    var     n;
+    var     nd;
+    var     isBanana;
+    
+    isBanana = IsBanana (node);
+    if (isBanana)
+    {
+        console.log ("Yum Yum!");
+    }
+    
+    n = GetNumChildren (node);
+    if (n >= 1)
+    {
+        for (i = 0; i &lt; n; i++)
+        {
+            nd = GetChildNode (node, i);
+            <font class="emphasize-chars">Visit (nd);</font>    /* Recursion: Visit child node */
+        }
+    }
+}
+</pre>
+                <p>
+                    Apart from giving the monkey it's well deserved feeling of happiness the function doesn't do 
+                    very much yet. However, it would be possible to add code in the function which does nifty things
+                    with every node such as changing the node's data or searching for some content.
+                </p>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <ol>
+                        <li>
+                            <p>
+                                Rewrite the following programs using functions.
+                            </p>
+                            <ol>
+                                <li>
+<pre class="prettyprint linenums">
+var i;
+var x;
+var exp;
+var pow;
+
+x   = 10;
+exp = 2;
+pow = 1;
+for (i = 1; i &lt;= exp; i++)
+{
+    pow = pow * x;
+}
+console.log (x + " to the power of " + exp + " = " + pow);
+
+x   = 10;
+exp = 3;
+pow = 1;
+for (i = 1; i &lt;= exp; i++)
+{
+    pow = pow * x;
+}
+console.log (x + " to the power of " + exp + " = " + pow);
+
+x   = 10;
+exp = 5;
+pow = 1;
+for (i = 1; i &lt;= exp; i++)
+{
+    pow = pow * x;
+}
+console.log (x + " to the power of " + exp + " = " + pow);
+</pre>                                
+                                </li>
+                                <li>
+<pre class="prettyprint linenums">
+var x;
+var y;
+
+x = 6;
+y = x &lt;&lt; 1;
+console.log (x + "-&gt;" + y);
+
+x = 5;
+y = 4 * x / 2;
+console.log (x + "-&gt;" + y);
+
+x = 25;
+y = x + x + x + x - x - x;
+console.log (x + "-&gt;" + y);
+</pre>                                
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            <p>
+                                The program below draws a stripey pattern onto a HTML canvas element. However, there 
+                                must be something wrong with the code, because we expected the program to draw a chessboard 
+                                pattern like this one:
+                            </p>
+                            <img src="img/07/20.png"/>
+                            <p>
+                                In short - this program needs correction! As you're already at it -you can make much better 
+                                use of functions and use control flow statements! Here's the buggy souce code:
+                            </p>
+<pre class="prettyprint linenums">
+&lt;html&gt;
+    &lt;head&gt;
+&lt;script type="application/javascript"&gt;
+function DrawChessBoard ()
+{
+    var cnv = document.getElementById ("canvas");
+    var ctx = cnv.getContext ('2d');
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0,  0, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10,  0, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20,  0, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30,  0, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40,  0, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50,  0, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60,  0, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70,  0, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80,  0, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90,  0, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 10, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 10, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 10, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 10, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 10, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 10, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 10, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 10, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 10, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 10, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 20, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 20, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 20, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 20, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 20, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 20, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 20, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 20, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 20, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 20, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 30, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 30, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 30, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 30, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 30, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 30, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 30, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 30, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 30, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 30, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 40, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 40, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 40, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 40, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 40, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 40, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 40, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 40, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 40, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 40, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 50, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 50, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 50, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 50, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 50, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 50, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 50, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 50, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 50, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 50, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 60, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 60, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 60, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 60, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 60, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 60, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 60, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 60, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 60, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 60, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 70, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 70, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 70, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 70, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 70, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 70, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 70, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 70, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 70, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 70, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 80, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 80, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 80, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 80, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 80, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 80, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 80, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 80, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 80, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 80, 10, 10);
+    
+    ctx.fillStyle = "black";
+    ctx.fillRect ( 0, 90, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (10, 90, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (20, 90, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (30, 90, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (40, 90, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (50, 90, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (60, 90, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (70, 90, 10, 10);
+    ctx.fillStyle = "black";
+    ctx.fillRect (80, 90, 10, 10);
+    ctx.fillStyle = "white";
+    ctx.fillRect (90, 90, 10, 10);
+}
+
+&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body onload="DrawChessBoard();"&gt;
+        &lt;canvas id="canvas" width="100" height="100"&gt;&lt;/canvas&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                        </li>
+                        <li>
+                            <p>
+                                Here's the skeleton of a web page which performs different calculations on two operands:
+                            </p>
+<pre class="prettyprint linenums">
+&lt;html&gt;
+    &lt;head&gt;
+&lt;script type="text/javascript"&gt;
+function Exec ()
+{
+    var op_a        = document.getElementById ("operand_a");
+    var op_b        = document.getElementById ("operand_b");
+    var operation   = document.getElementById ("operation");
+    var result      = document.getElementById ("result");
+    var out;
+    
+    out          = op_a.value + operation.value + op_b.value + "=???";
+    result.value = "Result here";
+    window.alert (out);
+}
+&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;table bgcolor="#c0c0c0"&gt;
+            &lt;tr&gt;
+                &lt;td&gt;
+                    &lt;input type=text id="operand_a"/&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                    &lt;select id="operation" size="5"&gt;
+                        &lt;option&gt;+&lt;/option&gt;
+                        &lt;option&gt;-&lt;/option&gt;
+                        &lt;option&gt;*&lt;/option&gt;
+                        &lt;option&gt;/&lt;/option&gt;
+                        &lt;option&gt;pow&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                    &lt;input type=text id="operand_b"/&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                    &lt;button onclick="Exec();"&gt;=&lt;/button&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                    &lt;input type=text id="result"/&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                            <p>
+                                The page offers the following operations:
+                            </p>
+                            <ul>
+                                <li><tt>+</tt> - Add operand B to operand A</li>
+                                <li><tt>-</tt> - Subtract operand B from operand A</li>
+                                <li><tt>*</tt> - Multiply operand A with operand B</li>
+                                <li><tt>/</tt> - Divide operand A by operand B</li>
+                                <li><tt>pow</tt> - Calculate operand A to the power of operand B</li>
+                            </ul>
+                            <p>
+                                To use the page
+                            </p>
+                            <ul>
+                                <li>
+                                    The user enters the operands,
+                                </li>
+                                <li>
+                                    chooses one of the operations in the list box
+                                </li>
+                                <li>
+                                    and clicks the '=' button
+                                </li>
+                                <li>
+                                    This will peform the chosen operation and print the result into the result box.
+                                </li>
+                            </ul>
+                            <p>
+                                The web page code above is just the bare bones. Your task is two fold:
+                            </p>
+                            <ol>
+                                <li>
+                                    Write the missing Javascript code that makes the calculator page work as advertised!
+                                    Put the code into the &lt;script&gt; section of the page's HTML code! Make libeal use of
+                                    functions!
+                                </li>
+                                <li>
+                                    With your code, implement robustness! For example, you can have the page print "#ERROR" 
+                                    into the result field when the user provides nonsensical values! Identify all cases where 
+                                    something could be wrong and provide the code to handle these cases!
+                                </li>
+                            </ol>
+                            <div class="note">
+                                This is a difficult task and needs careful consideration first. Don't rush, but carefully think it 
+                                through! Put effort into writing good code!
+                            </div>
+                        </li>
+                        <li>
+                            <p>
+                                The factorial of any integer number <i>n</i> is defined as the product of itself 
+                                and all smaller positive integers:
+                            </p>
+                            <div class="quote">n! = n * n-1 * n-2 * ... * 1</div>
+                            <p>
+                                Write a recursive function which computes the factorial of a positive integer!
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                Write a program with a recursive function which generates the following series:
+                            </p>
+<pre>
+"0 0 0"
+"0 0 1"
+"0 1 0"
+"0 1 1"
+"1 0 0"
+"1 0 1"
+"1 1 0"
+"1 1 1"
+</pre>
+                        </li>
+                    </ol>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

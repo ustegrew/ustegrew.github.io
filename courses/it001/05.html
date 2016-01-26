@@ -1,0 +1,1617 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_05</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/00common/easteregg.js"></script>
+    <script src="scripts/05/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Operators &amp; Expressions</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Operators &amp; Expressions</h1>
+                <p>
+                    Like with a mathematical formula an <em>expression</em> is a statement which calculates some value and stores
+                    the result in a variable. An expression has an equal sign <tt>=</tt> with a variable to its left and a 
+                    term to its right:
+                </p>
+<pre class="prettyprint">
+{variable} = {term}
+</pre>
+
+                <p>
+                    The term is what calculates and returns the value, and equal sign <tt>=</tt> tells the system to store 
+                    the result of the calculation in the variable. The term can consist of one or more constants, variables, 
+                    function calls or operators. Here some examles:
+                </p>
+<pre class="prettyprint">
+var a, alpha, b, c, d, e, f;
+alpha = 1.2;
+
+a = 3;                              /* Simple assignment */
+b = 2 + 5;
+c = a * 4 + 28;
+d = Math.random ();                 /* Function call     */
+e = Math.sin (alpha * 3.14 / 180);  
+</pre>
+<div class = "tryitout">
+    <button onclick="Exec_01 ();">Try it</button>
+    <span class="tooltip">See Javascript debugger: <tt>Exec_01 ()</tt></span>
+</div>
+                <div class="note">
+                    Be aware that the understanding of the term "expression" in this course deviates from the 
+                    understanding of "expression" in computer science! See the <a href="90.html#discuss_expression">discussion</a> 
+                    in the appendix.
+                </div>
+                <p>
+                    Expressions are <i>not</i> equations! You cannot place a term at the left hand side of the 
+                    <tt>=</tt> sign! A statement like this one would be legal as a mathematical equation, but 
+                    illegal in Javascript:
+                </p>
+<pre class="prettyprint">
+a + b = 23
+</pre>
+
+                <p>
+                    You also cannot place more than one variable at the left hand side of the <tt>=</tt> sign. 
+                    This statement would be illegal:
+                </p>
+<pre class="prettyprint">
+x1, x2 = Math.sqrt (25);     
+
+/* Square root of 25 has two solutions in mathematics (-5, +5), */
+/* but Javascript calculates only one of them (+5)              */
+</pre>
+
+                <div class="note">
+                    Expressions borrow ideas from mathematical formulas.
+                </div>
+
+                <h2>Operators</h2>
+                <p>
+                    An <em>operator</em> represents an operation on some values. That is, 
+                    the operator stands for something you want to <b>do</b> with the values. For 
+                    example, the term <tt>3 + 4</tt> stands for <b>add 3 and 4</b>, the 
+                    <tt>+</tt> stands for the addition operation.
+                </p>
+                <div class="note">Operators are the verbs of expressions</div>
+                <div class="related-info">
+                    Javascript does have more operators than the ones shown here. We just present
+                    those operators which can be found in other programming languages, such as Java,
+                    PHP, or C++. If you want to know more information <i>specific to Javascript</i>, see the 
+                    <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators.1.html">MDN</a>.
+                </div>
+
+                <h3>Arithmetic operators</h3>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 150px;"><b>Operation</b></td>
+                        <td class="general-table-cell"><b>Examples</b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>+</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">addition</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 2 + 3
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be 5. 
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0010 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0010 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>-</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">subtraction</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 3 - 1
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be 2.
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0020 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0020 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>*</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">multiplication</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 5 * 4
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be 20.
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0030 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0030 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>/</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">division</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 1 / 2
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be 0.5
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 1.0 / 0.0
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be <tt>+Infinity</tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 1.0 / -0.0
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be <tt>-Infinity</tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0040 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0040 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>-</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">unary negation</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = -3
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>a</tt> will be -3
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid darkgray;">
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = -x
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <ul style="display:inline;">
+                                            <li>If x is 1, then <tt>a</tt> will be -1</li>
+                                            <li>If x is -1, then <tt>a</tt> will be 1</li>
+                                        </ul>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = -a
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        Negates <tt>a</tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0050 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0050 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                         </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>++</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Increment (postfix)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 5;
+b = a++;
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <ul style="display: inline;">
+                                            <li>Assigns value of <tt>a</tt> to <tt>b</tt>.</li>
+                                            <li>then increments <tt>a</tt>...</li>
+                                            <li>Afterwards, <tt>a</tt> is 6, and <tt>b</tt> is 5</li>
+                                        </ul>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0060 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0060 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>++</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Increment (prefix)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 5;
+b = ++a;
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <ul style="display: inline;">
+                                            <li>Increments <tt>a</tt>...</li>
+                                            <li>then assigns value of <tt>a</tt> to <tt>b</tt>.</li>
+                                            <li>Afterwards, <tt>a</tt> is 6, and <tt>b</tt> is 6</li>
+                                        </ul>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0070 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0070 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>--</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Decrement (postfix)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 5;
+b = a--;
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <ul style="display: inline;">
+                                            <li>Assigns value of <tt>a</tt> to <tt>b</tt>...</li>
+                                            <li>then decrements <tt>a</tt>.</li>
+                                            <li>Afterwards, <tt>a</tt> is 4, and <tt>b</tt> is 5</li>
+                                        </ul>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0080 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0080 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>--</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Decrement (prefix)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+a = 5;
+b = --a;
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <ul style="display: inline;">
+                                            <li>Decrements <tt>a</tt>...</li>
+                                            <li>then assigns value of <tt>a</tt> to <tt>b</tt>.</li>
+                                            <li>Afterwards, <tt>a</tt> is 4, and <tt>b</tt> is 4</li>
+                                        </ul>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0090 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0090 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>%</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Remainder (modulo)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+ 6 %  3 =  0
+</pre>                                    
+                                    </td>
+                                    <td>
+                                         <tt>&nbsp;6 = &nbsp;2 * &nbsp;3 <font style="color: blue;">+ 0</font></tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+ 5 %  3 =  2
+</pre>                                    
+                                    </td>
+                                    <td>
+                                         <tt>&nbsp;5 = &nbsp;1 * &nbsp;3 <font style="color: blue;">+ 2</font></tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+-5 %  3 = -2
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>-5 = -1 * &nbsp;3 <font style="color: blue;">- 2</font></tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+ 5 % -3 =  2
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>&nbsp;5 = -1 * -3 <font style="color: blue;">+ 2</font></tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+-5 % -3 = -2
+</pre>                                    
+                                    </td>
+                                    <td>
+                                        <tt>-5 = &nbsp;1 * -3 <font style="color: blue;">- 2</font></tt>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0100 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0100 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on arithmetic operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators.html">MDN</a></div>
+
+                <h3>Bitwise operators</h3>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 150px;"><b>Operation</b></td>
+                        <td class="general-table-cell"><b>Examples from the <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators.html">MDN</a></b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&amp;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Bitwise AND</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+     14 = 00000000000000000000000000001110
+          --------------------------------
+ 9 &amp; 14 = 00000000000000000000000000001000 = 8
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0200 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0200 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>|</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Bitwise OR</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+     14 = 00000000000000000000000000001110
+          --------------------------------
+ 9 | 14 = 00000000000000000000000000001111 = 15
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0210 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0210 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>^</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Bitwise XOR</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+     14 = 00000000000000000000000000001110
+          --------------------------------
+ 9 ^ 14 = 00000000000000000000000000000111 = 7
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0220 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0220 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>~</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Bitwise NOT</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+          --------------------------------
+     ~9 = 11111111111111111111111111110110 = -10
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0230 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0230 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&lt;&lt;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Left shift</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+          --------------------------------
+ 9 &lt;&lt; 2 = 00000000000000000000000000100100 = 36
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0240 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0240 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&gt;&gt;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">
+                            Right shift<br/>
+                            <div style = "font-size: 75%;">(sign propagating)</div>
+                        </td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+      9 = 00000000000000000000000000001001
+          --------------------------------
+ 9 &gt;&gt; 2 = 00000000000000000000000000000010 = 2
+
+
+     -9 = 11111111111111111111111111110111
+          --------------------------------
+-9 &gt;&gt; 2 = 11111111111111111111111111111101 = -3
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0250 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0250 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&gt;&gt;&gt;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">
+                            Right shift<br/>
+                            <div style = "font-size: 75%;">(zero fill)</div>
+                        </td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+       9 = 00000000000000000000000000001001
+           --------------------------------
+ 9 &gt;&gt;&gt; 2 = 00000000000000000000000000000010 = 2
+
+
+      -9 = 11111111111111111111111111110111
+           --------------------------------
+-9 &gt;&gt;&gt; 2 = 00111111111111111111111111111101 
+         = 1073741821
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0260 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0260 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on bitwise operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators.html">MDN</a></div>
+
+                <h3>Assignment operator</h3>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 150px;"><b>Operation</b></td>
+                        <td class="general-table-cell"><b>Examples</b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>=</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Assignment</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+</pre>                                    
+                                    </td>
+                                    <td>
+<pre class="prettyprint" style="border: 0px;">
+a = 3;      // a becomes 3
+a = a + 2;  // if a was 3, then a will become 5
+</pre>                                    
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on the assignment operator, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment_Operators.html">MDN</a></div>
+
+                <h3>Compound assignment operators</h3>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 155px;"><b>Example</b></td>
+                        <td class="general-table-cell"><b>Meaning</b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>+=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x += 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x + 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>-=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x -= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x - 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>*=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x *= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x * 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>/=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x /= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x / 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>%=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x %= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x % 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&lt;&lt;=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x &lt;&lt;= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x &lt;&lt; 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&gt;&gt;=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x &gt;&gt;= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x &gt;&gt; 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt></tt>&gt;&gt;&gt;=</td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x &gt;&gt;&gt;= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x &gt;&gt;&gt; 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&amp;=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x &amp;= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x &amp; 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>^=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x ^= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x ^ 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>!=</tt></td>
+                        <td class="general-table-cell" style="width: 155px;">
+<pre class="prettyprint" style="border: 0px;">
+x |= 3;
+</pre>                                    
+                        </td>
+                        <td class="general-table-cell">
+<pre class="prettyprint" style="border: 0px;">
+x = x | 3;
+</pre>                                    
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on compound assignment operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Assignment_Operators.html">MDN</a></div>
+
+                <h3>Comparison operators</h3>
+                <p>
+                    A comparison is a relational operator which test some kind of relation between
+                    two operands.
+                </p>
+                <p>
+                    A comparison always returns a boolean value: <tt>true</tt> when 
+                    the relation holds, and <tt>false</tt> when it doesn't. For example, the 
+                    comparison for equality between the operands <tt>4</tt> and <tt>4</tt> would 
+                    return <tt>true</tt>, because <tt>4</tt> is equal to <tt>4</tt>.                
+                </p>
+                <p>
+                    Since the return value of a comparison operator is a boolean value it
+                    can be assigned to a variable. The variable can be used like any other 
+                    variable.
+<pre class="prettyprint">
+var a = 10;
+var b =  5;
+var c;
+var d;
+
+c = (a >  b);
+d = (a == b);
+console.log (a + " >  " + b + ": " + c);
+console.log (a + " == " + b + ": " + d);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_290 ();">Try it</button>
+    <span class="tooltip">See Javascript debugger: <tt>Exec_290 ()</tt></span>
+</div>
+                </p>
+                <p>
+                    With regards to the (un) equality operators, there are two flavours:
+                    <dl>
+                        <dt>Generic</dt>
+                        <dd>
+                            (<tt>==</tt> and <tt>!=</tt>). The <em>generic</em> operator 
+                            converts both operands to the same type before performing 
+                            the test on (un) equality. This makes it possible to test 
+                            operands of different types for equality, e.g. a string 
+                            and an integer.
+                        </dd>
+                        <dt>Strict</dt>
+                        <dd>
+                            (<tt>===</tt> and <tt>!==</tt>). The <em>strict</em> operator 
+                            does not do any type conversion. Thus, both, the types and 
+                            values of both operators are being considered when doing the 
+                            test.
+                        </dd>
+                    </dl>
+                </p>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 250px;"><b>Relation</b></td>
+                        <td class="general-table-cell"><b>Examples returning <tt>true</tt></b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>==</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+5 == 5
+</pre>
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0300 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0300 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>===</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Strictly equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+5 === 5
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0310 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0310 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>!=</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Not equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+4 != 5
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0320 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0320 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>!==</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Not strictly equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+"5" !== 5
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0330 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0330 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&gt;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Greater than</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+5 &gt; 4
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0340 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0340 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&gt;=</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Greater than or equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+4 &gt;= 4
+5 &gt;= 4
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0350 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0350 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&lt;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Lesser than</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+4 &lt; 5
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0360 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0360 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&lt;=</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Lesser than or equal to</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+5 &lt;= 5
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0370 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0370 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on comparison operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators.html">MDN</a></div>
+                
+                <h3>Logical operators</h3>
+                <p>
+                    Logical operators implement the three operations in boolean algebra: <em>And</em>, <em>Or</em>, 
+                    <em>Not</em>. They return boolean values - either <tt>true</tt> or <tt>false</tt>. 
+                </p>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 150px;"><b>Operation</b></td>
+                        <td class="general-table-cell"><b>Examples</b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>&amp;&amp;</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Logical <em>and</em></td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+var a = true;
+var b = true;
+var c = false;
+var d = (3 &lt; 4);
+var e = (4 &lt; 3);
+var y1;
+var y2;
+var y3;
+var y4;
+
+y1 = a &amp;&amp; b;    // true
+y2 = a &amp;&amp; c;    // false
+y3 = a &amp;&amp; d;    // true
+y4 = a &amp;&amp; e;    // false
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0400 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0400 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>||</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Logical <em>or</em></td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+var a = true;
+var b = true;
+var c = false;
+var d = (3 &lt; 4);
+var e = (4 &lt; 3);
+var y1;
+var y2;
+var y3;
+var y4;
+var y5;
+
+y1 = a || b;    // true
+y2 = a || c;    // true
+y3 = a || d;    // true
+y4 = a || e;    // true
+y5 = c || e;    // false;
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0410 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0410 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>!</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">Logical <em>not</em></td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+var a = true;
+var b = false;
+var y1;
+var y2;
+
+y1 = !a;        // false
+y2 = !b;        // true
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0420 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0420 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="related-info">For more on logical operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_Operators.html">MDN</a></div>
+
+                <h3>String operators</h3>
+                <p>
+                    There are two operators which chain strings together to a new string. This operation of
+                    chaining strings is called <em>concatenation</em>.
+                </p>
+                <table class="general-table">
+                    <tr>
+                        <td class="general-table-cell" style="width: 100px;"><b>Operator</b></td>
+                        <td class="general-table-cell" style="width: 150px;"><b>Operation</b></td>
+                        <td class="general-table-cell"><b>Examples</b></td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>+</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">concatenate</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+var a = "opera"
+var b = "tor";
+var y1;
+var y2;
+
+y1 = a + b;         // "operator"
+y2 = a + " " + b;   // "opera tor"
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0500 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0500 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="general-table-cell" style="padding-left: 40px;"><tt>+=</tt></td>
+                        <td class="general-table-cell" style="padding-left: 20px;">concatenate (compound)</td>
+                        <td class="general-table-cell">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">
+<pre class="prettyprint" style="border: 0px;">
+var a = "My "
+var b = "operator ";
+var c = "is ";
+var d = "not ";
+var e = "working.";
+var y;
+
+y  = a;            // "My "
+y += b;            // "My operator "
+y += c;            // "My operator is "
+y += d;            // "My operator is not "
+y += e;            // "My operator is not working."
+</pre>                                    
+                                    </td>
+                                    <td style="width: 75px; text-align: right; vertical-align:bottom;">
+                                        <button class="tryitout-plain" onclick="Exec_0510 ();">
+                                            Try...
+                                            <span class="tooltip">See Javascript debugger: <tt>Exec_0510 ()</tt></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    Strings can also be concatenated with variables of other types. Variables of 
+                    other types will be converted to strings during the concatenation.
+<pre class="prettyprint">
+var a = "I told you ";
+var b = 123456;
+var c = " times ";
+var y;
+
+y = a + b + c + ": Stop exaggerating!";
+window.alert (y);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0520 ();">
+        Try it
+        <span class="tooltip">See Javascript debugger: <tt>Exec_0520 ()</tt></span>
+    </button>
+</div>
+                </p>
+                <div class="related-info">For more on string operators, see the 
+                <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/String_Operators.html">MDN</a></div>
+
+                <h3>Conditional operator</h3>
+                <p>
+                    The conditional operator returns one of two values depending on the result
+                    of a boolean term. It is often used as a shortcut for the <tt>if</tt>
+                    statement. The conditional operator is used as follows:
+                </p>
+<pre class="prettyprint">
+condition  ?  first-term : second-term
+</pre>
+                <p>
+                    <ul>
+                        <li>
+                            The <em>condition</em> is treated as a boolean expression and evaluated
+                            to either <tt>true</tt> or <tt>false</tt>.
+                        </li>
+                        <li>
+                            If the condition evaluates to <tt>true</tt>, return result of <em>first-term</em>.
+                        </li>
+                        <li>
+                            If the condition evaluates to <tt>false</tt>, return result of <em>second-term</em>.
+                        </li>
+                    </ul>
+                </p>
+<pre class="prettyprint">
+var a =  5;
+var b = 20;
+var y;
+
+y = (a &gt; 10) ? "Wow, big value!" :  "My, what a small value!";
+console.log (y);
+
+y = (b &gt; 10) ? "Wow, big value!" :  "My, what a small value!";
+console.log (y);
+</pre>
+<div class="tryitout">
+    <button onclick="Exec_0600 ();">
+        Try it
+        <span class="tooltip">See Javascript debugger: <tt>Exec_0600 ()</tt></span>
+    </button>
+</div>
+                <div class="related-info">
+                    For more on special operators, see the section "Special Operators" in the
+                    <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators.1.html">MDN</a>
+                </div>
+
+                <h3>Operator precedence</h3>
+                <p>
+                    Operators aren't always executed in the order in which they appear in the program. For example,
+                    the multiplication has priority before addition.
+<pre class="prettyprint">
+2 + 3 * 4           // yields 14, not 20    
+</pre>
+                </p>
+                <p>
+                    Here are most of the Javascript operators, sorted by preference. Operators with
+                    highest precedence are at the top of the list; the list entries are sorted by priority.
+                    <dl>
+                        <dt>negation/increment</dt>
+                            <dd>
+                                <tt>!</tt> <tt>~</tt> <tt>-</tt> <tt>+</tt> <tt>++</tt>
+                                <tt>--</tt>
+                            </dd>
+                        <dt>multiply/divide</dt>
+                            <dd>
+                                <tt>*</tt> <tt>/</tt> <tt>%</tt>
+                            </dd>
+                        <dt>addition/subtraction</dt>
+                            <dd>
+                                <tt>+</tt> <tt>-</tt>
+                            </dd>
+                        <dt>bitwise shift</dt>
+                            <dd>
+                                <tt>&lt;&lt;</tt> <tt>&gt;&gt;</tt> <tt>&gt;&gt;&gt;</tt>
+                            </dd>
+                        <dt>relational</dt>
+                            <dd>
+                                <tt>&lt;</tt> <tt>&lt;=</tt> <tt>&gt;</tt> <tt>&gt;=</tt>
+                            </dd>
+                        <dt>equality</dt>
+                            <dd>
+                                <tt>==</tt> <tt>!=</tt> <tt>===</tt> <tt>!==</tt>
+                            </dd>
+                        <dt>bitwise and</dt>
+                            <dd>
+                                <tt>&amp;</tt>
+                            </dd>
+                        <dt>bitwise xor</dt>
+                            <dd>
+                                <tt>^</tt>
+                            </dd>
+                        <dt>bitwise or</dt>
+                            <dd>
+                                <tt>|</tt>
+                            </dd>
+                        <dt>logical and</dt>
+                            <dd>
+                                <tt>&amp;&amp;</tt>
+                            </dd>
+                        <dt>logical or</dt>
+                            <dd>
+                                <tt>||</tt>
+                            </dd>
+                        <dt>conditional</dt>
+                            <dd>
+                                <tt>?:</tt>
+                            </dd>
+                        <dt>assignment</dt>
+                            <dd>
+                                <tt>=</tt> <tt>+=</tt> <tt>-=</tt> <tt>*=</tt> <tt>/=</tt>
+                                <tt>%=</tt> <tt>&lt;&lt;=</tt> <tt>&gt;&gt;=</tt> <tt>&gt;&gt;&gt;=</tt> <tt>&amp;=</tt>
+                                <tt>^=</tt> <tt>|=</tt>
+                            </dd>
+                    </dl>
+                </p>
+                <div class="related-info">
+                    For more on operator precedence, see the
+                    <a href="/docs/mdn/developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence.html">MDN</a>.
+                </div>
+                <h3>Brackets</h3>
+                <p>
+                    Like in mathematics, brackets change the order of calculations in a term. They override the 
+                    normal operator precedence.
+                </p>
+<pre class="prettyprint">
+a = 2 + 3 * 4       /* a will be 14 */
+b = (2 + 3) * 4     /* b will be 20 */
+</pre>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <p>
+                        <div class="hint">
+                            Before asking me for help, do your own research in the 
+                            <a href="/docs/mdn/developer.mozilla.org/en-US/index.html">MDN</a>
+                            and by writing test programs in your workspace!
+                        </div>
+                        <ol>
+                            <li>
+                                For each of the following expressions, check whether it's valid.
+                                <ul>
+                                    <li>If an expression is valid, what will be the value of <tt>a</tt>?</li>
+                                    <li>If an expression is invalid, state the reason why it is invalid.</li>
+                                </ul>
+                                <ol>
+                                    <li>
+<pre class="prettyprint">
+a = 15 % 4 * 3;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+5 = 5;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a + 4 = 0;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = 3++;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = --b;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = "3" + 3;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = (15 >>> 2) % 2;
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = (((21 >>> 2) > 6) ? "Very big" : "Not so big");
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint">
+a = 8 | 7 % 3;
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                For each of the following programs, what's the output?
+                                <ol>
+                                    <li>
+<pre class="prettyprint linenums">
+var a = 5;
+var b = --a;
+window.alert (b);
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint linenums">
+var a = 5;
+var b = a++;
+window.alert (b);
+</pre>
+                                    </li>
+                                    <li>
+<pre class="prettyprint linenums">
+var a = 5;
+var b = ++a % 3;
+var c = a++ % 3;
+window.alert ("b is " + b + " and c is " + c);
+</pre>
+                                    </li>
+                                    <li>
+<a name="01"></a>
+<pre class="prettyprint linenums">
+var out;
+var i = 1;
+var a = 
+[
+    "q", "a", "r", "t", 
+    "r", "n", "s", "u", 
+    "a", "i", "o", "l", 
+    "c", "j", "e", "p", 
+    "y", "x"
+];
+
+out  = "The secret word is: ";
+
+out += a [i];
+
+i &lt;&lt;= 1;
+out += a [i];
+
+i &lt;&lt;= 1;
+out += a [i];
+
+i &lt;&lt;= 1;
+out += a [i];
+
+i &lt;&lt;= 1;
+out += a [i];
+
+window.alert (out);
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                This program is supposed to show an alert box with the same 
+                                text as the program in the <a href="#01">previous exercise</a>. 
+                                But something went wrong, and the text is all garbled. Change 
+                                this program so it shows the proper text!
+                                <ol>
+                                    <li>
+<pre class="prettyprint linenums">
+var out;
+var i = 16;
+var a = 
+[
+    "y", "a", "t", "q",
+    "n", "s", "u", "r", 
+    "i", "o", "l", "r", 
+    "j", "e", "p", "c", 
+    "x", "a"
+];
+
+out  = "The secret word is: ";
+
+out += a [i];
+
+i >>= 1;
+out += a [i];
+
+i >>= 1;
+out += a [i];
+
+i >>= 1;
+out += a [i];
+
+i >>= 1;
+out += a [i];
+
+window.alert (out);
+</pre>
+                                    </li>
+                                </ol>
+                            </li>
+                            <li>
+                                <p>
+                                    For each of the following logic circuits, write a program which computes 
+                                    and prints the circuit's truth table!
+                                </p>
+                                <ol>
+                                    <li><br/><img src="img/05/01.png"/></li>
+                                    <li><br/><img src="img/05/02.png"/></li>
+                                    <li><br/><img src="img/05/03.png"/></li>
+                                </ol>
+                            </li>
+                            <li>
+                                <p>
+                                    Write a program which does the same as the program below - but without using 
+                                    any comparison operators or flow control statements!
+                                </p>
+<pre class="prettyprint linenums">
+/* Allowed values for x:
+ *     0, 1, 2, 3, 4, 5, 6, 7
+ */
+var x = 5;
+var out;
+
+out = (x >= 5)  ?  "true" : "false";
+console.log (out);
+</pre>
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

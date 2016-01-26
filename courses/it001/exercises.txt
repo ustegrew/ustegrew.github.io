@@ -1,0 +1,60 @@
+Exercises
+
+04 - Variables:
+
+Data type of the following values?
+5
+"x"
+-4
+true
+null
+3.8
+19268
+"hello"
+undefined
+false
+-168.3
+
+10 - Problem-solving
+
+Fake names
+
+ncru
+nsms
+shel
+ores
+idsi
+dave
+odiz
+mbir
+torm
+sios
+iest
+ctsk
+klut
+ectu
+ansv
+rabo
+
+
+
+Sandra Bryant
+Dennis Powell
+George Butler
+Raymond Cox
+Linda Richardson
+Walter Cox
+Jonathan Martinez
+Peter Nelson
+Martin Robinson
+Julia Washington
+Philip Carter
+Anne Cook
+Michael Smith
+Julie Jones
+Henry Evans
+Rose White
+Clarence Thomas
+Fred Lopez
+Howard Perez
+Ernest Rodriguez

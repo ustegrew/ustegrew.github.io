@@ -1,0 +1,428 @@
+<html>
+<head>
+    <script>var prettyPrint; /* prevent JSLint error*/</script>
+    <title>it001_programming-with-javascript_01</title>
+    <link rel="stylesheet" type="text/css" href="aux/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/lib/google-code-prettify/src/prettify.css"/>
+    <script src="/lib/google-code-prettify/src/prettify.js"></script>
+    <script src="scripts/01/exec.js"></script>
+</head>
+<body onload="prettyPrint();">
+    <div class="header"><a href="/it001"><b>it001</b></a> &gt; Using Javascript</div>
+    <table class="pagecont">
+        <tr>
+            <td class="toc">
+                <ol>
+                    <li class="toc-item"><a href="/it001/">Introduction</a></li>
+                    <li class="toc-item"><a href="/it001/00.html">Your workspace</a></li>
+                    <li class="toc-item"><a href="/it001/01.html">Using Javascript</a></li>
+                    <li class="toc-item"><a href="/it001/02.html">Javascript tour</a></li>
+                    <li class="toc-item"><a href="/it001/03.html">Statements</a></li>
+                    <li class="toc-item"><a href="/it001/04.html">Variables</a></li>
+                    <li class="toc-item"><a href="/it001/05.html">Operators</a></li>
+                    <li class="toc-item"><a href="/it001/06.html">Control flow</a></li>
+                    <li class="toc-item"><a href="/it001/07.html">Functions</a></li>
+                    <li>                 <a href="/it001/08.html">Problem solving</a></li>
+                </ol>
+                <hr/>
+                Other links:
+                <ul>
+                    <li class="toc-item"><a href="/docs/mdn/developer.mozilla.org/en-US/">MDN</a></li>
+                    <li class="toc-item"><a href="https://developers.google.com/chrome-developer-tools/">Google dev tools</a></li>
+                </ul>
+                <hr/>
+                Work area
+            </td>
+            <td class="cont">
+                <h1>Using Javascript</h1>
+                <h2>The debugger</h2>
+                <p>
+                    Google Chrome has got a powerful feature built right into the browser which allows you to 
+                    test your javascripts - the debugger. This is a piece of software which allows you to step 
+                    through your code and to inspect all the internal information, such as the values in the 
+                    variables in your scripts. The debugger isn't the only developer tool in Google Chrome, but
+                    it will be the one you will use most often.
+                    <div class="note">
+                        To test your Javascipt code, make extensive use of the debugger! Read 
+                        Google's  
+                        <a href="https://developers.google.com/chrome-developer-tools/">introduction</a> to the developer 
+                        tools, especially the 
+                        <a href="https://developers.google.com/chrome-developer-tools/docs/javascript-debugging">section</a>
+                        on how to use the debugger!
+                    </div>
+                </p>
+                <a name="linking"></a>
+                <h2>Linking</h2>
+                <p>
+                    In the majority of cases, javascripts run as part of web pages inside the web browser.
+                    A script is made available to the web browser by using the <tt>&lt;script&gt;</tt> tag
+                    inside the resp. web page. In other words, the <tt>&lt;script&gt;</tt> tag <em>links</em> 
+                    a script to the web page.<br/>
+                    There are two ways by which we can link a script to a web page: Either <em>internally</em> 
+                    or <em>externally</em>. There's no hard and fast rule which way to choose. As a rule of
+                    thumb, small javascripts are better linked internally whilst large javascripts would be 
+                    better linked externally. If the same javascript is shared between multiple web pages
+                    it is mandatory to link it externally. It's really up to the developer to decide how to
+                    set up the website and how best to do the Javascripting.
+                    <div class="note">
+                        In most of the code examples on this site we'll just show the Javascript code without 
+                        the embedding HTML code. When you try some example code you'll always have to write 
+                        your own HTML code to link to it - even if that HTML code isn't in the resp. example.
+                    </div>
+                </p>
+                <h3>Linking internally</h3>
+                <p>
+                    Linking a script internally is also called "embedding" because the script's source code
+                    is directly embedded in the resp. web page. To link a javascript internally, you need to
+                    <ul>
+                        <li>
+                            Insert a <tt>&lt;script&gt;</tt> tag into your web page. You can do this in the
+                            <tt>&lt;head&gt;</tt> section or the <tt>&lt;body&gt;</tt> section. Here it's 
+                            embedded in the <tt>&lt;head&gt;</tt> section:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                            And here it's embedded in the <tt>&lt;body&gt;</tt> section:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                            <div class="hint">
+                                In this course we will always link our scripts in the <tt>&lt;head&gt;</tt> section.
+                            </div>      
+                        </li>
+                        <li>
+                            Insert your script code between the opening <tt>&lt;script&gt;</tt> 
+                            and the closing <tt>&lt;/script&gt;</tt> tag:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+            /* The embedded script code */
+            window.alert ("Hello World");
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                        </li>
+                        <li>
+                            As soon as you load that web page into the browser you will see a message box:<br/>
+                            <img src="img/01/sshot-01.png"/>
+                        </li>
+                    </ul>
+                </p>
+                <h3>Linking externally</h3>
+                <p>
+                    Linking a script externally means that the script is placed in a file separate from the 
+                    web page. As with embedding, the file is linked with a <tt>&lt;script&gt;</tt> tag, but 
+                    this time a reference is inserted into the <tt>&lt;script&gt;</tt> tag's <tt>src</tt>
+                    attribute. To link a script externally you need to
+                    <ul>
+                        <li>
+                            Insert an empty <tt>&lt;script&gt;</tt> tag into your web page.
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script/&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                        </li>
+                        <li>
+                            Set the <tt>&lt;script&gt;</tt> tag's <tt>src</tt> attribute so it points
+                            to the resp. Javascript file.
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="path/to/script.js"/&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                        </li>
+                        <li>
+                            When loading the web page the web browser will execute the script file
+                            as soon as it encouters the <tt>&lt;script&gt;</tt> tag. For this to work 
+                            the script's file needs to be accessible to the webbrowser.
+                        </li>
+                    </ul>
+                    <div class="note">
+                         There must only be Javascript code in the script's file, i.e. no HTML code or 
+                         <tt>&lt;script&gt;</tt> tags. Anything but valid Javascript code will result 
+                         in an error.
+                    </div>
+                </p>
+                <h2>Input and output</h2>
+                <p>
+                    Most times programs need to interact with the user at some stage. With javascripts the 
+                    user interaction needs a little bit more integration into the web pages they are linked to.
+                    This means some level of HTML coding, especially when it comes to capturing the user's
+                    input. We won't look into this in too much detail since HTML coding isn't the goal 
+                    of this course. However, we'll give the bare bone details.<br/>
+                    For <em>output</em>, we'll make use of three methods: 
+                    <ul>
+                        <li>Printing to the Javascript console.</li>
+                        <li>Showing a message box.</li>
+                        <li>Interfacing with the embedding webpage</li>
+                    </ul>
+                    For <em>input</em>, we'll just interface with the embedding webpage.
+                </p>
+                <h3>Output</h3>
+                <p>
+                    Most times your program will present some information to the user. For example, 
+                    we may want to tell the user that some value is too high. There are different 
+                    ways of telling the user about the too-high value:
+                    <dl>
+                        <dt>Javascript console</dt>
+                        <dd>
+                            The Javascript console is accessible from the Developer tools in Google
+                            Chrome. You can send text to the console which is then printed out for
+                            your reading pleasure. This is convenient for continouus data output, 
+                            but it's not as visible:
+<pre class="prettyprint">
+var myValue = 100;
+if (myValue >= 100)
+    console.log ("Yikes! myValue is too high!");
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_03_01 ();">Try it</button>
+</div>
+                        </dd>
+                        <dt>Message box</dt>
+                        <dd>
+                            This pops up a message box on your screen showing the designated message
+                            and an "OK" button. The box stays until you click the "OK" button (this 
+                            can be a bit awkward if you need continouus output of multiple values):
+<pre class="prettyprint">
+var myValue = 100;
+if (myValue >= 100)
+    window.alert ("Yikes! myValue is too high!");
+</pre>
+<div class = "tryitout">
+    <span class="tooltip">See Javascript console</span>
+    <button onclick="Exec_03_02 ();">Try it</button>
+</div>
+                        </dd>
+                        <dt>Interfacing with the embedding webpage</dt>
+                        <dd>
+                            This will make Javascript change the content of the embedding web page.
+                            This is very visible and non-intrusive. It's a bit more complex to 
+                            set up, though.<br/>
+                            Two things are necessary for in-page output:
+                            <ul>
+                                <li>
+                                    In your web page, in the <tt>&lt;body&gt;</tt> section, you will need 
+                                    to provide a HTML element with an <tt>id</tt> attribute. 
+                                    Here we use a <tt>&lt;pre&gt;</tt> element. Note that the 
+                                    <tt>&lt;pre&gt;</tt> element has an <tt>id</tt> attribute set to 
+                                    <tt>Ex_03_03_output</tt>. The <tt>id</tt> is very important, because
+                                    Javascript will use it to access the <tt>&lt;pre&gt;</tt> element:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;pre id="Ex_03_03_output"/&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                                </li>
+                                <li>
+                                    In your linked Javascript code you need to set the <tt>innerHTML</tt> 
+                                    property of the <tt>&lt;pre&gt;</tt> element with the <tt>id</tt> 
+                                    specified in the previous step. This will set the text in the 
+                                    <tt>&lt;pre&gt;</tt> element to whatever string you provide:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+            var myValue = 100;
+            if (myValue >= 100)
+                document.getElementById("Ex_03_03_output")
+                        .innerHTML = "Yikes! myValue is too high!";
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;pre id="Ex_03_03_output"&gt;&lt;/pre&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                            We could have used other HTML elements to write our output into. 
+                            Here's the same example, but this time we use a <tt>&lt;p&gt;</tt>
+                            element instead of a <tt>&lt;pre&gt;</tt> element:
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+            var myValue = 100;
+            if (myValue >= 100)
+                document.getElementById("Ex_03_03_output")
+                        .innerHTML = "Yikes! myValue is too high!";
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p id="Ex_03_03_output"&gt;&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                                <pre id="Ex_03_03_output"></pre>
+                                <div class = "tryitout">
+                                    <button onclick="Exec_03_03 ();">Try it</button>
+                                </div>
+                                </li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </p>
+                <h3>Input</h3>
+                <p>
+                    Programs need data to work with, and often this data has to be provided by the user. To set up
+                    user input in a web page you will need to put some web form elements into the web page and 
+                    have your Javascript work with those form elements. Here's an example of a page which receives
+                    input from the user and shows the input in a message box:
+<pre class="prettyprint linenums">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+            function Exec_04_01 ()
+            {
+                var inputElement;
+                var text;
+                
+                inputElement = document.getElementById ("Ex_04_01_txtInput");
+                text         = inputElement.value;
+                window.alert (text);
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;input type="text" id="Ex_04_01_txtInput" value="Type some text here."/&gt;
+        &lt;button onclick="Exec_04_01 ();""/&gt;Try it&lt;/button&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                    <input type="text" id="Ex_04_01_txtInput" value="Type some text here."/>
+                    <div class="tryitout">
+                        <button onclick="Exec_04_01();">Try it</button>
+                    </div>
+                    <p>
+                        In this example we use an event handler and connect it with the "Try it" button. The
+                        event handler is defined as a function in lines <tt>4</tt> to <tt>12</tt>. We won't talk 
+                        much about functions now, they will be explained later. Suffice to say that the event
+                        handler function is registered with the "Try it" button such that it is called 
+                        when the user clicks the button. The registering is done in line <tt>17</tt>, in the 
+                        attribute <tt>onclick="Exec_04_01 ();"</tt>.
+                        <div class="hint">
+                            These days the use of HTML event handlers is discouraged in web design. However, 
+                            this course isn't about web development. It's about programming, and we just need 
+                            something that is quick to set up. If you want to learn more about web development
+                            then you need to learn the correct way of registering event listeners in Javascript.
+                        </div>
+                    </p>
+                </p>
+                <div class="exercises">
+                    <h2>Exercises</h2>
+                    <p>
+                        <ol>
+                            <li>
+                                <ul>
+                                    <li>
+                                        Create a new web page <tt>1.html</tt> with an embedded script 
+                                        that shows a message box with some text.
+                                    </li>
+                                    <li>
+                                        Try your web page with the debugger. Use the breakpoint feature and 
+                                        step through the code!
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li>Create a new web page <tt>2.html</tt>.</li>
+                                    <li>Create a Javascript file <tt>2.js</tt>.</li>
+                                    <li>Edit the the web page so it links to the Javascript file (<tt>&lt;script&gt;</tt> tag).</li>
+                                    <li>In the Javascript file, put code which shows a message box with some text.</li>
+                                    <li>Test the web page in your browser.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                Create this document in your workspace (details below the source code):
+<pre class="prettyprint">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script&gt;
+            var myNumber = 125;
+        
+            function three_a_plus_one (a)
+            {
+                var a0;
+                var div2;
+                var nRuns;
+                var msg;
+                
+                a0      = a;
+                nRuns   = 0;
+                while (a0 >= 2)
+                {
+                    div2 = a0  %  2;
+                    if (div2 === 0)
+                    {
+                        a0 = a0 / 2;
+                    }
+                    else
+                    {
+                        a0 = 3 * a0 + 1;
+                    }
+                    nRuns++;
+                }
+                
+                msg = "For number " + a + " we needed " + nRuns + " iterations.";
+                window.alert (msg);
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body onload="three_a_plus_one (myNumber);"&gt;
+        &lt;pre&gt;&lt;/pre&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+                                <ul>
+                                    <li>Create a new empty web page <tt>0.html</tt>.</li>
+                                    <li>Paste the code above into the web page.</li>
+                                    <li>
+                                        Execute the web page with the Google Chrome debugger. You need to be
+                                        able to describe what the javascript code is doing! 
+                                    </li>
+                                    <li>
+                                        Bonus! Change the Javascript code so it prints the message in the 
+                                        <tt>&lt;pre&gt;</tt> element in the web page, and not in a message box!
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
