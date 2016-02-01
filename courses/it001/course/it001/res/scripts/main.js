@@ -410,7 +410,7 @@ define
             (
                 {
                     title:  "Looking glass",
-                    style:  "height:325px;width:1024px;"
+                    style:  "height:485px;width:1024px;"
                 }
             );
             domConstruct.place (dlgJSDemo.domNode, window.document.body, "first");

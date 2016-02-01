@@ -434,7 +434,7 @@ define
                     pnlDbgGrid = new Grid 
                     (
                         {
-                            id:         'dbgDetails',
+                            id:         "dbgDetails",
                             cacheClass: cache,
                             store:      store,
                             structure:  struct,
@@ -444,7 +444,7 @@ define
                                 ColumnResizer,
                                 SingleSort
                             ],
-                            style:      "width:430px;height:135px;"
+                            style:      "width:475px;height:250px;"
                         }, _this.pnlDbg
                     );
                     pnlDbgGrid.startup ();

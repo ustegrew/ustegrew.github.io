@@ -1,33 +1,45 @@
-<div style="min-width:1000px;">
-    <div style="display: table; width: 990px;margin-bottom:10px;border:2px solid darkblue;border-radius:5px;padding:3px;">
-        <div style="display:table-row;">
-            <div style="display:table-cell;">
+<div>
+    <table style="width:100%;margin-bottom:10px;">
+        <tr>
+            <td>
                 <button data-dojo-attach-point="btnReset"></button>
-            </div>
-            <div style="display:table-cell;width:100%">
+            </td>
+            <td style="width:100%">
                 &nbsp;
-            </div>
-            <div style="display:table-cell">
+            </td>
+            <td>
                 <span style="white-space:nowrap">
                     <button data-dojo-attach-point="btnPrev"></button>
                     <button data-dojo-attach-point="btnNext"></button>
                 </span>
-            </div>
-        </div>
-    </div>
-    <div style="display:table;width:995px;border-spacing:5px;border:2px solid darkblue;border-radius:5px;">
-        <div style="display:table-row">
-            <div style="display:table-cell;width:640px;border-right:1px solid darkblue;position:relative;">
-                <div data-dojo-attach-point="pnlSrc" style="top:0px;bottom:0px;left:0px;right:0px;position:absolute;">/* No program loaded */</div>
-            </div>
-            <div style="display:table-cell">
-                <div style="width:100%;height:140px;display:block;border-bottom:1px solid darkblue;">
-                    <div data-dojo-attach-point="pnlDbg" style="width:100%;height:100%;display:block;">dbg</div>
-                </div>
-                <div style="width:100%;height:40px;padding:8px;display:block;">
-                    <div data-dojo-attach-point="pnlComment" style='width:98%;height:100%;overflow-y:auto;display:block;'>Nothing loaded yet</div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
+    <table style="width:100%">
+        <tr>
+            <td>
+                <table style="width:100%;">
+                    <tr>
+                        <td style="border:1px solid darkblue; border-radius:5px;padding:5px;">
+                            <div data-dojo-attach-point="pnlSrc" style="width:500px;height:367px;">/* No program loaded */</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table style="width:100%;">
+                    <tr>
+                        <td style="border:1px solid darkblue; border-radius:5px;padding:5px;">
+                            <div data-dojo-attach-point="pnlDbg">dbg</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid darkblue; border-radius:5px;padding:5px;">
+                            <div data-dojo-attach-point="pnlComment" style="width:250px;height:100px;">Nothing loaded yet</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </div>
