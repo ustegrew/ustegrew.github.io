@@ -538,7 +538,7 @@ define
                         ret.type    = "NaN";
                         ret.value   = "Not a number";
                     }
-                    else if (Number.isInteger (x))
+                    else if (x % 1 === 0)
                     {
                         ret.type    = "integer";
                         ret.value   = "" + x;
