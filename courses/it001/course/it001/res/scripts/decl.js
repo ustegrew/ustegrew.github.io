@@ -33,7 +33,8 @@ define ([], function ()
          *       when committing / pushing upstream.
          *       TODO: Remove for production code.
          */
-        debugShowPrograms: false         
+        debugShowPrograms: false,
+        
     };
 
     window.it001.gProgramRepository ["notImpl"] =
