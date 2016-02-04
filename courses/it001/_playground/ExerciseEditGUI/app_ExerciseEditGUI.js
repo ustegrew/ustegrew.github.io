@@ -36,7 +36,7 @@ require
                 onSave:         function () 
                 {
                     var content;
-                    content = window.xedit.GetContent ();
+                    content = window.xedit01.GetContent ();
                     console.log (content);
                 }
             }
@@ -63,7 +63,7 @@ require
                 onSave:         function () 
                 {
                     var content;
-                    content = window.xedit.GetContent ();
+                    content = window.xedit02.GetContent ();
                     console.log (content);
                 }
             }
