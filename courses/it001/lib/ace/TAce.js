@@ -129,6 +129,20 @@ define
                 domConstruct.destroy (this.fRefNode);
             },
             
+            GetContent: function ()
+            {
+                var ret;
+                
+                ret = this.fEditor.getValue ();
+                
+                return ret;
+            },
+            
+            SetContent: function (content)
+            {
+                this.fEditor.setValue (content);
+            },
+            
             /**
              * Setup function. Loads the ace library (if needed) and binds      [10]
              * the editor component into the given reference DOM node. 
@@ -278,7 +292,7 @@ define
                 mode  = (iMode >= 0)  ?  
                         kModPreamble + this.fLanguageMode
                     :
-                        kModPreamble + "text";
+                        kModPreamble + "plain_text";
                 this.fEditor = ace.edit (this.fRefNode);
                 this.fEditor.$blockScrolling = Infinity;                        /* 30 */
                 this.fEditor.getSession ().setMode (mode);

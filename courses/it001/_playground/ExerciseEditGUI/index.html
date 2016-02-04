@@ -6,10 +6,9 @@
         <title>
             Courses
         </title>
-        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/claro.css"        type="text/css">
-        <link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/document.css"     type="text/css">
-        <link rel="stylesheet"  href="lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css">
-        <script type="text/javascript" src="lib/pieroxy_lz-string/lz-string.js"                    ></script>
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/claro.css"        type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/document.css"     type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css">
         <script type="text/javascript">
             /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
             var dojoConfig =
@@ -20,7 +19,7 @@
                     "dojo-debug-messages":  true
                 },
                 locale:             'en',
-                baseUrl:            'lib/',
+                baseUrl:            '../../lib/',
                 tlmSiblingsOfDojo:  false,
                 packages:
                 [
@@ -38,15 +37,19 @@
             };
         </script>
         <script type             = "text/javascript"
-                src              = "lib/dojo/dojo/dojo.js"
+                src              = "../../lib/dojo/dojo/dojo.js"
                 data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
             /* Integrate dojo toolkit */
         </script>
-        <script type="text/javascript" src="app.js">
+        <script type="text/javascript" src="app_ExerciseEditGUI.js">
             /* Application specific program */
         </script>
     </head>
     <body class="claro">
-        <div id="pnlMain" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;"></div>
+        <h1>Demo: Free form and source code editor</h1>
+        <hr/>
+        <div id="editTest01"></div>
+        <p><br/></p>
+        <div id="editTest02"></div>
     </body>
 </html>

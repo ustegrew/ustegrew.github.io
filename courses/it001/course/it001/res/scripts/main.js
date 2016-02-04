@@ -208,6 +208,19 @@ define
         window.it001.onUnloadArticle = function ()
         {
         };
+        
+        window.it001.onSaveExercise = function (exID)
+        {
+            var uid;
+            var node;
+            var comprContent;
+            var origContent;
+            
+            uid             = "it001.exercise." + exID;
+            node            = dom.byId (exID);
+            origContent     = node.innerHTML;
+            comprContent    = LZString.compressToUTF16 ()
+        }
 
         window.it001.JSDemo_RunExample = function (key)
         {
