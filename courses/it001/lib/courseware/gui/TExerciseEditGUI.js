@@ -86,32 +86,6 @@ define
                 kPlaintext:     30
             },
             
-            fAPIEditor:
-            {
-                fEditor:        null,
-                GetContent:     null,
-                SetContent:     null,
-            },
-            
-            fConfig:
-            {
-                fType:      null,
-                fSrcLang:   null,
-                fHeight:    0,
-                fWidth:     0
-            },
-            
-            fHandlers:
-            {
-                onCancel:   null,
-                onLoad:     null,
-                onSave:     null
-            },
-            
-            fHost: null,
-            
-            fPnlEditor: null,
-            
             GetContent: function () 
             {
                 var ret;
@@ -126,18 +100,6 @@ define
                 this.fAPIEditor.SetContent (content);
             },
             
-            Handle_FileSave: function ()
-            {
-                
-            },
-            
-            Handle_FileClose: function ()
-            {
-                
-            },
-            
-            
-            
             /**
              * Dojo specific cTor.
              * 
@@ -147,14 +109,27 @@ define
              */
             constructor: function (params)
             {
-                this.fHost                  = params.fHost;
-                this.fConfig.fHeight        = params.fHeight;
-                this.fConfig.fWidth         = params.fWidth;
-                this.fConfig.fType          = params.fType;
-                this.fConfig.fSrcLang       = params.fSrcLang;
-                this.fHandlers.onCancel     = params.onCancel;
-                this.fHandlers.onLoad       = params.onLoad;
-                this.fHandlers.onSave       = params.onSave;
+                this.fPnlEditor = null;
+                this.fHost      = params.fHost;
+                this.fAPIEditor =
+                {
+                    fEditor:        null,
+                    GetContent:     null,
+                    SetContent:     null,
+                };
+                this.fConfig =
+                {
+                    fType:      params.fType,
+                    fSrcLang:   params.fSrcLang,
+                    fHeight:    params.fHeight,
+                    fWidth:     params.fWidth
+                };
+                this.fHandlers =
+                {
+                    onCancel:   params.onCancel,
+                    onLoad:     params.onLoad,
+                    onSave:     params.onSave
+                },
                 this._Init ();
             },
             
