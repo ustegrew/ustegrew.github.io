@@ -200,7 +200,7 @@ define
              * above each section */
             InitializeExamples ();
 
-            /* Pretty print all source examples on this page
+            /* Pretty print all source listings on this page
              */
             window.prettyPrint ();
         };

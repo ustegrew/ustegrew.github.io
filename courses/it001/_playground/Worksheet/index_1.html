@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico">
+        <title>
+            Exercise test - one exercise
+        </title>
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/claro.css"      type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/document.css"   type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/gridx/resources/claro/Gridx.css"   type="text/css">
+        <script type="text/javascript">
+            /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
+            var dojoConfig =
+            {
+                has:
+                {
+                    "dojo-firebug":         true,
+                    "dojo-debug-messages":  true
+                },
+                locale:             'en',
+                baseUrl:            '../../lib/',
+                tlmSiblingsOfDojo:  false,
+                packages:
+                [
+                    {name: 'ace',                   location: 'ace'},
+                    {name: 'dojo',                  location: 'dojo/dojo'},
+                    {name: 'dijit',                 location: 'dojo/dijit'},
+                    {name: 'dojox',                 location: 'dojo/dojox'},
+                    {name: 'gridx',                 location: 'dojo/gridx'},
+                    {name: 'jsdemo',                location: 'jsdemo'},
+                    {name: 'courseware',            location: 'courseware'},
+                    {name: 'google-code-prettify',  location: 'google-code-prettify'},
+                    {name: 'course',                location: '../course'},
+                    {name: 'pieroxy_lz-string',     location: 'pieroxy_lz-string'}
+                ]
+            };
+        </script>
+        <script type             = "text/javascript"
+                src              = "../../lib/dojo/dojo/dojo.js"
+                data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
+            /* Integrate dojo toolkit */
+        </script>
+
+        <style>
+div.exercise
+{
+    position:           relative;
+    margin-left:        50px;
+    width:              650px;
+}
+
+div.exercise-text
+{
+}
+
+div.exercise-toolbar
+{
+    position:           absolute;
+    top:                -3px;
+    left:               -45px;
+}
+
+div.exercise-workspace
+{
+    border:             5px solid lightgray;
+    margin-bottom:      10px;
+}
+        </style>
+
+        <script type="text/javascript">
+require
+([
+    "dojo/parser",
+    "dojo/dom",
+    "dojo/dom-construct",
+    "dojo/dom-style",
+    "dojo/query",
+    "dojo/_base/fx",
+    "dojo/fx",
+    "dojo/on",
+    "dijit/Toolbar",
+    "dijit/form/Button",
+    "courseware/gui/TExerciseEditGUI",
+    "dojo/domReady!"
+], function 
+(
+    parser,
+    dom,
+    domConstruct,
+    domStyle,
+    query,
+    baseFx,
+    fx,
+    on,
+    TToolbar,
+    TButton,
+    TExerciseEditGUI
+)
+{
+    var wr_01;
+    var wr_01_01;
+    var wr_01_02;
+    var wr_01_03;
+    var bt;
+    var editor;
+    var solution;
+
+    var expandNode = function (node)
+    {
+        domStyle.set (node, "height", "0px");
+        fx.wipeIn ({node:node}).play ();
+    };
+    
+    var shrinkNode = function (node)
+    {
+        domStyle.set (node, "height", "480px");
+        fx.wipeOut ({node:node}).play ();
+    };
+    
+    var ExerciseLoad = function ()
+    {
+        editor.SetContent (solution);
+        console.log ("Editor text LOADED");
+    }
+    
+    var ExerciseOpen = function ()
+    {
+        editor.SetContent (solution);
+        editor.ClearFlagChanged ();
+        expandNode (wr_01_03);
+        bt.set ("disabled", true);
+        console.log ("Edit OPENED");
+    };
+    
+    var ExerciseSave = function ()
+    {
+        solution = editor.GetContent ();
+        editor.ClearFlagChanged ();
+        console.log ("Solution SAVED");
+    };
+    
+    var ExerciseCancel = function ()
+    {
+        var hasChanged;
+        var doSave;
+        
+        hasChanged = editor.HasChanged ();
+        doSave     = false;
+        if (hasChanged)
+        {
+            doSave = confirm ("Document has changed. Save?");
+        }
+        if (doSave)
+        {
+            solution = editor.GetContent ();
+        }
+        shrinkNode (wr_01_03);
+        editor.SetContent ("");
+        bt.set ("disabled", false);
+        console.log ("Edit CANCELLED");
+    }
+
+    var InitializeExercises = function ()
+    {
+        wr_01    = dom.byId ("01");
+        wr_01_01 = dom.byId ("01.01");
+        wr_01_02 = dom.byId ("01.02");
+        wr_01_03 = dom.byId ("01.03");
+        solution = "/* Your solution here */";
+
+        bt = new TButton
+        (
+            {
+                label:      "<img src=\"edit.png\"/>",
+                onClick:    ExerciseOpen
+            }
+        );
+        bt.startup ();
+    
+        editor   = new TExerciseEditGUI
+        (
+            {
+                fHost:          null,
+                fType:          "src",
+                fSrcLang:       "js",
+                fWidth:         "640px",
+                fHeight:        "480px",
+                onCancel:       ExerciseCancel,
+                onLoad:         ExerciseLoad,
+                onSave:         ExerciseSave
+            }
+        );
+        editor.startup ();
+
+        domConstruct.place 
+        (
+            bt.domNode, wr_01_01, "only"
+        );
+        domConstruct.place
+        (
+            editor.domNode, wr_01_03, "only"
+        );
+        shrinkNode (wr_01_03);
+    }
+    
+    parser.parse().then
+    (
+        function ()
+        {
+            InitializeExercises ();
+        }
+    );
+});
+        </script>
+    </head>
+    <body class="claro">
+        <h1>Demo: Worksheet</h1>
+        <h2>Multiple exercises</h2>
+        <hr/>
+        <div class="exercise" id="01">
+            <div class="exercise-toolbar" id="01.01">&nbsp;</div>
+            <div class="exercise-text" id="01.02">
+                <p>
+                    Write a program which converts a number into a weekday string and prints
+                    the weekday string to the console. Use the following mapping scheme:
+                </p>
+                <ul>
+                    <li><tt>1</tt>: Sunday</li>
+                    <li><tt>3</tt>: Monday</li>
+                    <li><tt>5</tt>: Tuesday</li>
+                    <li><tt>2</tt>: Wednesday</li>
+                    <li><tt>4</tt>: Thursday</li>
+                    <li><tt>6</tt>: Friday</li>
+                    <li><tt>7</tt>: Saturday</li>
+                </ul>
+                <p>
+                    Write three version of this program, each using a different method!
+                </p>
+            </div>
+            <div class="exercise-workspace" id="01.03">&nbsp;</div>
+        </div>
+    </body>
+</html>

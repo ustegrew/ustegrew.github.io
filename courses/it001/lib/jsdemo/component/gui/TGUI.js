@@ -169,11 +169,6 @@ define
                 this.fController = host;
             },
             
-            /* -------------------------------------------------------------
-             * Property definitions. It's recommended not to access these from 
-             * outside, but to use the public Notify_... methods for that.
-             * ------------------------------------------------------------- */
-            
             /**
              * Dojo demands this property. Template is defined in a separate 
              * file <code>jsdemo/templates/TDebugView.templ.html</code>.
@@ -183,63 +178,72 @@ define
              */
             templateString:     template,                       /* [1], [2] */
             
-            fBtnNext:           null,
-            fBtnPrev:           null,
-            fBtnReset:          null,
-            
-            /**
-             * The hosting controller. Does all the application specific logic.
-             *
-             * @type        
-             * @private
-             */
-            fController:        null,
-
-            /**
-             * Handle for the comment panel (div DOM node).
-             *
-             * @type        [DOM:DIV]
-             * @private
-             */
-            fPnlComment:        null,
-
-            /**
-             * Handle for the debug details panel. 
-             *
-             * @type        [gridx/Grid]
-             * @private
-             */
-            fPnlDbg:            null,
-        
-            /**
-             * Handle for the source view panel (ace editor component). 
-             *
-             * @type        [ace/ace]
-             * @private
-             */
-            fPnlEditor:         null,
-            
-            /**
-             * Target size: Width.
-             *
-             * @type        String
-             * @private
-             */
-            fGeoWidth:          "450px",
-
-            /**
-             * Target size: Height.
-             *
-             * @type        String
-             * @private
-             */
-            fGeoHeight:         "600px;",
-
             /**
              * Dojo specific cTor.
+             * 
+             * We have to declare instance specific properties inside the cTor
+             * function, otherwise the properties will be class owned (static),
+             * i.e. every instance will share the same values!
              */
             constructor: function ()
             {
+                /* -------------------------------------------------------------
+                 * Property definitions. It's recommended not to access these from 
+                 * outside, but to use the public Notify_... methods for that.
+                 * ------------------------------------------------------------- */
+            
+                this.fBtnNext =           null;
+                this.fBtnPrev =           null;
+                this.fBtnReset =          null;
+
+                /**
+                 * The hosting controller. Does all the application specific logic.
+                 *
+                 * @type        
+                 * @private
+                 */
+                this.fController =        null;
+
+                /**
+                 * Handle for the comment panel (div DOM node).
+                 *
+                 * @type        [DOM:DIV]
+                 * @private
+                 */
+                this.fPnlComment =        null;
+
+                /**
+                 * Handle for the debug details panel. 
+                 *
+                 * @type        [gridx/Grid]
+                 * @private
+                 */
+                this.fPnlDbg =            null;
+
+                /**
+                 * Handle for the source view panel (ace editor component). 
+                 *
+                 * @type        [ace/ace]
+                 * @private
+                 */
+                this.fPnlEditor =         null;
+
+                /**
+                 * Target size: Width.
+                 *
+                 * @type        String
+                 * @private
+                 */
+                this.fGeoWidth =          "450px";
+
+                /**
+                 * Target size: Height.
+                 *
+                 * @type        String
+                 * @private
+                 */
+                this.fGeoHeight =         "600px;";
+
             },
             
             /* -------------------------------------------------------------
@@ -471,6 +475,10 @@ define
                         {
                             throw "TGUI::startup(): Error loading ace editor. Details:\n" + 
                                   JSON.stringify (err, null, 4);
+                        },
+                        function ()
+                        {
+                            /* Do nothing as we set the editor to readonly. */
                         }
                     );
                 };

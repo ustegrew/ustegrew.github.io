@@ -4,15 +4,13 @@ require
     "dojo/dom",
     "dojo/dom-construct",
     "courseware/TCourseWare",
-    "courseware/gui/TExerciseEditGUI",
     "dojo/domReady!"
 ], function 
 (
     parser,
     dom,
     domConstruct,
-    TCourseWare,
-    TExerciseEditGUI
+    TCourseWare
 )
 {
     parser.parse().then

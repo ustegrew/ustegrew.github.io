@@ -54,72 +54,70 @@ define
             ],
             
             /**
-             * The editor component
-             * 
-             * @type        ace/ace
-             * @public
-             */
-            fEditor: null,
-            
-            /**
-             * The callback function to be called when loading of the Ace editor 
-             * library failed.
-             * 
-             * @type        JSFunction
-             * @private
-             */
-            fCallbackOnError: null,
-            
-            /**
-             * The callback function to be called after successfull loading of 
-             * the Ace editor library.
-             * 
-             * @type        JSFunction
-             * @private
-             */
-            fCallbackOnLoad: null, 
-            
-            /**
-             * The object (client) using this object. Determines in which context 
-             * we run the given callback functions. This enables clients to use
-             * the 'this' reference in their callbacks.
-             * If it's not a JSObject then we assume that no context is specified
-             * in which case we run the callbacks in the global context 
-             * (<code>window</code>).
-             * 
-             * @type        JSObject
-             * @private
-             */
-            fClient: null, 
-            
-            fHasSyntaxCheck: false,
-            
-            fIsReadOnly: false,
-            
-            fIsSetup: false,
-            
-            /**
-             * The language mode we set the Ace editor to.
-             * 
-             * @type        string
-             * @private
-             */
-            fLanguageMode: null, 
-
-            /**
-             * The DOM node which will host the Ace editor.
-             * 
-             * @type        DOMnode
-             * @private
-             */
-            fRefNode: null, 
-            
-            /**
              * Dojo specific cTor.
              */
             constructor: function ()
             {
-                this.fIsSetup = false;
+                /**
+                 * The editor component
+                 * 
+                 * @type        ace/ace
+                 * @public
+                 */
+                this.fEditor = null;
+
+                /**
+                 * The callback function to be called when loading of the Ace editor 
+                 * library failed.
+                 * 
+                 * @type        JSFunction
+                 * @private
+                 */
+                this.fCallbackOnError = null;
+
+                /**
+                 * The callback function to be called after successfull loading of 
+                 * the Ace editor library.
+                 * 
+                 * @type        JSFunction
+                 * @private
+                 */
+                this.fCallbackOnLoad = null;
+
+                /**
+                 * The object (client) using this object. Determines in which context 
+                 * we run the given callback functions. This enables clients to use
+                 * the 'this' reference in their callbacks.
+                 * If it's not a JSObject then we assume that no context is specified
+                 * in which case we run the callbacks in the global context 
+                 * (<code>window</code>).
+                 * 
+                 * @type        JSObject
+                 * @private
+                 */
+                this.fClient = null;
+
+                this.fHasSyntaxCheck = false;
+
+                this.fIsReadOnly = false;
+
+                /**
+                 * The language mode we set the Ace editor to.
+                 * 
+                 * @type        string
+                 * @private
+                 */
+                this.fLanguageMode = null;
+
+                /**
+                 * The DOM node which will host the Ace editor.
+                 * 
+                 * @type        DOMnode
+                 * @private
+                 */
+                this.fRefNode = null;
+                
+                this.fIsSetup       = false;
             },
             
             destroy: function ()
@@ -202,7 +200,7 @@ define
              *                                              when there was an error
              *                                              loading the ace library.
              */
-            Setup: function (refNode, languageMode, isReadOnly, hasSyntaxCheck, client, callbackOnLoad, callbackOnError)
+            Setup: function (refNode, languageMode, isReadOnly, hasSyntaxCheck, client, callbackOnLoad, callbackOnError, callbackOnChange)
             {
                 var _host = this;
                 
@@ -219,6 +217,7 @@ define
                 this.fLanguageMode          = languageMode;
                 this.fCallbackOnError       = callbackOnError;
                 this.fCallbackOnLoad        = callbackOnLoad;
+                this.fCallbackOnChange      = callbackOnChange;
                 this.fIsReadOnly            = (isReadOnly === true);
                 this.fHasSyntaxCheck        = (hasSyntaxCheck === true);
 
@@ -284,6 +283,8 @@ define
             
             _Initialize: function ()
             {
+                var _host = this;
+                
                 var kModPreamble    = "ace/mode/";
                 var iMode;
                 var mode;
@@ -304,6 +305,7 @@ define
                 {
                     this.fEditor.session.setOption ("useWorker", false);
                 }
+                this.fEditor.getSession().on ("change", this.fCallbackOnChange);
                 this._Exec (this.fCallbackOnLoad, null);
             }
         };

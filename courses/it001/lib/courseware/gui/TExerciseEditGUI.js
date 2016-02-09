@@ -45,15 +45,19 @@ define
          * show either the ACE editor component or a rich text editor.
          * 
          * <pre>    
-         *     .----------------------------------------------------.
-         *     | 1 // My solution                                   |
-         *     |                                                    |
-         *     |                                                    |
-         *     |                                                    |
-         *     |                                                    |
-         *     |                                            .-------.
-         *     |                                            |  OK   |
-         *     '--------------------------------------------'-------'
+         *     .------.--------------------------------------.
+         *     | File |                                      |
+         *     .---------------------------------------------.
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     |                                             |
+         *     '---------------------------------------------'
          * </pre>
          * 
          * Elements on the user interface:
@@ -62,9 +66,8 @@ define
          *     <dt>Content panel</dt>
          *     <dd>The content of the user's solution.</dd>
          *     
-         *     <dt>OK button</dt>
-         *     <dd>Closes the editor. Notifies clients so they can use the contents
-         *         (e.g. committing it to storage.</dd>
+         *     <dt>Menu bar</dt>
+         *     <dd>As in current user interfaces for applications.</dd>
          * </dl>
          * 
          * @class       TExerciseEditGUI
@@ -86,11 +89,25 @@ define
                 kPlaintext:     30
             },
             
+            ClearFlagChanged : function ()
+            {
+                this.fAPIEditor.fHasChanged = false;
+            },
+            
             GetContent: function () 
             {
                 var ret;
                 
                 ret = this.fAPIEditor.GetContent ();
+                
+                return ret;
+            },
+            
+            HasChanged: function ()
+            {
+                var ret;
+                
+                ret = this.fAPIEditor.fHasChanged;
                 
                 return ret;
             },
@@ -114,6 +131,7 @@ define
                 this.fAPIEditor =
                 {
                     fEditor:        null,
+                    fHasChanged:    false,
                     GetContent:     null,
                     SetContent:     null,
                 };
@@ -257,7 +275,11 @@ define
                                         name:       "formatBlock",
                                         plainText:  true
                                     }
-                                ]
+                                ],
+                                onChange: function ()
+                                {
+                                    _host.fAPIEditor.fHasChanged = true;
+                                }
                             },
                             pnlWrapperEdit
                         );
@@ -315,12 +337,16 @@ define
                             _host,
                             function ()
                             {
-                                _host.fHandlers.onLoad ();
+                                _host.fHandlers.onLoad.call (_host);
                             },
                             function (err)
                             {
                                 throw "TExerciseEditGUI::startup(): Error loading ace editor. Details:\n" + 
                                       JSON.stringify (err, null, 4);
+                            },
+                            function ()
+                            {
+                                _host.fAPIEditor.fHasChanged = true;
                             }
                         );
                         this.fAPIEditor.GetContent = function ()
