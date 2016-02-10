@@ -19,26 +19,33 @@ define
         var ret;
 
         /**
-         * Insert_explanation_here
+         * A worksheet. Contains several exercises. All exercises share a single editor
+         * instance.
          * 
-         * @class       TChangeToClassName
+         * @class       TWorksheet
          */
         TWorksheet = 
         {
             /**
-             * Insert_explanation_here
-             * 
-             * @type        Insert_typename_here
-             * @private
+             * Worksheet controller class. 
              */
-            fProperty: null,
-
+            TController: function (host)
+            {
+                this.fHost = host;
+                
+            },
+            
             /**
              * Dojo specific cTor.
              */
-            constructor: function (params)
+            constructor: function ()
             {
-                
+                /**
+                 *  The controller. Controls the behaviour of this worksheet.
+                 * 
+                 * @type TWorksheet::TController
+                 */
+                this.fController = new this.TController (this);
             },
 
             /* -------------------------------------------------------------

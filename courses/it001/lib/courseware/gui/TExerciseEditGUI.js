@@ -117,6 +117,11 @@ define
                 this.fAPIEditor.SetContent (content);
             },
             
+            SetType: function (type, lang)
+            {
+                this._SetType (type, lang);
+            },
+            
             /**
              * Dojo specific cTor.
              * 
@@ -126,8 +131,10 @@ define
              */
             constructor: function (params)
             {
-                this.fPnlEditor = null;
-                this.fHost      = params.fHost;
+                this.fPnlEditor         = null;
+                this.fPnlWrapperEdit    = null;
+                this.fPnlWrapper        = null;
+                this.fHost              = params.fHost;
                 this.fAPIEditor =
                 {
                     fEditor:        null,
@@ -137,8 +144,6 @@ define
                 };
                 this.fConfig =
                 {
-                    fType:      params.fType,
-                    fSrcLang:   params.fSrcLang,
                     fHeight:    params.fHeight,
                     fWidth:     params.fWidth
                 };
@@ -147,8 +152,7 @@ define
                     onCancel:   params.onCancel,
                     onLoad:     params.onLoad,
                     onSave:     params.onSave
-                },
-                this._Init ();
+                };
             },
             
             /* -------------------------------------------------------------
@@ -187,7 +191,6 @@ define
                 var pnlWrapper;
                 var pnlWrapperMenuBar;
                 var pnlWrapperEdit;
-                var srcType;
                 var wrStyle;
                 var menuBar;
                 var subMenu;
@@ -241,21 +244,94 @@ define
                 );
                 menuBar.startup ();
                 menuBar.placeAt (pnlWrapperMenuBar);
-
+                
+                pnlWrapperEdit = domConstruct.create ("div");
+                
+                pnlWrapper = domConstruct.create 
+                (
+                    "div",
+                    {
+                        style:  "width:" + this.fConfig.fWidth + ";height" + this.fConfig.fHeight + ";"
+                    }
+                );
+                domConstruct.place (pnlWrapperMenuBar,  pnlWrapper,     "only");
+                domConstruct.place (pnlWrapperEdit,     pnlWrapper,     "last");
+                domConstruct.place (pnlWrapper,         this.domNode,   "only");
+                
+                this.fPnlWrapper        = pnlWrapper;
+                this.fPnlWrapperEdit    = pnlWrapperEdit;
+            },
+            
+            _SetType: function (type, srcLang)
+            {
+                var _host = this;
+                
+                var eType;
+                var eLang;
+                var wrStyle;
+                
+                if (type === "rtf")
+                {
+                    eType   = this.EType.kRichText;
+                    eLang   = this.ESrcLang.kPlaintext;
+                }
+                else if (type === "src")
+                {
+                    eType = this.EType.kSourceCode;
+                    if (srcLang === "js")
+                    {
+                        eLang = this.ESrcLang.kJavascript;
+                    }
+                    else if (srcLang === "html")
+                    {
+                        eLang = this.ESrcLang.kHTML;
+                    }
+                    else
+                    {
+                        eLang   = this.ESrcLang.kPlaintext;
+                        this._Log ("Unknown source language: " + srcLang + ". Set to kSourceCode/kPlaintext.");
+                    }
+                }
+                else
+                {
+                    eType   = this.EType.kRichText;
+                    eLang   = this.ESrcLang.kPlaintext;
+                    this._Log ("Unknown text type: " + type + ". Set to kRichText");
+                }
+                
+                if (this.fPnlEditor !== null)
+                {
+                    this.fPnlEditor.destroy ();
+                    this.fPnlEditor = null;
+                }
+                domConstruct.destroy (this.fPnlWrapperEdit);
+                
                 /**
                  * Set up editor component
                  */
-                switch (this.fConfig.fType)
+                switch (eType)
                 {
                     case this.EType.kRichText:
-                        wrStyle         = "left:0px;right:2px;";
-                        pnlWrapperEdit  = domConstruct.create 
+                        wrStyle                 = "left:0px;right:2px;";
+                        this.fPnlWrapperEdit    = domConstruct.create 
                         (
                             "div",
                             {
                                 style: wrStyle
                             }
                         );
+                        this.fAPIEditor.GetContent = function ()                /* [100] */
+                        {
+                            var ret;
+                            
+                            ret = _host.fPnlEditor.get ("value");
+                            
+                            return ret;
+                        };
+                        this.fAPIEditor.SetContent = function (content)         /* [100] */
+                        {
+                            _host.fPnlEditor.set ("value", content);
+                        };
                         this.fPnlEditor = new TRichTextEdit 
                         (
                             {
@@ -281,20 +357,8 @@ define
                                     _host.fAPIEditor.fHasChanged = true;
                                 }
                             },
-                            pnlWrapperEdit
+                            this.fPnlWrapperEdit
                         );
-                        this.fAPIEditor.GetContent = function ()
-                        {
-                            var ret;
-                            
-                            ret = _host.fPnlEditor.get ("value");
-                            
-                            return ret;
-                        };
-                        this.fAPIEditor.SetContent = function (content)
-                        {
-                            _host.fPnlEditor.set ("value", content);
-                        };
                         this.fPnlEditor.onLoadDeferred.then
                         (
                             function ()
@@ -307,7 +371,7 @@ define
                         
                     case this.EType.kSourceCode:
                         wrStyle    = "width:100%;height:" + this.fConfig.fHeight + ";";
-                        pnlWrapperEdit = domConstruct.create 
+                        this.fPnlWrapperEdit = domConstruct.create 
                         (
                             "div",
                             {
@@ -315,7 +379,7 @@ define
                             }
                         );
 
-                        switch (this.fConfig.fSrcLang)
+                        switch (eLang)
                         {
                             case this.ESrcLang.kJavascript:
                                 srcType = "javascript";
@@ -327,10 +391,22 @@ define
                                 srcType = "plain_text";
                         }
                         
-                        this.fPnlEditor = new TAceEdit ();                         /* <----- Property: fPnlEditor */
+                        this.fAPIEditor.GetContent = function ()                /* [100] */
+                        {
+                            var ret;
+                            
+                            ret = _host.fPnlEditor.GetContent ();
+                            
+                            return ret;
+                        };
+                        this.fAPIEditor.SetContent = function (content)         /* [100] */
+                        {
+                            _host.fPnlEditor.SetContent (content);
+                        };
+                        this.fPnlEditor = new TAceEdit ();                      /* <----- Property: fPnlEditor */
                         this.fPnlEditor.Setup
                         (
-                            pnlWrapperEdit,
+                            this.fPnlWrapperEdit,
                             srcType,
                             false,
                             true,
@@ -349,18 +425,6 @@ define
                                 _host.fAPIEditor.fHasChanged = true;
                             }
                         );
-                        this.fAPIEditor.GetContent = function ()
-                        {
-                            var ret;
-                            
-                            ret = _host.fPnlEditor.GetContent ();
-                            
-                            return ret;
-                        };
-                        this.fAPIEditor.SetContent = function (content)
-                        {
-                            _host.fPnlEditor.SetContent (content);
-                        };
                     
                         break;
                         
@@ -368,54 +432,7 @@ define
                         throw "TExerciseEditGUI::Unknown text type: " + this.fConfig.fType;
                 }
                 
-                pnlWrapper = domConstruct.create 
-                (
-                    "div",
-                    {
-                        style:  "width:" + this.fConfig.fWidth + ";height" + this.fConfig.fHeight + ";"
-                    }
-                );
-                domConstruct.place (pnlWrapperMenuBar,  pnlWrapper,     "only");
-                domConstruct.place (pnlWrapperEdit,     pnlWrapper,     "last");
-                domConstruct.place (pnlWrapper,         this.domNode,   "only");
-            },
-            
-            _Init: function ()
-            {
-                var type;
-                var lang;
-                
-                type    = this.fConfig.fType;
-                lang    = this.fConfig.fSrcLang;
-                
-                if (type === "rtf")
-                {
-                    this.fConfig.fType      = this.EType.kRichText;
-                    this.fConfig.fSrcLang   = this.ESrcLang.kPlaintext;
-                }
-                else if (type === "src")
-                {
-                    this.fConfig.fType      = this.EType.kSourceCode;
-                    if (lang === "js")
-                    {
-                        this.fConfig.fSrcLang   = this.ESrcLang.kJavascript;
-                    }
-                    else if (lang === "html")
-                    {
-                        this.fConfig.fSrcLang   = this.ESrcLang.kHTML;
-                    }
-                    else
-                    {
-                        this.fConfig.fSrcLang   = this.ESrcLang.kPlaintext;
-                        this._Log ("Unknown source language: " + lang + ". Set to kSourceCode/kPlaintext.");
-                    }
-                }
-                else
-                {
-                    this.fConfig.fType      = this.EType.kRichText;
-                    this.fConfig.fSrcLang   = this.ESrcLang.kPlaintext;
-                    this._Log ("Unknown text type: " + type + ". Set to kRichText");
-                }
+                domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, "last");
             },
             
             _Log: function (msg)
@@ -431,4 +448,46 @@ define
 );
 
 /*
+
+[100]:  It's important to set the editor's event handlers BEFORE creating the 
+        actual editor. This is critical, especially with the Ace editor, as that 
+        one loads asynchronously and will invoke the onLoad handler at the wrong
+        time. Consider these scenarios where we define the event handlers AFTER
+        creating/initializing the ace editor:
+        1.      Ace editor is not loaded:
+        1.1.        Execute:    this.fPnlEditor = new TAceEdit ();
+                        This creates a new TAceEdit object
+        1.2.        Execute:    this.fPnlEditor.Setup
+        1.2.1           Execute:    hasAceEditor = (typeof window.ace === "object");
+                            This will fail -> hasAceEditor == false
+        1.2.2.          Execute FALSE branch of     if (! hasAceEditor)
+        1.2.2.1.            Execute     aceLib.get (url).then (...)
+                                returns a promise, i.e. waits until ace editor is 
+                                actually loaded. Whilst waiting...
+        1.3.        Execute:    this.fAPIEditor.GetContent = function ()...
+                        Define accessor function
+        1.4.        Execute:    this.fAPIEditor.SetContent = function (content)
+                        Define accessor function
+        1.5.        Execute promise:    _host._Initialize.call (_host);
+                        Now (i.e. AFTER loading ace library and AFTER defining 
+                        accessor functions! Result: Works perfect!
+                        
+        2.      Now, with ACE editor loaded:
+        2.1.        Execute:    this.fPnlEditor = new TAceEdit ();
+                        This creates a new TAceEdit object
+        2.2.        Execute:    this.fPnlEditor.Setup
+        2.2.1           Execute:    hasAceEditor = (typeof window.ace === "object");
+                            This will PASS -> hasAceEditor == true -> Problem!
+        2.2.2.          Execute TRUE branch of     if (! hasAceEditor) {...} else {...}
+        2.2.2.1.            Execute     this._Initialize ();
+                                Executed immediately
+        2.2.2.1.1.              Execute:    this._Exec (this.fCallbackOnLoad, null);
+                                    In _Initialize (). Now we have a problem if 
+                                    fCallbackOnLoad is not defined correctly! 
+                                    It will try to call the wrong event handler.
+                        
+        Solution: Define the event handlers before creating/initializing the ace editor.
+                     
+        
+
  */      

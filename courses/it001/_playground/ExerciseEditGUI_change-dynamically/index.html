@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <link rel="shortcut icon" href="favicon.ico">
         <title>
-            Exercise test - multiple exercises
+            Courses
         </title>
-        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/claro.css"      type="text/css">
-        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/document.css"   type="text/css">
-        <link rel="stylesheet"  href="../../lib/dojo/gridx/resources/claro/Gridx.css"   type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/claro.css"        type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/document.css"     type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css">
         <script type="text/javascript">
             /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
             var dojoConfig =
@@ -41,58 +41,13 @@
                 data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
             /* Integrate dojo toolkit */
         </script>
-
-        <script type="text/javascript">
-require
-([
-    "dojo/parser",
-    "dojo/dom",
-    "dojo/dom-construct",
-    "courseware/gui/TWorksheet",
-    "dojo/domReady!"
-], function 
-(
-    parser,
-    dom,
-    domConstruct,
-    TWorksheet
-)
-{
-    var wsheet;
-    
-    var LoadQuestions = function (url)
-    {
-        wsheet.Load (url);
-    }
-
-    var InitializeExercises = function ()
-    {
-        debugger;
-        wsheet  = new TWorksheet 
-        (
-            {
-                onLoad: function () {LoadQuestions ("questions.json");}
-            }
-        );
-        wsheet.startup ();
-        
-        domConstruct.place (wsheet.domNode, "worksheet", "only");
-    }
-    
-    parser.parse().then
-    (
-        function ()
-        {
-            InitializeExercises ();
-        }
-    );
-});
+        <script type="text/javascript" src="app_ExerciseEditGUI.js">
+            /* Application specific program */
         </script>
     </head>
     <body class="claro">
-        <h1>Demo: Worksheet</h1>
-        <h2>Multiple exercises</h2>
+        <h1>Demo: Editors - change dynamically</h1>
         <hr/>
-        <div id="worksheet"></div>
+        <div id="editTest01"></div>
     </body>
 </html>
