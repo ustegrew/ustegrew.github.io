@@ -97,8 +97,21 @@ define
                  */
                 this.fClient = null;
 
+                /**
+                 * If <code>true</code>, enable syntax checking 
+                 * (i.e. background worker runs).                               [40]
+                 * 
+                 * @type boolean
+                 * @private
+                 */
                 this.fHasSyntaxCheck = false;
 
+                /**
+                 * If <code>true</code>, set to readonly. Content can still be set
+                 * from Javascript, though. Use case: We might use the editor to 
+                 * just display source code, and the source code isn't meant to be edited, 
+                 * but just displayed.
+                 */
                 this.fIsReadOnly = false;
 
                 /**
@@ -117,12 +130,18 @@ define
                  */
                 this.fRefNode = null;
                 
-                this.fIsSetup       = false;
+                /**
+                 * A flag denoting whether the component has already been set up.
+                 * Used to protect against multiple attempts to set it up.
+                 * 
+                 * @type boolean
+                 * @private
+                 */
+                this.fIsSetup = false;
             },
             
             destroy: function ()
             {
-                console.log ("Destroying editor");
                 this.fEditor.destroy ();
                 domConstruct.destroy (this.fRefNode);
             },
@@ -190,8 +209,8 @@ define
              * @param   {string}        languageMode        The language mode to use.
              * @param   {boolean}       isReadOnly          If <code>true</code>, set 
              *                                              editor into readonly mode.
-             * @param   {boolean}       isReadOnly          If <code>false</code>, 
-             *                                              disable syntax check.
+             * @param   {boolean}       hasSyntaxCheck      If <code>false</code>, 
+             *                                              disable syntax check. [40]
              * @param   {Object}        client              The client using this class.
              * @param   {function}      callbackOnLoad      Call this function 
              *                                              when editor library 
@@ -199,6 +218,11 @@ define
              * @param   {function}      callbackOnError     Call this function 
              *                                              when there was an error
              *                                              loading the ace library.
+             * @param   {function}      callbackOnChange    Call this function 
+             *                                              when the to-be-edited
+             *                                              content has changed 
+             *                                              (e.g. user typed into
+             *                                              the panel).
              */
             Setup: function (refNode, languageMode, isReadOnly, hasSyntaxCheck, client, callbackOnLoad, callbackOnError, callbackOnChange)
             {
@@ -211,6 +235,10 @@ define
                 {
                     throw "TAce::Setup: Can't execute multiple times.";
                 }
+                else
+                {
+                    this.fIsSetup = true;
+                }
 
                 this.fRefNode               = refNode;
                 this.fClient                = client;
@@ -219,7 +247,7 @@ define
                 this.fCallbackOnLoad        = callbackOnLoad;
                 this.fCallbackOnChange      = callbackOnChange;
                 this.fIsReadOnly            = (isReadOnly === true);
-                this.fHasSyntaxCheck        = (hasSyntaxCheck === true);
+                this.fHasSyntaxCheck        = (hasSyntaxCheck === true);        /* [40] */
 
                 hasAceEditor = (typeof window.ace === "object");
                 if (! hasAceEditor)
@@ -234,6 +262,7 @@ define
                             /* Silently discard 'data' parameter, as we're just interested
                              * in loading the ace editor into memory */
                             _host._Initialize.call (_host);                     /* [22] */
+                            _host.fIsSetup = true;
                         },
                         function (err)
                         {
@@ -283,8 +312,6 @@ define
             
             _Initialize: function ()
             {
-                var _host = this;
-                
                 var kModPreamble    = "ace/mode/";
                 var iMode;
                 var mode;
@@ -381,10 +408,17 @@ define
             and integrated into the environment. Due to the asynchronous nature 
             we must place all further initialazion code into the callback. 
 
-   [30]:    This prevents the warning message
+    [30]:   This prevents the warning message
                 Automatically scrolling cursor into view after selection change.
                 This will be disabled in the next version. Set 
                 editor.$blockScrolling = Infinity to disable this message
             each time we set the cursor in the ace editor.
 
+    [40]:   If the editor is in readonly mode then the syntax check feature can
+            pop up annoying syntax error markers when the content is set to faulty 
+            or unknown code. That's why the syntax check feature can be turned off.
+            Use case examples: In some instances we might want to show deliberately faulty source 
+            code (i.e. to demonstrate something) or show code which isn't recognized 
+            by the embedded ace editor (e.g. lisitng in some obscure programming language).
+            In such cases the error markers can be more of a hindrance than a help.
  */

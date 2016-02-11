@@ -221,7 +221,7 @@ define
                 this.fPnlDbg =            null;
 
                 /**
-                 * Handle for the source view panel (ace editor component). 
+                 * Handle for the source view panel (ace editor component).     [20]
                  *
                  * @type        [ace/ace]
                  * @private
@@ -460,7 +460,7 @@ define
                      * startup () on the main panel.
                      * ---------------------------------------------------*/
                     _this.fPnlEditor = new TAceEdit ();                         /* <----- Property: fPnlEditor */
-                    _this.fPnlEditor.Setup
+                    _this.fPnlEditor.Setup                                      /* [20] */
                     (
                         _this.pnlSrc,
                         "javascript",
@@ -668,4 +668,8 @@ define
  *      offers the toUrl function.
  *      
  * [10]:JSObject spec for the program used: TODO
+ * 
+ * [20]:Note that we have to turn syntax checking off - code examples
+ *      come in different languages, some of which aren't recognized by the 
+ *      editor's syntax checker (e.g. old style BASIC).
  */

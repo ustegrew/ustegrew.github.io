@@ -316,7 +316,11 @@ define (["course/it001/res/scripts/decl"], function ()
         ]
     };
     
-
+    /**
+     * This example demonstrates a program in ancient style BASIC (using goto commands)
+     * Note that the code listing component should either cater for that language or have 
+     * syntax checking turned off.
+     */
     window.it001.gProgramRepository ["it001_Ex_03_050"] =
     {
         globals:

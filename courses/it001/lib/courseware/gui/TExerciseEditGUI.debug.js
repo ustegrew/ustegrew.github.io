@@ -203,6 +203,7 @@ define
                 var menuBar;
                 var subMenu;
 
+console.log("TExerciseEditGUI::startup(): this.fAPIEditor.fHasEditor = false;");                
                 this.fAPIEditor.fHasEditor = false;                             /* [20] */
 
                 this.fAPIEditor.GetContent = function ()
@@ -289,8 +290,10 @@ define
                 var eType;
                 var eLang;
                 var wrStyle;
+console.log("TExerciseEditGUI::_SetType (" + type + ", " + srcLang + "): if (this.fAPIEditor.fHasEditor) [" + this.fAPIEditor.fHasEditor + "]");                
                 if (this.fAPIEditor.fHasEditor)                                 /* [20] */
                 {
+console.log("TExerciseEditGUI::_SetType (" + type + ", " + srcLang + "): this.fAPIEditor.fEditor.destroy ()");                
                     this.fAPIEditor.fEditor.destroy ();
                     this.fAPIEditor.fEditor         = null;
                     this.fAPIEditor.fEarlyContent   = null;
@@ -345,33 +348,43 @@ define
                                 style: wrStyle
                             }
                         );
+console.log("TExerciseEditGUI::_SetType (" + type + ", " + srcLang + ")<TRichTextEdit>: this.fAPIEditor.GetContent = function ()<");                
                         this.fAPIEditor.GetContent = function ()                /* [100] */
                         {
                             var ret;
                             
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TRichTextEdit>: if (_host.fAPIEditor.fHasEditor) [" + _host.fAPIEditor.fHasEditor + "]");                
                             if (_host.fAPIEditor.fHasEditor)                    /* [20] */
                             {
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TRichTextEdit>: ret = _host.fAPIEditor.fEditor.get (\"value\");");                
                                 ret = _host.fAPIEditor.fEditor.get ("value");
                             }
                             else
                             {
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TRichTextEdit>: throw");                
                                 throw "TExerciseEditGUI::fAPIEditor.GetContent<TRichTextEdit>: Editor hasn't finished loading yet. Can't retrieve content."
                             }
                             
                             return ret;
                         };
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TRichTextEdit>: this.fAPIEditor.SetContent = function (content)");                
                         this.fAPIEditor.SetContent = function (content)         /* [100] */
                         {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TRichTextEdit>: if (_host.fAPIEditor.fHasEditor) [" + _host.fAPIEditor.fHasEditor + "]");                
                             if (_host.fAPIEditor.fHasEditor)
                             {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TRichTextEdit>: _host.fAPIEditor.fEarlyContent = null;");                
                                 _host.fAPIEditor.fEarlyContent = null;
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TRichTextEdit>: _host.fAPIEditor.fEditor.set (\"value\", content); [content='" + content + "']");                
                                 _host.fAPIEditor.fEditor.set ("value", content);
                             }
                             else
                             {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TRichTextEdit>: _host.fAPIEditor.fEarlyContent = content; [content='" + content + "']");                
                                 _host.fAPIEditor.fEarlyContent = content;
                             }
                         };
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TRichTextEdit>: this.fAPIEditor.fEditor = new TRichTextEdit (...);");                
                         this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
                         (
                             {
@@ -394,19 +407,23 @@ define
                                 ],
                                 onChange: function ()
                                 {
+console.log("TExerciseEditGUI::fAPIEditor.fEditor.onChange()<TRichTextEdit>: _host.fAPIEditor.fHasChanged = true;");
                                     _host.fAPIEditor.fHasChanged = true;
                                 }
                             },
                             this.fPnlWrapperEdit
                         );
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TRichTextEdit>: this.fAPIEditor.fEditor.onLoadDeferred.then");                
                         this.fAPIEditor.fEditor.onLoadDeferred.then
                         (
                             function ()
                             {
+console.log("TExerciseEditGUI::fAPIEditor.fAPIEditor.fEditor.onLoadDeferred<TRichTextEdit>: _host.fAPIEditor.fHasEditor = true;");                
                                 _host.fAPIEditor.fHasEditor = true;             /* [20] */
                                 _host._HandleOnLoad.call (_host);
                             }
                         );
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TRichTextEdit>: this.fAPIEditor.fEditor.onLoadDeferred.then");                
                         this.fAPIEditor.fEditor.startup ();
                         break;
                         
@@ -432,34 +449,45 @@ define
                                 srcType = "plain_text";
                         }
                         
+console.log("TExerciseEditGUI::_SetType (" + type + ", " + srcLang + ")<TAceEdit>: this.fAPIEditor.GetContent = function ()");                
                         this.fAPIEditor.GetContent = function ()                /* [100] */
                         {
                             var ret;
 
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TAceEdit>: if (_host.fAPIEditor.fHasEditor) [" + _host.fAPIEditor.fHasEditor + "]");
                             if (_host.fAPIEditor.fHasEditor)                    /* [20] */
                             {
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TAceEdit>: ret = _host.fAPIEditor.fEditor.GetContent ();");                
                                 ret = _host.fAPIEditor.fEditor.GetContent ();
                             }
                             else
                             {
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TAceEdit>: throw");                
                                 throw "TExerciseEditGUI::fAPIEditor.GetContent<TAceEdit>: Editor hasn't finished loading yet. Can't retrieve content."
                             }
                             
                             return ret;
                         };
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TAceEdit>: this.fAPIEditor.SetContent = function (content)");                
                         this.fAPIEditor.SetContent = function (content)         /* [100] */
                         {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TAceEdit>: if (_host.fAPIEditor.fHasEditor) [" + _host.fAPIEditor.fHasEditor + "]");                
                             if (_host.fAPIEditor.fHasEditor)
                             {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TAceEdit>: _host.fAPIEditor.fEarlyContent = null;");                
                                 _host.fAPIEditor.fEarlyContent = null;
+console.log("TExerciseEditGUI::fAPIEditor.GetContent()<TAceEdit>: _host.fAPIEditor.fEditor.SetContent (content); [content='" + content + "']");                
                                 _host.fAPIEditor.fEditor.SetContent (content);
                             }
                             else
                             {
+console.log("TExerciseEditGUI::fAPIEditor.SetContent()<TAceEdit>: _host.fAPIEditor.fEarlyContent = content; [content='" + content + "']");                
                                 _host.fAPIEditor.fEarlyContent = content;
                             }
                         };
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TAceEdit>: this.fAPIEditor.fEditor = new TAceEdit ();");                
                         this.fAPIEditor.fEditor = new TAceEdit ();              /* <----- Property: fAPIEditor.fEditor */
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TAceEdit>: this.fAPIEditor.fEditor.Setup (...);");                
                         this.fAPIEditor.fEditor.Setup
                         (
                             this.fPnlWrapperEdit,
@@ -469,16 +497,20 @@ define
                             _host,
                             function ()
                             {
+console.log("TExerciseEditGUI::fAPIEditor.fEditor.onLoad()<TAceEdit>: _host.fAPIEditor.fHasEditor = true;");
                                 _host.fAPIEditor.fHasEditor = true;             /* [20] */
+console.log("TExerciseEditGUI::fAPIEditor.fEditor.onLoad()<TAceEdit>: _host._HandleOnLoad.call (_host);");
                                 _host._HandleOnLoad.call (_host);
                             },
                             function (err)
                             {
+console.log("TExerciseEditGUI::fAPIEditor.fEditor.onError()<TAceEdit>: throw");
                                 throw "TExerciseEditGUI::startup(): Error loading ace editor. Details:\n" + 
                                       JSON.stringify (err, null, 4);
                             },
                             function ()
                             {
+console.log("TExerciseEditGUI::fAPIEditor.fEditor.onChange()<TAceEdit>: _host.fAPIEditor.fHasChanged = true;");
                                 _host.fAPIEditor.fHasChanged = true;
                             }
                         );
@@ -486,18 +518,23 @@ define
                         break;
                         
                     default:
+console.log("TExerciseEditGUI::fAPIEditor._SetType (" + type + ", " + srcLang + ")<TAceEdit>: throw");                
                         throw "TExerciseEditGUI::Unknown text type: " + type;
                 }
                 
+console.log("TExerciseEditGUI::_SetType (" + type + ", " + srcLang + "): domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, \"last\");");                
                 domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, "last");
             },
             
             _HandleOnLoad: function ()
             {
+console.log("TExerciseEditGUI::_HandleOnLoad(): if (this.fAPIEditor.fEarlyContent !== null)  [this.fAPIEditor.fEarlyContent='" + this.fAPIEditor.fEarlyContent + "']");                
                 if (this.fAPIEditor.fEarlyContent !== null)
                 {
+console.log("TExerciseEditGUI::_HandleOnLoad(): this.fAPIEditor.SetContent (this.fAPIEditor.fEarlyContent);  [this.fAPIEditor.fEarlyContent='" + this.fAPIEditor.fEarlyContent + "']");                
                     this.fAPIEditor.SetContent (this.fAPIEditor.fEarlyContent);
                 }
+console.log("TExerciseEditGUI::_HandleOnLoad(): this.fHandlers.onLoad.call (this.fHost);");                
                 this.fHandlers.onLoad.call (this.fHost);
             },
             

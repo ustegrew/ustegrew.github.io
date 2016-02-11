@@ -31,7 +31,7 @@ require
         var editor = new TExerciseEditGUI 
         (
             {
-                fHost:          null,
+                fHost:          window,
                 fWidth:         "800px",
                 fHeight:        "180px",
                 onCancel:       function () 
@@ -40,7 +40,7 @@ require
                 },
                 onLoad:         function ()
                 {
-                    window.xedit01.SetContent ("<h1>Free form editor</h1><p>...for your editing pleasure!</p>");
+//                    window.xedit01.SetContent ("The editor");
                 },
                 onSave:         function () 
                 {
@@ -59,12 +59,15 @@ require
     window.xrotate = function ()
     {
         var record;
+        var message;
         
-        window.xtypesI = (window.xtypesI >= window.xtypes.length-1)  ?  0  :  window.xtypesI + 1;
+        window.xtypesI  = (window.xtypesI >= window.xtypes.length-1)  ?  0  :  window.xtypesI + 1;
         
-        record = window.xtypes [window.xtypesI];
-        console.log ("Setting: " + window.xtypesI + ". Type/language: " + record.type + "::" + record.lang);
+        record          = window.xtypes [window.xtypesI];
+        message         = "Setting #" + window.xtypesI + ". Type/language: " + record.type + "::" + record.lang;
         window.xedit01.SetType (record.type, record.lang);
+        window.xedit01.SetContent (message);
+        console.log (message);
         window.setTimeout (window.xrotate, 5000);
     }
 

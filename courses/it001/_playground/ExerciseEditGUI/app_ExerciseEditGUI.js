@@ -20,7 +20,7 @@ require
         var editor = new TExerciseEditGUI 
         (
             {
-                fHost:          null,
+                fHost:          window,
                 fWidth:         "800px",
                 fHeight:        "180px",
                 onCancel:       function () 
@@ -47,7 +47,7 @@ require
         editor = new TExerciseEditGUI 
         (
             {
-                fHost:          null,
+                fHost:          window,
                 fWidth:         "800px",
                 fHeight:        "180px",
                 onCancel:       function () 
