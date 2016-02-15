@@ -275,26 +275,36 @@ table.instruction img
 /**
  * Exercises
  */
-ol.exercises
+div.exercises
 {
-    margin-left:                    2.5em;
+}
+
+div.exercise
+{
+    position:                       relative;
+    margin-left:                    50px;
     margin-top:                     1em !important;
+    width:                          800px;
 }
 
-ol.exercises > li
+div.exercise > div.exercise-text
 {
-    margin-bottom:                  2.5em;
+    
 }
 
-ol.exercises > li > ol
+div.exercise > div.exercise-toolbar
 {
-    margin-left:                    0px !important;
-    margin-top:                     0px !important;
+    position:                       absolute;
+    left:                           -25px;
 }
 
-ol.exercises > li > ol > li
+div.exercise > div.exercise-workspace
 {
-    margin-bottom:                  0.5em;
+    border:                         1px solid lightgray;
+    margin-bottom:                  10px;
+    margin-left:                    27px;
+    margin-top:                     10px;
+    width:                          745px;
 }
 
 /**
