@@ -6,11 +6,13 @@ define
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
-        "require",
+        "require",                                                              /* [10] */
         "dojo/query",
         "dojo/dom-construct",
         "dojo/dom-attr",
         "dojo/on",
+        "dojox/json/schema",
+        "dojo/fx",
         "dijit/MenuBar",
         "dijit/PopupMenuBarItem",
         "dijit/Menu",
@@ -29,6 +31,8 @@ define
         domConstruct,
         domAttr,
         on,
+        JSObjectValidator,
+        fx,
         TMenuBar,
         TPopupMenuBarItem,
         TMenu,
@@ -39,6 +43,204 @@ define
         TExerciseEditGUI
     )
     {
+        var kSchemaPropertiesExercise =
+        {
+            "$schema":      "http://json-schema.org/draft-03/schema#",
+            "title":        "Exercise properties block",
+            "description":  "Properties block describing an exercise",
+            "type":         "object",
+            properties:
+            {
+                "id":
+                {
+                    "description":      "The exercise's unique ID. Must be unique for the entire course.",
+                    "type":             "string",
+                    "pattern":          "^[a-zA-Z0-9.]+$"
+                },
+                "type":
+                {
+                    "description":      "The exercise's solution text type. One of: " +
+                                        "'rtf/plain_text','src/js','src/html','src/plain_text'",
+                    "type":             "string",
+                    "pattern":          "^(rtf/plain_text)|(src/js)|(src/html)|(src/plain_text)$"
+                }
+            }
+        };
+        
+        var TExercise = function ()
+        {
+            this.fContentType            = "";
+            this.fContentLang            = "";
+            this.fID                     = "";
+            this.fIsSaved                = false;
+            this.fNodeParent             = null;
+            this.fNodeText               = null;
+            this.fNodeToolbar            = null;
+            this.fNodeWorkspace          = null;
+            this.fNodeText               = "";
+            this.fIsNullObject           = true;
+            this.fObjButton              = null;
+            this.fTextQuestion           = "";
+            this.fTextSolution           = "";
+        };
+
+        /**
+         * Worksheet controller class. 
+         * 
+         * @class       TController
+         * @private
+         */
+        TController = function (host)
+        {
+            var ETestType =
+            {
+                kSkip:              0,
+                kIDMustExist:       1,
+                kIDMustNotExist:    2
+            };
+
+            this.fEditor            = null;
+            this.fExercisePrevious  = new TExercise ();                /*  */
+            this.fExerciseCurrent   = new TExercise ();
+            this.fExerciseList      = [];
+            this.fExerciseMap       = {};
+            this.fHost              = host;
+
+            /**
+             * Notification: User cancelled editing solution to the current exercise.
+             */
+            this.NotifyEditCancel = function ()
+            {
+
+            };
+
+            /**
+             * Notification: User opened solution editor for another exercise.
+             */
+            this.NotifyEditOpen = function (id)
+            {
+                var domNode;
+                var isDifferent;
+                var exC;
+
+                this._AssertIDUsable (id, ETestType.kIDMustExist);
+                domNode = this.fEditor.domNode;
+                if (this.fExerciseCurrent.fIsNullObject)                    /* [50] */
+                {
+                    exC = this.fExerciseMap [id];
+                    this.fEditor.SetType (exC.fContentType, exC.fContentLang);
+                    this.fExerciseCurrent = exC;
+                    domConstruct.place (domNode, this.fExerciseCurrent.fNodeWorkspace, "only");
+                    fx.wipeIn ({node:this.fExerciseCurrent.fNodeWorkspace}).play ();
+                }
+                else
+                {
+                    isDifferent = (this.fExerciseCurrent.fID != id);
+                    if (isDifferent)
+                    {
+//                            this.fExerciseCurrent = this.fExerciseMap [id];
+
+                    }
+                }
+
+            }
+
+            /**
+             * Notification: User saves solution to current exercise.
+             */
+            this.NotifyEditSave = function ()
+            {
+
+            };
+
+            /**
+             * Notification: Solution editor for current exercise has finished 
+             *               loading text from storage.
+             *               
+             */
+            this.NotifyEditLoaded = function ()
+            {
+
+            };
+
+            /**
+             * Notification: User copies all solutions to clipboard.
+             */
+            this.NotifyPageCopySolutions = function ()
+            {
+
+            }
+
+            /**
+             * Notification: Worksheet has finished loading and is ready for work.
+             */
+            this.NotifyPageLoaded = function ()
+            {
+            };
+
+            this.SetEditor = function (editor)
+            {
+                this.fEditor = editor;
+            }
+
+            this.RegisterExercise = function (objEx)
+            {
+                this._AssertIDUsable (objEx.fID, ETestType.kIDMustNotExist);
+                objEx.fIsNullObject = false;
+                this.fExerciseList.push (objEx);
+                this.fExerciseMap [objEx.fID] = objEx;
+            };
+
+            this._AssertIDUsable = function (id, testTypeUnique)
+            {
+                var isWrongType;
+                var isNull;
+                var hasID;
+
+                isWrongType = (typeof id !== 'string');
+                isNull      = (id == null);
+                if (isWrongType)
+                {
+                    throw "TWorksheet::TController::_AssertIDUnique: Exercise ID must be a string. Given: " + (typeof id);
+                }
+                else if (isNull)
+                {
+                    throw "TWorksheet::TController::_AssertIDUnique: Exercise ID must be not null. Given: null.";
+                }
+
+                /**
+                 * Test whether id already exists. Behaviour:
+                 * 
+                 * testType                     hasID       Result
+                 * ---------------------------------------------------------
+                 *  ETestType.kSkip             true        OK
+                 *                              false       OK
+                 *  ETestType.kIDMustExist      true        OK
+                 *                              false       throw exception
+                 *  ETestType.kIDMustNotExist   true        throw exception
+                 *                              false       OK
+                 */
+                if (testTypeUnique !== ETestType.kSkip)
+                {
+                    hasID = this.fExerciseMap.hasOwnProperty (id);
+                    if (testTypeUnique === ETestType.kIDMustExist)
+                    {
+                        if (! hasID)
+                        {
+                            throw "TWorksheet::TController::_AssertIDUnique: Missing exercise ID: " + id;
+                        }
+                    }
+                    else
+                    {
+                        if (hasID)
+                        {
+                            throw "TWorksheet::TController::_AssertIDUnique: Exercise ID must be unique. Offending ID: " + id;
+                        }
+                    }
+                }
+            };
+        };
+
         var TWorksheet;
         var ret;
 
@@ -50,14 +252,30 @@ define
          */
         TWorksheet = 
         {
-            /**
-             * Worksheet controller class. 
-             */
-            TController: function (host)
+            kSchemaPropertiesExercise:
             {
-                this.fHost = host;
-                
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Exercise properties block",
+                "description":  "Properties block describing an exercise",
+                "type":         "object",
+                properties:
+                {
+                    "id":
+                    {
+                        "description":      "The exercise's unique ID. Must be unique for the entire course.",
+                        "type":             "string",
+                        "pattern":          "^[a-zA-Z0-9.]+$"
+                    },
+                    "type":
+                    {
+                        "description":      "The exercise's solution text type. One of: " +
+                                            "'rtf/plain_text','src/js','src/html','src/plain_text'",
+                        "type":             "string",
+                        "pattern":          "^(rtf/plain_text)|(src/js)|(src/html)|(src/plain_text)$"
+                    }
+                }
             },
+            
             
             /**
              * Dojo specific cTor.
@@ -69,7 +287,27 @@ define
                  * 
                  * @type TWorksheet::TController
                  */
-                this.fController = new this.TController (this);
+                this.fController = new TController (this);
+                
+                /**
+                 * The client using this class.
+                 */
+                this.fHost = params.fHost;
+                
+                /**
+                 * The editor for the user to edit the solutions to the exercises.
+                 */
+                this.fEditor = null;
+                
+                /**
+                 * The callbacks from the client. Will be called in the client's 
+                 * context (i.e. 'this' inside a callback will point to the client
+                 * object, not the TWorksheet object.
+                 */
+                this.fHandlers =
+                {
+                    onLoad:     params.onLoad
+                };
             },
 
             /* -------------------------------------------------------------
@@ -101,7 +339,7 @@ define
             
             startup: function ()
             {
-                var _host           = this;
+                var _controller     = this.fController;
                 var kImgBaseURL     = _require.toUrl ("courseware/img");
                 
                 var list;
@@ -109,15 +347,12 @@ define
                 var ndeGlobalMenu;
                 var globalMenuBar;
                 var subMenu;
+                var objExercise;
                 var ndeListExercises;
                 var ndeExercise;
+                var ndeProps;
                 var iconURLEdit;
-                var innerHTMLExercise;
-                var btn;
-                var editor;
-                var nde_toolbar;
-                var nde_text;
-                var nde_workspace;
+                var splits;
                 
                 /* Setup menu bar on top of the worksheet */
                 list          = domQuery ("*[data-courseware-type=\"globalMenu\"]");
@@ -142,7 +377,7 @@ define
                     (
                         {
                             label:      "Solutions to clipboard",
-                            onClick:    function () {console.log ("Page to clipboard");}
+                            onClick:    function () {_controller.NotifyPageCopySolutions.call (_controller);}
                         }
                     )
                 );
@@ -164,75 +399,60 @@ define
                 if (ndeListExercises.length >= 1)
                 {
                     /* Create editor component */
-                    editor = new TExerciseEditGUI
+                    this.fEditor = new TExerciseEditGUI
                     (
                         {
                             fHost:      window,
-                            fWidth:     "640px",
-                            fHeight:    "480px",
-                            onCancel:   function () {console.log ("Editor: onCancel");},
-                            onLoad:     function () {console.log ("Editor: onLoad");},
-                            onSave:     function () {console.log ("Editor: onSave");},
+                            fWidth:     "745px",                                /* [20] */
+                            fHeight:    "480px",                                /* [20] */
+                            onCancel:   function () {_controller.NotifyEditCancel.call  (_controller);},
+                            onLoad:     function () {_controller.NotifyEditLoaded.call  (_controller);},
+                            onSave:     function () {_controller.NotifyEditSave.call    (_controller);},
                         }
                     );
-                    editor.startup ();
+                    this.fEditor.startup ();
+                    this.fController.SetEditor (this.fEditor);
                     
                     /* Set up exercises */
                     iconURLEdit = kImgBaseURL + "/edit.png";
                     for (i = 0; i < ndeListExercises.length; i++)
                     {
-                        ndeExercise = ndeListExercises [i];
+                        ndeExercise                         = ndeListExercises [i];
                         
-                        /* Cache inner content of the resp. exercise */
-                        innerHTMLExercise = ndeExercise.innerHTML;
+                        ndeProps                            = domAttr.get (ndeExercise, "data-courseware-props");
+                        ndeProps                            = this._GetRecord (ndeProps, kSchemaPropertiesExercise, "TWorksheet::startup()");
+                        splits                              = ndeProps.type.split ("/");
                         
-                        /* Create "Edit this" button */
-                        btn = new TButton
+                        /* Create exercise object and register it with the controller. */
+                        objExercise                         = new TExercise ();
+                        objExercise.fContentType            = splits [0];
+                        objExercise.fContentLang            = splits [1];
+                        objExercise.fID                     = ndeProps.id;
+                        objExercise.fIsSaved                = false;
+                        objExercise.fTextQuestion           = ndeExercise.innerHTML;
+                        objExercise.fTextSolution           = "";
+                        objExercise.fNodeParent             = ndeExercise;
+                        objExercise.fNodeText               = domConstruct.create ("div", {'class': "exercise-text"     });
+                        objExercise.fNodeToolbar            = domConstruct.create ("div", {"class": "exercise-toolbar"  });
+                        objExercise.fNodeWorkspace          = domConstruct.create ("div", {"class": "exercise-workspace"});
+                        objExercise.fNodeText.innerHTML     = ndeExercise.innerHTML;
+                        objExercise.fObjButton              = new TButton
                         (
                             {
-                                label:      "<img src=\"" + iconURLEdit + "\"/>",
-                                onClick:    function () {console.log ("Exercise open");}
+                                exerciseUID:    objExercise.fID,
+                                label:          "<img src=\"" + iconURLEdit + "\"/>",
+                                onClick:        function () {_controller.NotifyEditOpen.call (_controller, this.exerciseUID);}
                             }
                         )
-                        btn.startup ();
+                        objExercise.fObjButton.startup ();
+                        _controller.RegisterExercise (objExercise);
                         
-                        /* Create hosting nodes for exercise text, toolbar and editor. */
-                        nde_toolbar = domConstruct.create
-                        (
-                            "div",
-                            {
-                                class:  "exercise-toolbar",
-                            }
-                        );
-                        nde_workspace = domConstruct.create
-                        (
-                            "div",
-                            {
-                                class:  "exercise-workspace",
-                            }
-                        );
-                        nde_text = domConstruct.create
-                        (
-                            "div",
-                            {
-                                class:  "exercise-text",
-                            }
-                        );
-                        
-                        /* Insert content into hosting nodes. Editor won't be assigned yet. */
-                        domConstruct.place (btn.domNode,    nde_toolbar,    "only");
-                        nde_text.innerHTML = innerHTMLExercise;
-                        if (i == 0)
-                        {
-                            domConstruct.place (editor.domNode, nde_workspace, "only");
-                            editor.SetType ("src", "js");
-                        }
-                        
-                        /* Empty exercise node and insert hosting nodes into exercise node. */
-                        domAttr.set        (ndeExercise,    "class",     "exercise");
-                        domConstruct.place (nde_toolbar,    ndeExercise, "only");
-                        domConstruct.place (nde_text,       ndeExercise, "last");
-                        domConstruct.place (nde_workspace,  ndeExercise, "last");
+                        /* Set up GUI */
+                        domAttr.set        (ndeExercise, "class", "exercise");
+                        domConstruct.place (objExercise.fObjButton.domNode,     objExercise.fNodeToolbar,   "only");
+                        domConstruct.place (objExercise.fNodeToolbar,           objExercise.fNodeParent,    "only");
+                        domConstruct.place (objExercise.fNodeText,              objExercise.fNodeParent,    "last");
+                        domConstruct.place (objExercise.fNodeWorkspace,         objExercise.fNodeParent,    "last");
                     }
                 }
                 else
@@ -240,6 +460,82 @@ define
                     console.log ("Found no exercises, i.e. no DOM nodes with attribute: " +
                                  "data-courseware-type=\"exercise\".");
                 }
+                
+                _controller.NotifyPageLoaded.call (_controller);
+                this.fHandlers.onLoad.call (this.fHost);
+            },
+            
+            _GetRecord: function (record, schema, client)
+            {
+                var kID = "TWorksheet::" + client;
+                
+                var isNotString;
+                var isNull;
+                var record;
+                var vResult;
+                var i;
+                var n;
+                var e;
+                var err;
+                var ret;
+                
+                isNotString = (typeof record !== "string");
+                isNull      = (record == null);
+                if (isNotString)
+                {
+                    throw kID + ": Given record is not a string (" + typeof record + ")";
+                }
+                else if (isNull)
+                {
+                    throw kID + ": Given record is NULL.";
+                }
+                else
+                {
+                    /* Replace single quotes by double quotes */                /* [30] */
+                    record = record.replace (/'/gi, "\"");
+                    try
+                    {
+                        ret = JSON.parse (record);
+                    }
+                    catch (e)
+                    {
+                        throw "Could not parse record. Given: " + record + "\n" +
+                              "Details: " + e;
+                    }
+                    vResult = JSObjectValidator.validate (ret, schema);
+                    if (! vResult.valid)
+                    {
+                        n = vResult.errors.length;
+                        e = kID + ": JSON record validation failed. Offending record:\n" +
+                                  JSON.stringify (record) + "\n" +
+                                  "Error list ";
+                        if (n >= 0)
+                        {
+                            if (n == 1)
+                            {
+                                e += "(" + n + " error):\n";
+                            }
+                            else
+                            {
+                                e += "(" + n + " errors):\n";
+                            }
+
+                            for (i = 0; i < n; i++)
+                            {
+                                err     = vResult.errors [i];
+                                e      += "    " + err.property + "::" + err.message + "\n";
+                            }
+                        }
+                        else
+                        {
+                            e += "No error details available";
+                        }
+
+                        throw e;
+                    }
+                }
+                
+                return ret;
             }
         };
     
@@ -257,5 +553,36 @@ define
        dojo has 'packaged' the toUrl function inside the global require.original 
        property. Requiring 'require' gives us an unpackaged require module which 
        offers the toUrl function.
- 
+
+ [20]: Needs refactoring: TExerciseEditGUI should autodiscover. Works for now. 
+       Logged as issue#12 [https://github.com/ustegrew/ustegrew.github.io/issues/12]
+
+ [30]: According to specs, JSON strings can't use single quotes to terminate strings. However,
+       this complicates the HTML coding of the web pages where we get the JSON string from -
+       we'll have to code constructs such as:
+           <div data-courseware-type="exercise" data-courseware-props='{"id":"08.13f2"}'>
+       Which quickly turn to a maintenance nightmare if there are multiple such tags in
+       the project. It would be yet another rule to consider when writing the web pages.
+       Therefore we'll just replace double quotes by single quotes which allows us to write:
+           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2'}">
+       This doesn't cover the case where strings contain single quotes, e.g.:
+           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That's a nice ID'}">
+       If we encounter this problem in this class, then we could solve it by allowing 
+       single quotes to be escaped (The JSON specs don't allow it), and to then use several 
+       successive string replacements:
+           1: Replace each \' by some other character
+           2: Replace each ' by "
+           3. JSON parse to object
+           4. Recursively walk the new object, replacing each occurence of other-character with '
+       Or we simply say: Don't use single quotes in strings!
+           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That is a nice ID'}">
+
+ [40]: For a new TController we create an empty dummy exercise as fExerciseCurrent,
+       fExercisePrevious. Setting it to null would create complications.
+
+ [50]: Tests whether current exercise is an empty one - which means that it's the
+       first exercise the user opens since the hosting web page has been loaded.
+       Any exercise opened after the first one will have the fIsNullObject property 
+       set to false.
+
  */

@@ -126,7 +126,6 @@ define
              * Dojo specific cTor.
              * 
              * @param   {type} params
-             * @param   {type} srcNodeRef
              * @returns {undefined}
              */
             constructor: function (params)
@@ -152,8 +151,8 @@ define
                 };
                 this.fConfig =
                 {
-                    fHeight:    params.fHeight,
-                    fWidth:     params.fWidth
+                    fHeight:    params.fHeight,                                 /* [22] */
+                    fWidth:     params.fWidth                                   /* [22] */
                 };
                 this.fHandlers =                                                /* [10] */
                 {
@@ -534,10 +533,16 @@ define
         the actual editor component too early (e.g. Null exception when trying to 
         get or set the content of the editor even though that one hasn't finished
         loading yet).
+                        
 [21]:   Clients might try to set the content whilst the actual editor component 
         hasn't finished loading. In that case we cache the content-to-be in a
         property and set the editor content inside the resp. editor's onLoad 
         handler.
+                        
+[22]:   Bad solution. Forces all clients to specify these values (either hard code 
+        or implement some discovery mechanism). Better to let this component discover
+        the value automatically.
+        Logged as issue#12 on github [https://github.com/ustegrew/ustegrew.github.io/issues/12]
 
 [100]:  It's important to set the editor's event handlers BEFORE creating the 
         actual editor. This is critical, especially with the Ace editor, as that 
