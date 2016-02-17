@@ -13,6 +13,7 @@ define
         "dojo/on",
         "dojox/json/schema",
         "dojo/fx",
+        "dojox/fx/scroll",
         "dijit/MenuBar",
         "dijit/PopupMenuBarItem",
         "dijit/Menu",
@@ -21,6 +22,7 @@ define
         "dijit/DropDownMenu",
         "dijit/form/Button",
         "courseware/gui/TExerciseEditGUI",
+        "courseware/gui/TButtonDialog"
     ],
     function 
     (
@@ -33,6 +35,7 @@ define
         on,
         JSObjectValidator,
         fx,
+        wndScroll,
         TMenuBar,
         TPopupMenuBarItem,
         TMenu,
@@ -40,7 +43,8 @@ define
         TMenuSeparator,
         TDropDownMenu,
         TButton,
-        TExerciseEditGUI
+        TExerciseEditGUI,
+        TButtonDialog
     )
     {
         var kSchemaPropertiesExercise =
@@ -72,7 +76,7 @@ define
             this.fContentType            = "";
             this.fContentLang            = "";
             this.fID                     = "";
-            this.fIsSaved                = false;
+            this.fHasChanged             = false;
             this.fNodeParent             = null;
             this.fNodeText               = null;
             this.fNodeToolbar            = null;
@@ -99,6 +103,7 @@ define
                 kIDMustNotExist:    2
             };
 
+            this.fConfirmDialog     = null;
             this.fEditor            = null;
             this.fExercisePrevious  = new TExercise ();                /*  */
             this.fExerciseCurrent   = new TExercise ();
@@ -119,30 +124,59 @@ define
              */
             this.NotifyEditOpen = function (id)
             {
+                var _host = this;
+                
                 var domNode;
-                var isDifferent;
-                var exC;
+                var exCur;
+                var exNxt;
 
                 this._AssertIDUsable (id, ETestType.kIDMustExist);
+                exNxt   = this.fExerciseMap [id];
+                exCur   = this.fExerciseCurrent;
                 domNode = this.fEditor.domNode;
-                if (this.fExerciseCurrent.fIsNullObject)                    /* [50] */
+                if (exCur.fIsNullObject)                                        /* [50] */
                 {
-                    exC = this.fExerciseMap [id];
-                    this.fEditor.SetType (exC.fContentType, exC.fContentLang);
-                    this.fExerciseCurrent = exC;
-                    domConstruct.place (domNode, this.fExerciseCurrent.fNodeWorkspace, "only");
-                    fx.wipeIn ({node:this.fExerciseCurrent.fNodeWorkspace}).play ();
+                    this.fEditor.SetType (exNxt.fContentType, exNxt.fContentLang);
+                    
+                    domConstruct.place (domNode, exNxt.fNodeWorkspace, "only");
+                    fx.wipeIn ({node:exNxt.fNodeWorkspace}).play ();
+
+                    this.fExerciseCurrent = exNxt;
                 }
                 else
                 {
-                    isDifferent = (this.fExerciseCurrent.fID != id);
-                    if (isDifferent)
+                    if (exCur.fID != exNxt.fID)
                     {
-//                            this.fExerciseCurrent = this.fExerciseMap [id];
-
+                        exCur.fHasChanged   = this.fEditor.HasChanged ();
+                        exCur.fTextSolution = this.fEditor.GetContent ();
+                        this._SaveCurrentSolution (true);
+                        
+                        fx.wipeOut ({node:exCur.fNodeWorkspace}).play ();
+                        exCur.fNodeWorkspace.removeChild (this.fEditor.domNode);
+                        this.fEditor.SetType (exNxt.fContentType, exNxt.fContentLang);
+                        domConstruct.place (this.fEditor.domNode, exNxt.fNodeWorkspace, "only");
+                        fx.wipeIn ({node:exNxt.fNodeWorkspace}).play ();
+                        
+                        this.fExerciseCurrent = exNxt;
                     }
                 }
-
+                
+                window.setTimeout
+                (
+                    function ()
+                    {
+                        wndScroll
+                        (
+                            {
+                                node:       _host.fExerciseCurrent.fNodeWorkspace,
+                                win:        window,
+                                duration:   500
+                            }
+                        ).play ();
+//                        window.scrollBy (0, -75);
+                    },
+                    500
+                );
             }
 
             /**
@@ -178,11 +212,6 @@ define
             {
             };
 
-            this.SetEditor = function (editor)
-            {
-                this.fEditor = editor;
-            }
-
             this.RegisterExercise = function (objEx)
             {
                 this._AssertIDUsable (objEx.fID, ETestType.kIDMustNotExist);
@@ -190,6 +219,16 @@ define
                 this.fExerciseList.push (objEx);
                 this.fExerciseMap [objEx.fID] = objEx;
             };
+            
+            this.SetConfirmDialog = function (objDlg)
+            {
+                this.fConfirmDialog = objDlg;
+            }
+
+            this.SetEditor = function (editor)
+            {
+                this.fEditor = editor;
+            }
 
             this._AssertIDUsable = function (id, testTypeUnique)
             {
@@ -239,6 +278,33 @@ define
                     }
                 }
             };
+            
+            /* Save editor's data to local storage */
+            this._SaveCurrentSolution = function (doConfirm)
+            {
+                if (this.fExerciseCurrent.fHasChanged)
+                {
+                    if (doConfirm)
+                    {
+                        this.fConfirmDialog.Show ("Unsaved changes", "Would you like to save your exercise?");
+                    }
+                    else
+                    {
+                        this._HandleConfirmed_SaveCurrentSolution ();
+                    }
+                }
+            }
+            
+            this._HandleAborted_SaveCurrentSolution = function ()
+            {
+                console.log ("Aborted: Saving current exercise");
+            }
+            
+            this._HandleConfirmed_SaveCurrentSolution = function ()
+            {
+                this.fEditor.ClearFlagChanged ();
+                console.log ("Confirmed: Saving current exercise");
+            }
         };
 
         var TWorksheet;
@@ -252,31 +318,6 @@ define
          */
         TWorksheet = 
         {
-            kSchemaPropertiesExercise:
-            {
-                "$schema":      "http://json-schema.org/draft-03/schema#",
-                "title":        "Exercise properties block",
-                "description":  "Properties block describing an exercise",
-                "type":         "object",
-                properties:
-                {
-                    "id":
-                    {
-                        "description":      "The exercise's unique ID. Must be unique for the entire course.",
-                        "type":             "string",
-                        "pattern":          "^[a-zA-Z0-9.]+$"
-                    },
-                    "type":
-                    {
-                        "description":      "The exercise's solution text type. One of: " +
-                                            "'rtf/plain_text','src/js','src/html','src/plain_text'",
-                        "type":             "string",
-                        "pattern":          "^(rtf/plain_text)|(src/js)|(src/html)|(src/plain_text)$"
-                    }
-                }
-            },
-            
-            
             /**
              * Dojo specific cTor.
              */
@@ -294,10 +335,14 @@ define
                  */
                 this.fHost = params.fHost;
                 
+                this.fConfirmDialog = null;
+                
                 /**
                  * The editor for the user to edit the solutions to the exercises.
                  */
                 this.fEditor = null;
+                
+                this.fDlgDoSaveConfirm = null;
                 
                 /**
                  * The callbacks from the client. Will be called in the client's 
@@ -352,7 +397,7 @@ define
                 var ndeExercise;
                 var ndeProps;
                 var iconURLEdit;
-                var splits;
+                var fragments;
                 
                 /* Setup menu bar on top of the worksheet */
                 list          = domQuery ("*[data-courseware-type=\"globalMenu\"]");
@@ -412,6 +457,27 @@ define
                     );
                     this.fEditor.startup ();
                     this.fController.SetEditor (this.fEditor);
+
+                    /* Set up confirmation dialog re. unsaved documents */
+                    this.fConfirmDialog = new TButtonDialog
+                    (
+                        {
+                            "host":     this.fController,
+                            "buttons":
+                            [
+                                {
+                                    label:      "Yes",
+                                    onClick:    this.fController._HandleConfirmed_SaveCurrentSolution
+                                },
+                                {
+                                    label:      "No",
+                                    onClick:    this.fController._HandleAborted_SaveCurrentSolution
+                                }
+                            ]
+                        }
+                    );
+                    this.fConfirmDialog.startup ();
+                    this.fController.SetConfirmDialog (this.fConfirmDialog);
                     
                     /* Set up exercises */
                     iconURLEdit = kImgBaseURL + "/edit.png";
@@ -421,14 +487,14 @@ define
                         
                         ndeProps                            = domAttr.get (ndeExercise, "data-courseware-props");
                         ndeProps                            = this._GetRecord (ndeProps, kSchemaPropertiesExercise, "TWorksheet::startup()");
-                        splits                              = ndeProps.type.split ("/");
+                        fragments                           = ndeProps.type.split ("/");
                         
                         /* Create exercise object and register it with the controller. */
                         objExercise                         = new TExercise ();
-                        objExercise.fContentType            = splits [0];
-                        objExercise.fContentLang            = splits [1];
+                        objExercise.fContentType            = fragments [0];
+                        objExercise.fContentLang            = fragments [1];
                         objExercise.fID                     = ndeProps.id;
-                        objExercise.fIsSaved                = false;
+                        objExercise.fHasChanged             = false;
                         objExercise.fTextQuestion           = ndeExercise.innerHTML;
                         objExercise.fTextSolution           = "";
                         objExercise.fNodeParent             = ndeExercise;
