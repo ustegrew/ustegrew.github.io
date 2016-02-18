@@ -14,6 +14,7 @@ define
         "dojox/json/schema",
         "dojo/fx",
         "dojox/fx/scroll",
+        "dojo/dom-geometry",
         "dijit/MenuBar",
         "dijit/PopupMenuBarItem",
         "dijit/Menu",
@@ -36,6 +37,7 @@ define
         JSObjectValidator,
         fx,
         wndScroll,
+        domGeometry,
         TMenuBar,
         TPopupMenuBarItem,
         TMenu,
@@ -105,7 +107,7 @@ define
 
             this.fConfirmDialog     = null;
             this.fEditor            = null;
-            this.fExercisePrevious  = new TExercise ();                /*  */
+            this.fExerciseNext      = new TExercise ();                /*  */
             this.fExerciseCurrent   = new TExercise ();
             this.fExerciseList      = [];
             this.fExerciseMap       = {};
@@ -124,59 +126,23 @@ define
              */
             this.NotifyEditOpen = function (id)
             {
-                var _host = this;
-                
-                var domNode;
-                var exCur;
-                var exNxt;
-
                 this._AssertIDUsable (id, ETestType.kIDMustExist);
-                exNxt   = this.fExerciseMap [id];
-                exCur   = this.fExerciseCurrent;
-                domNode = this.fEditor.domNode;
-                if (exCur.fIsNullObject)                                        /* [50] */
+                this.fExerciseNext = this.fExerciseMap [id];
+                if (this.fExerciseCurrent.fIsNullObject)                                        /* [50] */
                 {
-                    this.fEditor.SetType (exNxt.fContentType, exNxt.fContentLang);
-                    
-                    domConstruct.place (domNode, exNxt.fNodeWorkspace, "only");
-                    fx.wipeIn ({node:exNxt.fNodeWorkspace}).play ();
-
-                    this.fExerciseCurrent = exNxt;
+this._PrintExerciseNodes ("NotifyEditOpen::IF(...)::TRUE)");
+                    this._UI_Exercise_Refocus (false);
                 }
                 else
                 {
-                    if (exCur.fID != exNxt.fID)
+this._PrintExerciseNodes ("NotifyEditOpen::IF(...)::FALSE)");
+                    if (this.fExerciseCurrent.fID  !=  this.fExerciseNext.fID)
                     {
-                        exCur.fHasChanged   = this.fEditor.HasChanged ();
-                        exCur.fTextSolution = this.fEditor.GetContent ();
-                        this._SaveCurrentSolution (true);
-                        
-                        fx.wipeOut ({node:exCur.fNodeWorkspace}).play ();
-                        exCur.fNodeWorkspace.removeChild (this.fEditor.domNode);
-                        this.fEditor.SetType (exNxt.fContentType, exNxt.fContentLang);
-                        domConstruct.place (this.fEditor.domNode, exNxt.fNodeWorkspace, "only");
-                        fx.wipeIn ({node:exNxt.fNodeWorkspace}).play ();
-                        
-                        this.fExerciseCurrent = exNxt;
+                        this.fExerciseCurrent.fHasChanged   = this.fEditor.HasChanged ();
+                        this.fExerciseCurrent.fTextSolution = this.fEditor.GetContent ();
+                        this._UI_Exercise_Close (true);
                     }
                 }
-                
-                window.setTimeout
-                (
-                    function ()
-                    {
-                        wndScroll
-                        (
-                            {
-                                node:       _host.fExerciseCurrent.fNodeWorkspace,
-                                win:        window,
-                                duration:   500
-                            }
-                        ).play ();
-//                        window.scrollBy (0, -75);
-                    },
-                    500
-                );
             }
 
             /**
@@ -279,31 +245,150 @@ define
                 }
             };
             
-            /* Save editor's data to local storage */
-            this._SaveCurrentSolution = function (doConfirm)
+            this._Handle_Aborted_SaveCurrentSolution = function ()
             {
+this._PrintExerciseNodes ("_Handle_Aborted_SaveCurrentSolution");
+                console.log ("Aborted: Saving current exercise");
+                this._UI_Exercise_Refocus (true);
+            };
+            
+            this._Handle_Confirmed_SaveCurrentSolution = function ()
+            {
+this._PrintExerciseNodes ("_Handle_Confirmed_SaveCurrentSolution");
+                console.log ("Confirmed: Saving current exercise");
+                this.fEditor.ClearFlagChanged ();
+                this._UI_Exercise_Refocus (true);
+            };
+            
+            /* Close current exercise. Save if necessary. */
+            this._UI_Exercise_Close = function (doConfirmSave)
+            {
+this._PrintExerciseNodes ("_UI_Exercise_Close");
                 if (this.fExerciseCurrent.fHasChanged)
                 {
-                    if (doConfirm)
+                    if (doConfirmSave)
                     {
                         this.fConfirmDialog.Show ("Unsaved changes", "Would you like to save your exercise?");
                     }
                     else
                     {
-                        this._HandleConfirmed_SaveCurrentSolution ();
+                        this._Handle_Confirmed_SaveCurrentSolution ();
                     }
+                }
+                else
+                {
+                    this._Handle_Aborted_SaveCurrentSolution ();
+                }
+            };
+            
+            this._UI_Exercise_Refocus = function (hasPrevious)
+            {
+this._PrintExerciseNodes ("_UI_Exercise_Refocus");
+                if (hasPrevious)
+                {
+                    this._UI_Exercise_Refocus_01_ShrinkCurrent ();
+                }
+                else
+                {
+                    this._UI_Exercise_Refocus_02_Editor_Migrate ();
                 }
             }
             
-            this._HandleAborted_SaveCurrentSolution = function ()
+            this._UI_Exercise_Refocus_01_ShrinkCurrent = function ()
             {
-                console.log ("Aborted: Saving current exercise");
+                var _host = this;
+                
+this._PrintExerciseNodes ("_UI_Exercise_Refocus_01_ShrinkCurrent");
+                fx.wipeOut 
+                (
+                    {
+                        node:       this.fExerciseCurrent.fNodeWorkspace,
+                        onEnd:      function () 
+                        {
+                            _host._UI_Exercise_Refocus_02_Editor_Migrate.call (_host);
+                        }
+                    }
+                ).play ();
             }
             
-            this._HandleConfirmed_SaveCurrentSolution = function ()
+            this._UI_Exercise_Refocus_02_Editor_Migrate = function ()
             {
-                this.fEditor.ClearFlagChanged ();
-                console.log ("Confirmed: Saving current exercise");
+this._PrintExerciseNodes ("_UI_Exercise_Refocus_02_Editor_Migrate");
+                this.fEditor.SetType (this.fExerciseNext.fContentType, this.fExerciseNext.fContentLang);
+                domConstruct.place (this.fEditor.domNode, this.fExerciseNext.fNodeWorkspace, "only");
+                this._UI_Exercise_Refocus_03_ExpandNext ();
+            }
+
+            this._UI_Exercise_Refocus_03_ExpandNext = function ()
+            {
+this._PrintExerciseNodes ("_UI_Exercise_Refocus_03_ExpandNext");
+                var _host = this;
+                
+                fx.wipeIn 
+                (
+                    {
+                        node:   this.fExerciseNext.fNodeWorkspace,
+                        onEnd:  function ()
+                        {
+                            _host._UI_Exercise_Refocus_04_ScrollToNextExercise.call (_host);
+                        }
+                    }
+                ).play ();
+            }
+            
+            this._UI_Exercise_Refocus_04_ScrollToNextExercise = function ()
+            {
+this._PrintExerciseNodes ("_UI_Exercise_Refocus_04_ScrollToNextExercise");
+                var _host = this;
+                
+                window.setTimeout
+                (
+                    function ()
+                    {
+                        var yNode;
+                        var yTarget;
+                        
+                        yNode       = domGeometry.position (_host.fExerciseNext.fNodeWorkspace, false);
+                        yTarget     = yNode.y - 50;
+                        wndScroll
+                        (
+                            {
+                                target:     {x:0,y:yTarget},
+                                win:        window,
+                                duration:   750,
+                                onEnd:  function ()
+                                {
+                                    _host._UI_Exercise_Refocus_05_Finished.call (_host);
+                                }
+                            }
+                        ).play ();
+                    },
+                    500
+                );
+            };
+            
+            this._UI_Exercise_Refocus_05_Finished = function ()
+            {
+this._PrintExerciseNodes ("_UI_Exercise_Refocus_05_Finished");
+                this.fExerciseCurrent = this.fExerciseNext;
+            };
+            
+            this._PrintExerciseNodes = function (context)
+            {
+                var cID;
+                var nID;
+                
+                cID = (this.fExerciseCurrent.fID !== "")  ? "ExerciseID_cur: '" + this.fExerciseCurrent.fID + "'" : "ExerciseID_cur: ''"
+                nID = (this.fExerciseNext.fID    !== "")  ? "ExerciseID_nxt: '" + this.fExerciseNext.fID    + "'" : "ExerciseID_nxt: ''"
+                
+                console.groupCollapsed ("Context: " + context + " / " + cID + " -> " + nID);
+                console.group ("ExerciseCurrent: " + cID);
+                console.dir (this.fExerciseCurrent);
+                console.groupEnd ();
+                console.group ("ExerciseNext: " + nID);
+                console.dir (this.fExerciseNext);
+                console.groupEnd ();
+                console.groupEnd ();
             }
         };
 
@@ -467,11 +552,11 @@ define
                             [
                                 {
                                     label:      "Yes",
-                                    onClick:    this.fController._HandleConfirmed_SaveCurrentSolution
+                                    onClick:    this.fController._Handle_Confirmed_SaveCurrentSolution
                                 },
                                 {
                                     label:      "No",
-                                    onClick:    this.fController._HandleAborted_SaveCurrentSolution
+                                    onClick:    this.fController._Handle_Aborted_SaveCurrentSolution
                                 }
                             ]
                         }
@@ -644,7 +729,7 @@ define
            <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That is a nice ID'}">
 
  [40]: For a new TController we create an empty dummy exercise as fExerciseCurrent,
-       fExercisePrevious. Setting it to null would create complications.
+       fExerciseNext. Setting it to null would create complications.
 
  [50]: Tests whether current exercise is an empty one - which means that it's the
        first exercise the user opens since the hosting web page has been loaded.
