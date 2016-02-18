@@ -130,12 +130,10 @@ define
                 this.fExerciseNext = this.fExerciseMap [id];
                 if (this.fExerciseCurrent.fIsNullObject)                                        /* [50] */
                 {
-this._PrintExerciseNodes ("NotifyEditOpen::IF(...)::TRUE)");
                     this._UI_Exercise_Refocus (false);
                 }
                 else
                 {
-this._PrintExerciseNodes ("NotifyEditOpen::IF(...)::FALSE)");
                     if (this.fExerciseCurrent.fID  !=  this.fExerciseNext.fID)
                     {
                         this.fExerciseCurrent.fHasChanged   = this.fEditor.HasChanged ();
@@ -247,14 +245,12 @@ this._PrintExerciseNodes ("NotifyEditOpen::IF(...)::FALSE)");
             
             this._Handle_Aborted_SaveCurrentSolution = function ()
             {
-this._PrintExerciseNodes ("_Handle_Aborted_SaveCurrentSolution");
                 console.log ("Aborted: Saving current exercise");
                 this._UI_Exercise_Refocus (true);
             };
             
             this._Handle_Confirmed_SaveCurrentSolution = function ()
             {
-this._PrintExerciseNodes ("_Handle_Confirmed_SaveCurrentSolution");
                 console.log ("Confirmed: Saving current exercise");
                 this.fEditor.ClearFlagChanged ();
                 this._UI_Exercise_Refocus (true);
@@ -263,7 +259,6 @@ this._PrintExerciseNodes ("_Handle_Confirmed_SaveCurrentSolution");
             /* Close current exercise. Save if necessary. */
             this._UI_Exercise_Close = function (doConfirmSave)
             {
-this._PrintExerciseNodes ("_UI_Exercise_Close");
                 if (this.fExerciseCurrent.fHasChanged)
                 {
                     if (doConfirmSave)
@@ -283,7 +278,6 @@ this._PrintExerciseNodes ("_UI_Exercise_Close");
             
             this._UI_Exercise_Refocus = function (hasPrevious)
             {
-this._PrintExerciseNodes ("_UI_Exercise_Refocus");
                 if (hasPrevious)
                 {
                     this._UI_Exercise_Refocus_01_ShrinkCurrent ();
@@ -298,11 +292,11 @@ this._PrintExerciseNodes ("_UI_Exercise_Refocus");
             {
                 var _host = this;
                 
-this._PrintExerciseNodes ("_UI_Exercise_Refocus_01_ShrinkCurrent");
                 fx.wipeOut 
                 (
                     {
                         node:       this.fExerciseCurrent.fNodeWorkspace,
+                        duration:   100,
                         onEnd:      function () 
                         {
                             _host._UI_Exercise_Refocus_02_Editor_Migrate.call (_host);
@@ -313,7 +307,6 @@ this._PrintExerciseNodes ("_UI_Exercise_Refocus_01_ShrinkCurrent");
             
             this._UI_Exercise_Refocus_02_Editor_Migrate = function ()
             {
-this._PrintExerciseNodes ("_UI_Exercise_Refocus_02_Editor_Migrate");
                 this.fEditor.SetType (this.fExerciseNext.fContentType, this.fExerciseNext.fContentLang);
                 domConstruct.place (this.fEditor.domNode, this.fExerciseNext.fNodeWorkspace, "only");
                 this._UI_Exercise_Refocus_03_ExpandNext ();
@@ -321,14 +314,14 @@ this._PrintExerciseNodes ("_UI_Exercise_Refocus_02_Editor_Migrate");
 
             this._UI_Exercise_Refocus_03_ExpandNext = function ()
             {
-this._PrintExerciseNodes ("_UI_Exercise_Refocus_03_ExpandNext");
                 var _host = this;
                 
                 fx.wipeIn 
                 (
                     {
-                        node:   this.fExerciseNext.fNodeWorkspace,
-                        onEnd:  function ()
+                        node:       this.fExerciseNext.fNodeWorkspace,
+                        duration:   100,
+                        onEnd:      function ()
                         {
                             _host._UI_Exercise_Refocus_04_ScrollToNextExercise.call (_host);
                         }
@@ -338,38 +331,29 @@ this._PrintExerciseNodes ("_UI_Exercise_Refocus_03_ExpandNext");
             
             this._UI_Exercise_Refocus_04_ScrollToNextExercise = function ()
             {
-this._PrintExerciseNodes ("_UI_Exercise_Refocus_04_ScrollToNextExercise");
                 var _host = this;
                 
-                window.setTimeout
+                var yNode;
+                var yTarget;
+
+                yNode       = domGeometry.position (_host.fExerciseNext.fNodeWorkspace, false);
+                yTarget     = yNode.y - 50;
+                wndScroll
                 (
-                    function ()
                     {
-                        var yNode;
-                        var yTarget;
-                        
-                        yNode       = domGeometry.position (_host.fExerciseNext.fNodeWorkspace, false);
-                        yTarget     = yNode.y - 50;
-                        wndScroll
-                        (
-                            {
-                                target:     {x:0,y:yTarget},
-                                win:        window,
-                                duration:   750,
-                                onEnd:  function ()
-                                {
-                                    _host._UI_Exercise_Refocus_05_Finished.call (_host);
-                                }
-                            }
-                        ).play ();
-                    },
-                    500
-                );
+                        target:     {x:0,y:yTarget},
+                        win:        window,
+                        duration:   500,
+                        onEnd:  function ()
+                        {
+                            _host._UI_Exercise_Refocus_05_Finished.call (_host);
+                        }
+                    }
+                ).play ();
             };
             
             this._UI_Exercise_Refocus_05_Finished = function ()
             {
-this._PrintExerciseNodes ("_UI_Exercise_Refocus_05_Finished");
                 this.fExerciseCurrent = this.fExerciseNext;
             };
             
