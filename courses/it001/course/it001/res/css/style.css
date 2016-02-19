@@ -275,6 +275,35 @@ table.instruction img
 /**
  * Exercises
  */
+
+/* Present config - remove when TWorksheet feature finished.  */
+
+ol.exercises
+{
+    margin-left:                    2.5em;
+    margin-top:                     1em !important;
+}
+
+ol.exercises > li
+{
+    margin-bottom:                  2.5em;
+}
+
+ol.exercises > li > ol
+{
+    margin-left:                    0px !important;
+    margin-top:                     0px !important;
+}
+
+ol.exercises > li > ol > li
+{
+    margin-bottom:                  0.5em;
+}
+
+
+
+/* ---------- For TWorksheet feature  ------------- */
+
 div.exercises
 {
 }
@@ -282,6 +311,7 @@ div.exercises
 div.exercise
 {
     position:                       relative;
+    margin-bottom:                  10px;
     margin-left:                    50px;
     margin-top:                     3em !important;
     width:                          800px;
@@ -301,7 +331,6 @@ div.exercise > div.exercise-toolbar
 div.exercise > div.exercise-workspace
 {
     border:                         1px solid lightgray;
-    margin-bottom:                  10px;
     margin-left:                    27px;
     margin-top:                     10px;
     width:                          745px;

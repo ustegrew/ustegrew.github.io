@@ -10,6 +10,7 @@ define
         "dojo/query",
         "dojo/dom-construct",
         "dojo/dom-attr",
+        "dojo/dom-style",
         "dojo/on",
         "dojox/json/schema",
         "dojo/fx",
@@ -33,6 +34,7 @@ define
         domQuery,
         domConstruct,
         domAttr,
+        domStyle,
         on,
         JSObjectValidator,
         fx,
@@ -128,7 +130,7 @@ define
             {
                 this._AssertIDUsable (id, ETestType.kIDMustExist);
                 this.fExerciseNext = this.fExerciseMap [id];
-                if (this.fExerciseCurrent.fIsNullObject)                                        /* [50] */
+                if (this.fExerciseCurrent.fIsNullObject)                        /* [50] */
                 {
                     this._UI_Exercise_Refocus (false);
                 }
@@ -422,6 +424,11 @@ define
                 {
                     onLoad:     params.onLoad
                 };
+                
+                /**
+                 * The persistent storage object. For saving/loading exercise solutions.
+                 */
+                this.fStore = params.store;
             },
 
             /* -------------------------------------------------------------
