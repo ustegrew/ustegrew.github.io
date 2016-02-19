@@ -23,24 +23,19 @@ define
          */
         TDriverAllpass = 
         {
-            Get: function (id)
+            Get: function (key)
             {
                 var ret;
                 
-                ret = this.fStore.Get (id);
+                ret = this.fStore.getItem (key);
                 
                 return ret;
             },
         
-            Set: function (id, data)
+            Set: function (key, data)
             {
-                this.fStore.Set (id, data);
-            },
-//            
-//            constructor: function (store)
-//            {
-//                this.fStore = store;
-//            }
+                this.fStore.setItem (key, data);
+            }
         };
     
         ret = declare ("TDriverAllpass", [TDriver], TDriverAllpass);

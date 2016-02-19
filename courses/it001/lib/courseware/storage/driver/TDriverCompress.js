@@ -4,14 +4,16 @@
 define 
 (
     [
-        "dojo/_base/declare"
+        "dojo/_base/declare",
+        "./TDriver"
     ],
     function 
     (
-        declare
+        declare,
+        TDriver
     )
     {
-        var TDriverAllpass;
+        var TDriverCompress;
         var ret;
 
         /**
@@ -19,38 +21,24 @@ define
          * 
          * @class       TChangeToClassName
          */
-        TDriverAllpass = 
+        TDriverCompress = 
         {
-            Haskey: function (key)
+            Get: function (key)
             {
                 var ret;
                 
-                ret = this.fStore.HasKey (key);
-                
-                return ret;
-            },
-            
-            Get: function (id)
-            {
-                var ret;
-                
-                ret = this.fStore.Get (id);
+                ret = this.fStore.getItem (key);
                 
                 return ret;
             },
         
-            Set: function (id, data)
+            Set: function (key, data)
             {
-                this.fStore.Set (id, data);
+                this.fStore.setItem (key, data);
             },
-            
-            constructor: function (store)
-            {
-                this.fStore = store;
-            }
         };
     
-        ret = declare ("TDriverAllpass", [], TDriverAllpass);
+        ret = declare ("TDriverCompress", [TDriver], TDriverCompress);
     
         return ret;
     }

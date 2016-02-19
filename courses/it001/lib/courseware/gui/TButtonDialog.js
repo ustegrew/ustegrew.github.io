@@ -6,7 +6,7 @@ define
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
-        "dojox/json/schema",
+        "courseware/util/validator/TValidatorJSON",
         "dojo/dom-construct",
         "dijit/Dialog",
         "dijit/form/Button"
@@ -83,7 +83,7 @@ define
              */
             constructor: function (params)
             {
-                this._AssertRecordOK (params, kSchemaParams, "constructor");
+                JSObjectValidator.AssertValid (params, kSchemaParams, "constructor");
                 this.fDescriptors   = params.buttons;
                 this.fDialog        = null;
                 this.fHost          = params.host;
@@ -182,50 +182,6 @@ define
                         btn.startup ();
                         domConstruct.place (btn.domNode, wr, "only");
                     }
-                }
-            },
-            
-            _AssertRecordOK: function (record, schema, client)
-            {
-                var kID = "TButtonDialog::" + client;
-                
-                var record;
-                var vResult;
-                var i;
-                var n;
-                var e;
-                var err;
-                var ret;
-                
-                vResult = JSObjectValidator.validate (record, schema);
-                if (! vResult.valid)
-                {
-                    n = vResult.errors.length;
-                    e = kID + ": JSON record validation failed.\n" +
-                              "Error list ";
-                    if (n >= 0)
-                    {
-                        if (n == 1)
-                        {
-                            e += "(" + n + " error):\n";
-                        }
-                        else
-                        {
-                            e += "(" + n + " errors):\n";
-                        }
-
-                        for (i = 0; i < n; i++)
-                        {
-                            err     = vResult.errors [i];
-                            e      += "    " + err.property + "::" + err.message + "\n";
-                        }
-                    }
-                    else
-                    {
-                        e += "No error details available";
-                    }
-
-                    throw e;
                 }
             },
             

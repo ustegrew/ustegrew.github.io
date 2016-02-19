@@ -25,15 +25,6 @@ define
         {
             fStore:     null,
             
-            HasKey: function (key)
-            {
-                var ret;
-                
-                ret = this.fStore.HasKey (key);
-                
-                return ret;
-            },
-            
             Get: function (key)
             {
                 throw kClass + "::Get (key): Must be overridden in sub class";
@@ -48,14 +39,28 @@ define
                 return ret;
             },
         
+            HasKey: function (key)
+            {
+                var ret;
+                
+                ret = this.fStore.hasOwnProperty (key);
+                
+                return ret;
+            },
+            
+            Remove: function (key)
+            {
+                this.fStore.removeItem (key);
+            },
+            
             Set: function (key, data)
             {
                 throw kClass + "::Set (key, data): Must be overridden in sub class";
             },
             
-            constructor: function (store)
+            constructor: function ()
             {
-                this.fStore = store;
+                this.fStore = window.localStorage;
             }
         };
     

@@ -12,7 +12,7 @@ define
         "dojo/dom-attr",
         "dojo/dom-style",
         "dojo/on",
-        "dojox/json/schema",
+        "courseware/util/validator/TValidatorJSON",
         "dojo/fx",
         "dojox/fx/scroll",
         "dojo/dom-geometry",
@@ -70,7 +70,7 @@ define
                     "description":      "The exercise's solution text type. One of: " +
                                         "'rtf/plain_text','src/js','src/html','src/plain_text'",
                     "type":             "string",
-                    "pattern":          "^(rtf/plain_text)|(src/js)|(src/html)|(src/plain_text)$"
+                    "enum":             ["rtf/plain_text", "src/js", "src/html", "src/plain_text"]
                 }
             }
         };
@@ -614,11 +614,6 @@ define
                 var isNotString;
                 var isNull;
                 var record;
-                var vResult;
-                var i;
-                var n;
-                var e;
-                var err;
                 var ret;
                 
                 isNotString = (typeof record !== "string");
@@ -644,37 +639,8 @@ define
                         throw "Could not parse record. Given: " + record + "\n" +
                               "Details: " + e;
                     }
-                    vResult = JSObjectValidator.validate (ret, schema);
-                    if (! vResult.valid)
-                    {
-                        n = vResult.errors.length;
-                        e = kID + ": JSON record validation failed. Offending record:\n" +
-                                  JSON.stringify (record) + "\n" +
-                                  "Error list ";
-                        if (n >= 0)
-                        {
-                            if (n == 1)
-                            {
-                                e += "(" + n + " error):\n";
-                            }
-                            else
-                            {
-                                e += "(" + n + " errors):\n";
-                            }
-
-                            for (i = 0; i < n; i++)
-                            {
-                                err     = vResult.errors [i];
-                                e      += "    " + err.property + "::" + err.message + "\n";
-                            }
-                        }
-                        else
-                        {
-                            e += "No error details available";
-                        }
-
-                        throw e;
-                    }
+                    
+                    JSObjectValidator.AssertValid (ret, schema, kID);
                 }
                 
                 return ret;

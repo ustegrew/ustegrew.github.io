@@ -5,7 +5,7 @@ define
 (
     [
         "dojo/_base/declare",
-        "dojox/json/schema",
+        "courseware/util/validator/TValidatorJSON",
         "jsdemo/component/program/api/TDescriptor_Program",
         "jsdemo/component/program/api/TSnapshot",
         "jsdemo/component/program/context/TContext",
@@ -33,7 +33,7 @@ define
         TProgram =
         {
             /**
-             * JS schema for a program description object. We use the dojox/json/schema validator to 
+             * JS schema for a program description object. We use the courseware/util/validator/TValidatorJSON validator to 
              * perform the actual validation.<br/>
              * Note that global symbols have naming restrictions. A global symbol may only
              * contain word characters or digits andlower or upper case characters or digits...
@@ -171,8 +171,8 @@ define
             {
                 var ret;
                 
-                this._AssertProgramCorrect  (name, p);
-                ret = new TDescriptor       (name, p);
+                JSObjectValidator.AssertValid (p, this.kSchemaProgram, "TProgram::CreateDescriptor()");
+                ret = new TDescriptor (name, p);
                 
                 return ret;
             },
@@ -267,55 +267,6 @@ define
                 this.fSnapshot      = new TSnapshot ();
                 
                 this._SetSnapshot ();
-            },
-            
-            /**
-             * Validates the given JSObject whether it is a valid program description record.
-             *  
-             * @param   {String}                     key         The name (key) of the program.
-             * @param   {JSObject}                   program     The program to validate.
-             * @throws  {IllegalArgumentException}   If the tested program is invalid.
-             * @private
-             */
-            _AssertProgramCorrect: function (key, program)
-            {
-                var result;
-                var i;
-                var n;
-                var e;
-                var err;
-                
-                result = JSObjectValidator.validate (program, this.kSchemaProgram);
-                if (! result.valid)
-                {
-                    n = result.errors.length;
-                    e = "User program failed validation\n" +
-                        "Program name: '" + key + "'\n" +
-                        "Error list ";
-                    if (n >= 0)
-                    {
-                        if (n == 1)
-                        {
-                            e += "(" + n + " error):\n";
-                        }
-                        else
-                        {
-                            e += "(" + n + " errors):\n";
-                        }
-                        
-                        for (i = 0; i < n; i++)
-                        {
-                            err     = result.errors [i];
-                            e      += "    " + err.property + "::" + err.message + "\n";
-                        }
-                    }
-                    else
-                    {
-                        e += "No error details available";
-                    }
-                    
-                    throw e;
-                }
             },
             
             /**

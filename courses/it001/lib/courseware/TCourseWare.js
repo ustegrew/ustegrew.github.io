@@ -8,7 +8,7 @@ define
         "dijit/_WidgetBase",
         "dojo/dom-construct",
         "dojo/request/xhr",
-        "dojox/json/schema",
+        "courseware/util/validator/TValidatorJSON",
         "dojo/query",
         "courseware/gui/TCourseWareGUI",
         "require",
@@ -422,12 +422,10 @@ define
                 var d;
                 var d;
                 var dS;
-                var cat;
                 var result;
                 var followupSchema;
                 
-                result = jsonValidator.validate (descriptor, this.kSchemaDescriptorGlobal);
-                this._AssertValidationPassed (descriptor, result);
+                jsonValidator.AssertValid (descriptor, this.kSchemaDescriptorGlobal, "TCourseWare::LoadCourse(kSchemaDescriptorGlobal)");
                 n      = descriptor.length;
                 if (n >= 1)
                 {
@@ -452,50 +450,8 @@ define
                             dS = JSON.stringify (d, null, 4);
                             throw "TCourseWare::_AssertDescriptorValid: Unknown node type '" + c + "' in node:\n" + dS;
                         }
-                        result = jsonValidator.validate (d, followupSchema);
-                        this._AssertValidationPassed (d, result);
+                        jsonValidator.AssertValid (d, followupSchema, "TCourseWare::LoadCourse(followupSchema)");
                     }
-                }
-            },
-            
-            _AssertValidationPassed: function (descriptor, result)
-            {
-                var i;
-                var n;
-                var e;
-                var err;
-                var msg;
-                
-                if (! result.valid)
-                {
-                    n = result.errors.length;
-                    e = "Course descriptor failed validation\n" +
-                        "Descriptor:\n" + JSON.stringify (descriptor, null, 4) + "\n\n" +
-                        "Error list ";
-                    if (n >= 0)
-                    {
-                        if (n === 1)
-                        {
-                            e += "(" + n + " error):\n";
-                        }
-                        else
-                        {
-                            e += "(" + n + " errors):\n";
-                        }
-                        
-                        for (i = 0; i < n; i++)
-                        {
-                            err     = result.errors [i];
-                            e      += "    " + err.property + "::" + err.message + "\n";
-                        }
-                    }
-                    else
-                    {
-                        e += "No error details available";
-                    }
-                    
-                    msg = "TCourseWare::_AssertValidationPassed: " + e;
-                    throw msg;
                 }
             },
             
