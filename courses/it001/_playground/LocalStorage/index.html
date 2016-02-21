@@ -64,7 +64,7 @@ function saveCompressed ()
     var value;
     
     value = txtCompressed.get ("value");
-    storeAllpass.Set ("txtCompressed", value);
+    storeCompressed.Set ("txtCompressed", value);
 }
             
 require
@@ -72,6 +72,7 @@ require
     "dojo/parser",
     "dojo/dom",
     "dijit/form/Textarea",
+    "dijit/form/Button",
     "courseware/storage/TLocalStorage",
     "dojo/domReady!"
 ], function 
@@ -79,6 +80,7 @@ require
     parser,
     dom,
     TTextArea,
+    TButton,
     TStore
 )
 {
@@ -117,20 +119,20 @@ require
         <h2>Allpass driver</h2>
         <p>Local storage layer with data stored unmodified.</p>
         <hr/>
-        <textarea data-dojo-id="txtAllpass" data-dojo-type="dijit/form/Textarea" data-dojo-props="value:'Default value',name:'txtAllpass'"></textarea>
         <button type="button" data-dojo-type="dijit/form/Button" data-dojo-id="btnStoreAllpass">Save
             <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
                 saveAllpass ();
             </script>
         </button>
+        <textarea data-dojo-id="txtAllpass" data-dojo-type="dijit/form/Textarea" data-dojo-props="value:'Default value',name:'txtAllpass'"></textarea>
         <h2>Compression driver</h2>
         <p>Local storage layer with data stored compressed. Compression driver (de)compresses on the fly.</p>
         <hr/>
-        <textarea data-dojo-id="txtCompressed" data-dojo-type="dijit/form/Textarea" data-dojo-props="value:'Default value',name:'txtCompressed'"></textarea>
         <button type="button" data-dojo-type="dijit/form/Button" data-dojo-id="btnStoreCompressed">Save
             <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
                 saveCompressed ();
             </script>
         </button>
+        <textarea data-dojo-id="txtCompressed" data-dojo-type="dijit/form/Textarea" data-dojo-props="value:'Default value',name:'txtCompressed'"></textarea>
     </body>
 </html>
