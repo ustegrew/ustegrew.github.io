@@ -57,8 +57,6 @@ define
                     ret = record.data;
                 }
                 
-                this._LogStats ("TDriverCompress::Get", record.isCompressed, ret, record.data);
-                
                 return ret;
             },
         
@@ -102,21 +100,6 @@ define
                 }
                 stor = JSON.stringify (record);
                 this.fStore.setItem (key, stor);
-                this._LogStats ("TDriverCompress::Set", record.isCompressed, data, compr);
-            },
-            
-            _LogStats: function (ctx, isCompressed, data, compr)
-            {
-                var lData;
-                var lCompr;
-                var lPerc;
-                var flagStr;
-                
-                lData   = data.length;
-                lCompr  = compr.length;
-                lPerc   = 100 * lCompr / lData;
-                flagStr = isCompressed ? "true " : "false";
-                console.log (ctx + "[compressed:" + flagStr + "]: lenData=" + lData + ", lenCompressed=" + lCompr + " (" + (Math.round (10 * lPerc)/10) + "%)")
             }
         };
     
