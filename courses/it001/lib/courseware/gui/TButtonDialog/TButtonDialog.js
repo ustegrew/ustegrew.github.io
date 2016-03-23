@@ -191,7 +191,7 @@ define
                 
                 handler = context.fDescriptors[iHandler].onClick;
                 this.fDialog.hide ();
-                handler.call (context.fHost);
+                handler.call (this.fHost);
             }
         };
     

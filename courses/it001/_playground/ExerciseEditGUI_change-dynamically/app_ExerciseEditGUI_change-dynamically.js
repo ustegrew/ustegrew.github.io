@@ -3,7 +3,7 @@ require
     "dojo/parser",
     "dojo/dom",
     "dojo/dom-construct",
-    "courseware/gui/TExerciseEditGUI",
+    "courseware/gui/TExerciseEditGUI/TExerciseEditGUI",
     "dojo/domReady!"
 ], function 
 (

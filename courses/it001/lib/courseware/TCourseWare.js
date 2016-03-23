@@ -8,12 +8,13 @@ define
         "dijit/_WidgetBase",
         "dojo/dom-construct",
         "dojo/request/xhr",
-        "courseware/util/validator/TValidatorJSON",
         "dojo/query",
-        "courseware/gui/TCourseWareGUI",
         "require",
         "dojo/request/script",
-        "dojo/NodeList-manipulate"
+        "dojo/NodeList-manipulate",
+        "courseware/util/validator/TValidatorJSON",
+        "courseware/gui/TCourseWareGUI/TCourseWareGUI",
+        "courseware/storage/TLocalStorage"
     ],
     function 
     (
@@ -21,11 +22,12 @@ define
         _WidgetBase,
         domConstruct,
         xhr,
-        jsonValidator,
         query,
-        TGUI,
         _require,
-        libLoader
+        libLoader,
+        jsonValidator,
+        TGUI,
+        TLocalStorage
     )
     {
         var TCourseWare;
@@ -254,6 +256,8 @@ define
              */
             fGUI: null,
             
+            fLocalStorage: null,
+            
             /**
              * Insert_explanation_here
              * 
@@ -297,6 +301,22 @@ define
             NotifyUnloadingArticle: function ()
             {
                 this._EventExec (this.fHandlerOnUnloadArticle);
+            },
+            
+            ExerciseSolutionLoad: function (id)
+            {
+                var data;
+                var ret;
+                
+                data = this.fLocalStorage.Get (id, "");
+                ret  = {id:id, data:data};
+                
+                return ret;
+            },
+            
+            ExerciseSolutionSave: function (record)
+            {
+                this.fLocalStorage.Set (record.id, record.data);
             },
 
             _LoadCourse: function (descriptor)
@@ -367,6 +387,7 @@ define
              */
             constructor: function (params, srcNodeRef)
             {
+                this.fLocalStorage = new TLocalStorage ({driver:"compress"});
             },
 
             /* -------------------------------------------------------------

@@ -23,8 +23,8 @@ define
         "dijit/MenuSeparator",
         "dijit/DropDownMenu",
         "dijit/form/Button",
-        "courseware/gui/TExerciseEditGUI",
-        "courseware/gui/TButtonDialog"
+        "courseware/gui/TExerciseEditGUI/TExerciseEditGUI",
+        "courseware/gui/TButtonDialog/TButtonDialog"
     ],
     function 
     (
@@ -153,6 +153,16 @@ define
 
             };
 
+            this.NotifyEditSaveAbort = function ()
+            {
+                this._Handle_Aborted_SaveCurrentSolution ();
+            };
+            
+            this.NotifyEditSaveConfirm = function ()
+            {
+                this._Handle_Confirmed_SaveCurrentSolution ();
+            };
+            
             /**
              * Notification: Solution editor for current exercise has finished 
              *               loading text from storage.
@@ -247,13 +257,11 @@ define
             
             this._Handle_Aborted_SaveCurrentSolution = function ()
             {
-                console.log ("Aborted: Saving current exercise");
                 this._UI_Exercise_Refocus (true);
             };
             
             this._Handle_Confirmed_SaveCurrentSolution = function ()
             {
-                console.log ("Confirmed: Saving current exercise");
                 this.fEditor.ClearFlagChanged ();
                 this._UI_Exercise_Refocus (true);
             };
@@ -389,76 +397,7 @@ define
          */
         TWorksheet = 
         {
-            /**
-             * Dojo specific cTor.
-             */
-            constructor: function (params)
-            {
-                /**
-                 *  The controller. Controls the behaviour of this worksheet.
-                 * 
-                 * @type TWorksheet::TController
-                 */
-                this.fController = new TController (this);
-                
-                /**
-                 * The client using this class.
-                 */
-                this.fHost = params.fHost;
-                
-                this.fConfirmDialog = null;
-                
-                /**
-                 * The editor for the user to edit the solutions to the exercises.
-                 */
-                this.fEditor = null;
-                
-                this.fDlgDoSaveConfirm = null;
-                
-                /**
-                 * The callbacks from the client. Will be called in the client's 
-                 * context (i.e. 'this' inside a callback will point to the client
-                 * object, not the TWorksheet object.
-                 */
-                this.fHandlers =
-                {
-                    onLoad:     params.onLoad
-                };
-                
-                /**
-                 * The persistent storage object. For saving/loading exercise solutions.
-                 */
-                this.fStore = params.store;
-            },
-
-            /* -------------------------------------------------------------
-             * Dijit overrides 
-             * ------------------------------------------------------------- */
-        
-            /**
-             * Startup method (for widgets). This overrides the _WidgetBase::startup ().
-             * 
-             * Excerpt, Dojo documentation:
-             *     + postCreate
-             *          This is typically the workhorse of a custom widget. The 
-             *          widget has been rendered (but note that child widgets in 
-             *          the containerNode have not!). The widget though may not 
-             *          be attached to the DOM yet so you shouldn’t do any sizing 
-             *          calculations in this method.
-             *     
-             *     + startup
-             *          If you need to be sure parsing and creation of any child 
-             *          widgets has completed, use startup. This is often used 
-             *          for layout widgets like BorderContainer. If the widget 
-             *          does JS sizing, then startup() should call resize(), 
-             *          which does the sizing.
-             */
-            postCreate: function ()
-            {
-                
-            },
-            
-            startup: function ()
+            Init: function ()
             {
                 var _controller     = this.fController;
                 var kImgBaseURL     = _require.toUrl ("courseware/img");
@@ -543,11 +482,11 @@ define
                             [
                                 {
                                     label:      "Yes",
-                                    onClick:    this.fController._Handle_Confirmed_SaveCurrentSolution
+                                    onClick:    function () {_controller.NotifyEditSaveConfirm.call (_controller);}
                                 },
                                 {
                                     label:      "No",
-                                    onClick:    this.fController._Handle_Aborted_SaveCurrentSolution
+                                    onClick:    function () {_controller.NotifyEditSaveAbort.call (_controller);}
                                 }
                             ]
                         }
@@ -605,6 +544,80 @@ define
                 
                 _controller.NotifyPageLoaded.call (_controller);
                 this.fHandlers.onLoad.call (this.fHost);
+            },
+            
+            /**
+             * Dojo specific cTor.
+             */
+            constructor: function (params)
+            {
+                /**
+                 *  The controller. Controls the behaviour of this worksheet.
+                 * 
+                 * @type TWorksheet::TController
+                 */
+                this.fController = new TController (this);
+                
+                /**
+                 * The client using this class.
+                 */
+                this.fHost = params.fHost;
+                
+                this.fConfirmDialog = null;
+                
+                /**
+                 * The editor for the user to edit the solutions to the exercises.
+                 */
+                this.fEditor = null;
+                
+                this.fDlgDoSaveConfirm = null;
+                
+                /**
+                 * The callbacks from the client. Will be called in the client's 
+                 * context (i.e. 'this' inside a callback will point to the client
+                 * object, not the TWorksheet object.
+                 */
+                this.fHandlers =
+                {
+                    onLoad:     params.onLoad
+                };
+                
+                /**
+                 * The persistent storage object. For saving/loading exercise solutions.
+                 */
+                this.fStore = params.store;
+            },
+
+            /* -------------------------------------------------------------
+             * Dijit overrides 
+             * ------------------------------------------------------------- */
+        
+            /**
+             * Startup method (for widgets). This overrides the _WidgetBase::startup ().
+             * 
+             * Excerpt, Dojo documentation:
+             *     + postCreate
+             *          This is typically the workhorse of a custom widget. The 
+             *          widget has been rendered (but note that child widgets in 
+             *          the containerNode have not!). The widget though may not 
+             *          be attached to the DOM yet so you shouldn’t do any sizing 
+             *          calculations in this method.
+             *     
+             *     + startup
+             *          If you need to be sure parsing and creation of any child 
+             *          widgets has completed, use startup. This is often used 
+             *          for layout widgets like BorderContainer. If the widget 
+             *          does JS sizing, then startup() should call resize(), 
+             *          which does the sizing.
+             */
+            postCreate: function ()
+            {
+                
+            },
+            
+            startup: function ()
+            {
+                this.fController.Notify ("kStart");
             },
             
             _GetRecord: function (record, schema, client)

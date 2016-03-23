@@ -37,6 +37,59 @@ define
         TRichTextEditFontChoice
     )
     {
+        var kObserverInterval = 1000;                                           /* [110] */
+
+        /**
+         * The editor's content change observer. Observes the current editor for
+         * changes of content. 
+         * 
+         * For more details: [110]
+         */
+        var TObserver_ContentChanged = function (host)                          
+        {
+            var _this = this;
+            
+            var EObserverState =
+            {
+                kWait:          10,
+                kRunning:       20
+            }
+            
+            this.fContentOld    = null;
+            this.fHost          = host;
+            this.fState         = EObserverState.kWait; 
+            
+            this.Run = function ()
+            {
+                var content;
+                
+                if (this.fState == EObserverState.kRunning)
+                {
+                    content = this.fHost.fAPIEditor.GetContent ();
+                    if (content !== this.fContentOld)                           /* [111] */
+                    {
+                        this.fContentOld                   = content;
+                        this.fHost.fAPIEditor.fHasChanged  = true;
+                        this.fHost.fHandlers.onChange.call (this.fHost.fHost);
+                    }
+                }
+                window.setTimeout (function () {_this.Run.call (_this)}, kObserverInterval);
+            };
+            
+            this.SetPaused = function ()
+            {
+                _this.fState = EObserverState.kWait;
+            };
+            
+            this.SetRunning = function ()
+            {
+                _this.fState = EObserverState.kRunning;
+            }
+            
+            this.Run ();
+        };
+        
+        
         var TExerciseEditGUI;
         var ret;
 
@@ -122,6 +175,14 @@ define
                 this._SetType (type, lang);
             },
             
+            fAPIEditor:                     null,
+            fConfig:                        null,
+            fHandlers:                      null,
+            fHost:                          null,
+            fObserver_ContentChanged:       null,
+            fPnlWrapper:                    null,
+            fPnlWrapperEdit:                null,
+
             /**
              * Dojo specific cTor.
              * 
@@ -137,9 +198,10 @@ define
                           "valid object (e.g. 'this' reference or window object).";
                 }
                 
-                this.fPnlWrapperEdit    = null;
-                this.fPnlWrapper        = null;
-                this.fHost              = params.fHost;
+                this.fObserver_ContentChanged   = new TObserver_ContentChanged (this);
+                this.fPnlWrapperEdit            = null;
+                this.fPnlWrapper                = null;
+                this.fHost                      = params.fHost;
                 this.fAPIEditor =
                 {
                     fEarlyContent:  null,                                       /* [21] */
@@ -157,6 +219,7 @@ define
                 this.fHandlers =                                                /* [10] */
                 {
                     onCancel:   params.onCancel,
+                    onChange:   params.onChange,
                     onLoad:     params.onLoad,
                     onSave:     params.onSave
                 };
@@ -288,6 +351,9 @@ define
                 var eType;
                 var eLang;
                 var wrStyle;
+                
+                this.fObserver_ContentChanged.SetPaused ();
+                
                 if (this.fAPIEditor.fHasEditor)                                 /* [20] */
                 {
                     this.fAPIEditor.fEditor.destroy ();
@@ -374,6 +440,7 @@ define
                         this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
                         (
                             {
+//                                fContent:       null,
                                 width:          this.fConfig.fWidth,
                                 height:         this.fConfig.fHeight,
                                 plugins:
@@ -390,11 +457,20 @@ define
                                         name:       "formatBlock",
                                         plainText:  true
                                     }
-                                ],
-                                onChange: function ()
-                                {
-                                    _host.fAPIEditor.fHasChanged = true;
-                                }
+                                ]//,
+//                                observeChanges: function ()                     /* [110] */
+//                                {
+//                                    var newContent;
+//                                    
+//                                    newContent = _host.fAPIEditor.fEditor.get ("value");            /* [111] */
+//                                    if (newContent !== _host.fAPIEditor.fEditor.fContent)
+//                                    {
+//                                        _host.fAPIEditor.fEditor.fContent   = newContent;
+//                                        _host.fAPIEditor.fHasChanged        = true;
+//                                        _host.fHandlers.onChange.call (_host);
+//                                    }
+//                                    window.setTimeout (_host.fAPIEditor.fEditor.observeChanges, 1000);
+//                                }                            
                             },
                             this.fPnlWrapperEdit
                         );
@@ -402,7 +478,8 @@ define
                         (
                             function ()
                             {
-                                _host.fAPIEditor.fHasEditor = true;             /* [20] */
+//                                _host.fAPIEditor.fEditor.fContent   = _host.fAPIEditor.fEditor.get ("value");
+                                _host.fAPIEditor.fHasEditor         = true;             /* [20] */
                                 _host._HandleOnLoad.call (_host);
                             }
                         );
@@ -478,7 +555,7 @@ define
                             },
                             function ()
                             {
-                                _host.fAPIEditor.fHasChanged = true;
+                                // onChange handler - now done using an observer
                             }
                         );
                     
@@ -489,6 +566,8 @@ define
                 }
                 
                 domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, "last");
+                
+                this.fObserver_ContentChanged.SetRunning ();
             },
             
             _HandleOnLoad: function ()
@@ -583,6 +662,24 @@ define
                         
         Solution: Define the event handlers before creating/initializing the ace editor.
                      
+[110]:  We cannot use the onChange event as provided by the dijit/Editor component - that
+        one only fires if the content has changed AND the component looses focus. In our
+        case we need to fire the onChange event as soon as something changed, even if the 
+        component has NOT lost focus. To solve this problem we create an observer function
+        which detects content changes and gets called once a second. When content change
+        has been detected, the observer fires the onChange event. This covers border 
+        cases such as the user copying and pasting content (would not be detected by the 
+        dijit/Editor provided onKeyUp event). 
         
-
+        The editor content change detection must use the observer pattern across all 
+        editor types - even though we only need it for the dijit/editor component. 
+        Otherwise when we switch editor type we'll have to provide some complex framework
+        to manage observers when editors change.
+        
+[111]:  Horribly inefficient, especially when we have longer text (Typical 
+        Shlemiel-the-painter-solution). Works for now - maybe we can implement a better 
+        solution. Possible: Upon creation, augment the Editor component's inner structure 
+        with some sort of DOM event handlers which detect content changes and pass these
+        on. Such handlers would need to cover border cases such as the user pasting content, 
+        i.e. key press detection is insufficient!
  */      
