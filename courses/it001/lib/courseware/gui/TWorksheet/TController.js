@@ -11,6 +11,9 @@ define
         declare
     )
     {
+        /* Debug flag - for that extra info in hard places! */
+        var gDebug = true;
+        
         var ESaveAction =
         {
             kNone:                      0,
@@ -298,7 +301,6 @@ define
             /* Export enumerators */
             ESaveAction:        ESaveAction,
                 
-            fDebug:             true,
             fHost:              null,
             fStack:             null,
             fState:             null,
@@ -314,6 +316,9 @@ define
             {
                 var t
                 
+                if (gDebug)                                            /* [20] */
+                    {console.log ("TController::Notify ('" + event + "')");}
+
                 /* It can be confusing, but for each transition the 'else' branch executes first.
                  * Once all the pre transition actions have completed, the worksheet will send
                  * a 'kSuccess' notification which will be handled in the TRUE branch of the 
@@ -324,6 +329,9 @@ define
                     /* We get our schedule transition back from the stack */
                     t = this.fStack.pop ();
                     
+                    if (gDebug)                                        /* [20] */
+                        {console.log ("TController::Notify ('" + event + "'): " + this.fState + " [" + event + "] -> " + t.stateNext);}
+
                     /* Now execute transition */
                     this.fState = t.stateNext;
                     t.handler.call (this.fHost);                            /* [10] */
@@ -334,6 +342,9 @@ define
                     t = this._GetTransition (event);
                     this.fStack.push (t);
                     
+                    if (gDebug)                                        /* [20] */
+                        {console.log ("TController::Notify ('" + event + "'): Executing pre transition actions");}
+
                     /* Now execute all animation actions. When they have completed, 
                      * we will receive a "kSuccess" notification */
                     this.fHost.NotifyPreTransitionActions (t.actions);                    
@@ -374,19 +385,18 @@ define
 
                 if (foundEvent)
                 {
-                    if (this.fDebug)
+                    if (gDebug)
                     {
-                        console.log 
-                        (
-                            "TController::_GetTransition (): " + this.fState + " [" + event + "] -> " + ret.stateNext
-                        );
-                    }
+                        console.groupCollapsed ("TController::_GetTransition ('" + event + "')");
+                        console.log ("Found: " + JSON.stringify (ret));
+                        console.groupEnd ();
+                    };
                 }
                 else
                 {
                     console.log 
                     (
-                        "TController::_GetTransition (): Invalid transition: " + this.fState + " [" + event + "]"
+                        "TController::_GetTransition ('" + event + "'): Invalid transition: " + this.fState + " [" + event + "]"
                     );
                 }
                 
@@ -412,4 +422,6 @@ define
 [10]    Each handler function is called within the context of the hosting TWorksheet object.
         Therefore the 'this' reference within each handler refers to the hosting TWorksheet 
         object, not this TController object.
+        
+[20]    Hate this compressed code formatting - but it makes other code more readable.
 */

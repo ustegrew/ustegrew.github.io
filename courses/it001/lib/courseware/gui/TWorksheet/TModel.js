@@ -30,8 +30,8 @@ define
          */
         TModel = 
         {
-            fExerciseList:  null,
-            fExerciseMap:   null,
+            fExerciseList:          null,
+            fExerciseMap:           null,
             
             GetByID: function (id)
             {

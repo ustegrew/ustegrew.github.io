@@ -37,6 +37,9 @@ define
         TRichTextEditFontChoice
     )
     {
+        /* Debug flag - for that extra info in hard places! */
+        var gDebug = true;
+        
         var kObserverInterval = 1000;                                           /* [110] */
 
         /**
@@ -59,11 +62,44 @@ define
             this.fHost          = host;
             this.fState         = EObserverState.kWait; 
             
-            this.Run = function ()
+            this.SetPaused = function ()
+            {
+                if (gDebug) console.log ("TExerciseEditGUI::TObserver_ContentChanged::SetPaused ()");
+
+                _this.fState = EObserverState.kWait;
+            };
+            
+            this.SetRunning = function ()
+            {
+                if (gDebug)
+                {
+                    if (_this.fState != EObserverState.kRunning)
+                    {
+                        console.log ("TExerciseEditGUI::TObserver_ContentChanged::SetRunning ()");
+                    }
+                    else
+                    {
+                        console.log ("TExerciseEditGUI::TObserver_ContentChanged::SetRunning (): Cancelled as we are already in run state.");
+                    }
+                }
+
+                if (_this.fState != EObserverState.kRunning)                    /* [112] */
+                {
+                    _this.fContentOld   = this.fHost.fAPIEditor.GetContent ();
+                    _this.fState        = EObserverState.kRunning;
+                    _this._Run ();
+                }
+            }
+            
+            this._Run = function ()
             {
                 var content;
+                var doQuery;
                 
-                if (this.fState == EObserverState.kRunning)
+                doQuery     = this.fState == EObserverState.kRunning    &&
+                              this.fHost.fAPIEditor.fHasEditor; //      && what else ?
+                
+                if (doQuery)
                 {
                     content = this.fHost.fAPIEditor.GetContent ();
                     if (content !== this.fContentOld)                           /* [111] */
@@ -72,21 +108,11 @@ define
                         this.fHost.fAPIEditor.fHasChanged  = true;
                         this.fHost.fHandlers.onChange.call (this.fHost.fHost);
                     }
+                    window.setTimeout (function () {_this._Run.call (_this)}, kObserverInterval);
                 }
-                window.setTimeout (function () {_this.Run.call (_this)}, kObserverInterval);
             };
             
-            this.SetPaused = function ()
-            {
-                _this.fState = EObserverState.kWait;
-            };
-            
-            this.SetRunning = function ()
-            {
-                _this.fState = EObserverState.kRunning;
-            }
-            
-            this.Run ();
+            this.fState = EObserverState.kWait;
         };
         
         
@@ -170,6 +196,16 @@ define
                 this.fAPIEditor.SetContent (content);
             },
             
+            SetOberverContentChanged_Paused: function ()
+            {
+                this.fAPIEditor.SetObserverPaused ();
+            },
+            
+            SetOberverContentChanged_Running: function ()
+            {
+                this.fAPIEditor.SetObserverRunning ();
+            },
+            
             SetType: function (type, lang)
             {
                 this._SetType (type, lang);
@@ -204,12 +240,21 @@ define
                 this.fHost                      = params.fHost;
                 this.fAPIEditor =
                 {
-                    fEarlyContent:  null,                                       /* [21] */
-                    fEditor:        null,
-                    fHasEditor:     false,                                      /* [20] */
-                    fHasChanged:    false,
-                    GetContent:     null,
-                    SetContent:     null
+                    fEarlyContent:              null,                                   /* [21] */
+                    fEditor:                    null,
+                    fHasEditor:                 false,                                  /* [20] */
+                    fHasChanged:                false,
+                    fObserverContentChanged:    this.fObserver_ContentChanged,
+                    GetContent:                 null,
+                    SetContent:                 null,
+                    SetObserverPaused: function ()
+                    {
+                        this.fObserverContentChanged.SetPaused ();
+                    },
+                    SetObserverRunning: function ()
+                    {
+                        this.fObserverContentChanged.SetRunning ();
+                    }
                 };
                 this.fConfig =
                 {
@@ -266,7 +311,7 @@ define
                 var subMenu;
 
                 this.fAPIEditor.fHasEditor = false;                             /* [20] */
-
+                
                 this.fAPIEditor.GetContent = function ()
                 {
                     _host._Log ("fAPIEditor.GetContent: Has not been set. Did you call SetType (...)?");
@@ -352,14 +397,12 @@ define
                 var eLang;
                 var wrStyle;
                 
-                this.fObserver_ContentChanged.SetPaused ();
-                
                 if (this.fAPIEditor.fHasEditor)                                 /* [20] */
                 {
+                    this.fAPIEditor.fHasEditor      = false;                    /* [20] */
                     this.fAPIEditor.fEditor.destroy ();
                     this.fAPIEditor.fEditor         = null;
                     this.fAPIEditor.fEarlyContent   = null;
-                    this.fAPIEditor.fHasEditor      = false;                    /* [20] */
                     domConstruct.destroy (this.fPnlWrapperEdit);
                 }
                 
@@ -566,8 +609,6 @@ define
                 }
                 
                 domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, "last");
-                
-                this.fObserver_ContentChanged.SetRunning ();
             },
             
             _HandleOnLoad: function ()
@@ -682,4 +723,8 @@ define
         with some sort of DOM event handlers which detect content changes and pass these
         on. Such handlers would need to cover border cases such as the user pasting content, 
         i.e. key press detection is insufficient!
+        
+[112]:  We set a guard to avoid multiple scheduling of window.setTimeout (...), just in case
+        .SetRunning() is called multiple times one after another.
+        
  */      

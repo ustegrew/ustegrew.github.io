@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Insert_here
+ *  @fileoverview
  */
 define 
 (
@@ -57,41 +57,55 @@ define
         TButtonDialog
     )
     {
+        /* Debug flag - for that extra info in hard places! */
+        var gDebug = true;
+        
         var TPreTransitionSequence = function (host)
         {
             var kActionSystemFileSave = function (actions)
             {
-                console.log ("kActionSystemFileSave");
+                if (gDebug)
+                {
+                    console.groupCollapsed ("TWorksheet::TPreTransitionSequence::kActionSystemFileSave (actions)");
+                    console.log ("actions: " + JSON.stringify (actions));
+                    console.groupEnd ();
+                }
                 this.fHost._NotifySystemFileSave.call (this.fHost, actions);
             };
             
             var kActionSystemControllerEvent = function ()
             {
-                console.log ("kActionSystemControllerEvent");
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionSystemControllerEvent ()");
                 this.fHost._NotifySystemControllerEvent.call (this.fHost, "kSuccess");
+            };
+            
+            var kActionSystemEditorChangeObserverSetPaused = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionSystemEditorChangeObserverSetPaused ()");
+                this.fHost._NotifySystemEditorChangeObserverSetPaused.call (this.fHost);
             };
             
             var kActionUICollapseCurrent = function ()
             {
-                console.log ("kActionUICollapseCurrent");
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUICollapseCurrent ()");
                 this.fHost._NotifyUICollapseCurrent.call (this.fHost);
             };
             
             var kActionUIExpandNext = function ()
             {
-                console.log ("kActionUIExpandNext");
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIExpandNext ()");
                 this.fHost._NotifyUIExpandNext.call (this.fHost);
             };
             
             var kActionUIMigrateEditor = function ()
             {
-                console.log ("kActionUIMigrateEditor");
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIMigrateEditor ()");
                 this.fHost._NotifyUIMigrateEditor.call (this.fHost);
             };
             
             var kActionUIScrollWindow = function ()
             {
-                console.log ("kActionUIScrollWindow");
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIScrollWindow ()");
                 this.fHost._NotifyUIScrollWindow.call (this.fHost);
             };
 
@@ -139,7 +153,7 @@ define
                 this.fProgram = new TProgram (this.fHost);
                 
                 /* 1. Save current exercise if it is requested. */
-                this.fProgram.AddStep (kActionSystemFileSave,               actions);
+                this.fProgram.AddStep (kActionSystemFileSave,                               actions);
                 
                 /* 2. Collapse current exercise or migrate editor. 
                  *    If doExpand is true then we also migrate the editor. */
@@ -147,28 +161,29 @@ define
                 doExpand    = actions.doExpandNext;
                 if ((! doCollapse) && (! doExpand))
                 {
-                    this.fProgram.AddStep (kActionSystemControllerEvent,    null);
                 }
                 else if ((! doCollapse) && (doExpand))
                 {
-                    this.fProgram.AddStep (kActionUIMigrateEditor,          null);
-                    this.fProgram.AddStep (kActionUIExpandNext,             null);
-                    this.fProgram.AddStep (kActionUIScrollWindow,           null);
-                    this.fProgram.AddStep (kActionSystemControllerEvent,    null);
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUIMigrateEditor,                          null);
+                    this.fProgram.AddStep (kActionUIExpandNext,                             null);
+                    this.fProgram.AddStep (kActionUIScrollWindow,                           null);
                 }
                 else if ((doCollapse) && (! doExpand))
                 {
-                    this.fProgram.AddStep (kActionUICollapseCurrent,        null);
-                    this.fProgram.AddStep (kActionSystemControllerEvent,    null);
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUICollapseCurrent,                        null);
                 }
                 else if ((doCollapse) && (doExpand))
                 {
-                    this.fProgram.AddStep (kActionUICollapseCurrent,        null);
-                    this.fProgram.AddStep (kActionUIMigrateEditor,          null);
-                    this.fProgram.AddStep (kActionUIExpandNext,             null);
-                    this.fProgram.AddStep (kActionUIScrollWindow,           null);
-                    this.fProgram.AddStep (kActionSystemControllerEvent,    null);
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUICollapseCurrent,                        null);
+                    this.fProgram.AddStep (kActionUIMigrateEditor,                          null);
+                    this.fProgram.AddStep (kActionUIExpandNext,                             null);
+                    this.fProgram.AddStep (kActionUIScrollWindow,                           null);
                 }
+                
+                this.fProgram.AddStep (kActionSystemControllerEvent,                        null);
 
                 this.fProgram.NotifyDoNextStep ();
             };
@@ -270,6 +285,8 @@ define
              */
             Handle_Changing_Change: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_Change ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -278,6 +295,8 @@ define
              */
             Handle_Changing_CopyAll: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_CopyAll ()");
+                
                 this._SystemCopyAllToClipboard (); 
             },
             
@@ -286,8 +305,11 @@ define
              */
             Handle_Changing_Edit: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_Edit ()");
+                
                 this.fExerciseCurrent = this.fExerciseNext;
-                this._SystemFileLoadIntoCurrent ();
+                this._SystemFileLoadCurrent ();
+                this._NotifySystemEditorChangeObserverSetRunning ();
             },
             
             /**
@@ -295,6 +317,8 @@ define
              */
             Handle_Changing_Read: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_Read ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -303,6 +327,8 @@ define
              */
             Handle_Changing_Save: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_Save ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -311,6 +337,8 @@ define
              */
             Handle_Changing_Terminate: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Changing_Terminate ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -324,6 +352,8 @@ define
              */
             Handle_Editing_Change: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_Change ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -332,6 +362,8 @@ define
              */
             Handle_Editing_CopyAll: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_CopyAll ()");
+                
                 this._SystemCopyAllToClipboard ();
             },
             
@@ -340,8 +372,11 @@ define
              */
             Handle_Editing_Edit: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_Edit ()");
+                
                 this.fExerciseCurrent = this.fExerciseNext;
-                this._SystemFileLoadIntoCurrent ();
+                this._SystemFileLoadCurrent ();
+                this.fEditor.SetOberverContentChanged_Running ();
             },
             
             /**
@@ -349,6 +384,8 @@ define
              */
             Handle_Editing_Read: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_Read ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -357,6 +394,8 @@ define
              */
             Handle_Editing_Terminate: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_Terminate ()");
+
                 /* Do nothing here, all actions already done. */
             },
             
@@ -370,6 +409,8 @@ define
              */
             Handle_Null_Start: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Null_Start ()");
+
                 /* Do nothing here, all actions already done. */
             },
             
@@ -383,6 +424,8 @@ define
              */
             Handle_Reading_CopyAll: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Reading_CopyAll ()");
+                
                 this._SystemCopyAllToClipboard ();
             },
             
@@ -391,8 +434,11 @@ define
              */
             Handle_Reading_Edit: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Reading_Edit ()");
+                
                 this.fExerciseCurrent = this.fExerciseNext;
-                this._SystemFileLoadIntoCurrent ();
+                this._SystemFileLoadCurrent ();
+                this.fEditor.SetOberverContentChanged_Running ();
             },
             
             /**
@@ -400,6 +446,8 @@ define
              */
             Handle_Reading_Terminate: function ()
             {
+                if (gDebug) console.log ("TWorksheet::Handle_Reading_Terminate ()");
+                
                 /* Do nothing here, all actions already done. */
             },
             
@@ -412,6 +460,13 @@ define
              */
             NotifyPreTransitionActions: function (actions)
             {
+                if (gDebug)
+                {
+                    console.groupCollapsed ("TWorksheet::NotifyPreTransitionActions (actions)");
+                    console.log ("actions: " + JSON.stringify (actions));
+                    console.groupEnd ();
+                }
+                
                 this.fPreTransitionSequence.Run (actions);
             },
             
@@ -501,7 +556,6 @@ define
                             fHeight:    "480px",                                /* [20] */
                             onCancel:   function () {_host._NotifySystemControllerEvent.call (_host, "kRead"     );},
                             onChange:   function () {_host._NotifySystemControllerEvent.call (_host, "kChange"   );},
-                            /* onLoad:     function () {_host._NotifySystemControllerEvent.call (_host, "kEdit"     );}, disabled -> seems unecessary*/
                             onLoad:     function () {},
                             onSave:     function () {_host._NotifySystemControllerEvent.call (_host, "kSave"     );},
                         }
@@ -545,7 +599,7 @@ define
                         objExercise.fID                     = ndeProps.id;
                         objExercise.fHasChanged             = false;
                         objExercise.fTextQuestion           = ndeExercise.innerHTML;
-                        objExercise.fTextSolution           = this._SystemFileLoadText (ndeProps.id);
+                        objExercise.fTextSolution           = this._SystemFileGetStoredText (ndeProps.id);
                         objExercise.fNodeParent             = ndeExercise;
                         objExercise.fNodeText               = domConstruct.create ("div", {'class': "exercise-text"     });
                         objExercise.fNodeToolbar            = domConstruct.create ("div", {"class": "exercise-toolbar"  });
@@ -558,8 +612,7 @@ define
                                 label:          "<img src=\"" + iconURLEdit + "\"/>",
                                 onClick: function () 
                                 {
-                                    _host.fExerciseNext = _host.fModel.GetByID (this.exerciseUID);
-                                    _host._NotifySystemControllerEvent.call (_host, "kEdit");
+                                    _host._NotifySystemFileOpenExercise (this.exerciseUID);
                                 }
                             }
                         )
@@ -585,11 +638,69 @@ define
             
             _NotifySystemControllerEvent: function (event)
             {
+                if (gDebug) console.log ("TWorksheet::_NotifySystemControllerEvent ('" + event + "')");
+                
                 this.fController.Notify.call (this.fController, event);
+            },
+            
+            _NotifySystemEditorChangeObserverSetPaused: function ()
+            {
+                if (gDebug) console.log ("TWorksheet::_NotifySystemEditorChangeObserverSetPaused ()");
+
+                this.fEditor.SetOberverContentChanged_Paused.call (this.fEditor);
+                this.fPreTransitionSequence.NotifyStepFinished ();
+            },
+            
+            _NotifySystemEditorChangeObserverSetRunning: function ()
+            {
+                if (gDebug) console.log ("TWorksheet::_NotifySystemEditorChangeObserverSetRunning ()");
+
+                this.fEditor.SetOberverContentChanged_Running.call (this.fEditor);
+                this.fPreTransitionSequence.NotifyStepFinished ();
+            },
+            
+            _NotifySystemFileOpenExercise: function (exerciseUID)
+            {
+                var doOpen;
+
+                doOpen = false;
+                if (this.fExerciseCurrent == null)
+                {
+                    doOpen = true;
+                }
+                else if (exerciseUID != this.fExerciseCurrent.fID)
+                {
+                    doOpen = true;
+                }
+                
+                if (gDebug)
+                {
+                    if (doOpen)
+                    {
+                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseUID + "')");
+                    }
+                    else
+                    {
+                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseUID + "'): Cancelled, as it's already open.");
+                    }
+                }
+                
+                if (doOpen)
+                {
+                    this.fExerciseNext = this.fModel.GetByID (exerciseUID);
+                    this._NotifySystemControllerEvent ("kEdit");
+                }
             },
             
             _NotifySystemFileSave: function (actions)
             {
+                if (gDebug)
+                {
+                    console.groupCollapsed ("TWorksheet::_NotifySystemFileSave (actions)");
+                    console.log ("actions: " + JSON.stringify (actions));
+                    console.groupEnd ();
+                }
+                
                 if (actions.saveAction == this.fController.ESaveAction.kSave)
                 {
                     this._NotifySystemFileSaveConfirmed ();
@@ -600,20 +711,21 @@ define
                 }
                 else
                 {
-                    console.log ("_NotifySystemFileSave (kNoAction)");
                     this.fPreTransitionSequence.NotifyStepFinished ();
                 }
             },
             
             _NotifySystemFileSaveAborted: function ()
             {
-                console.log ("_NotifySystemFileSaveAborted");
+                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSaveAborted ()");
+                
                 this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
             _NotifySystemFileSaveConfirmed: function ()
             {
-                console.log ("_NotifySystemFileSaveConfirmed");
+                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSaveConfirmed ()");
+                
                 this._SystemFileSave ();
                 this.fPreTransitionSequence.NotifyStepFinished ();
             },
@@ -622,6 +734,8 @@ define
             {
                 var _host = this;
                 
+                if (gDebug) console.log ("TWorksheet::_NotifyUICollapseCurrent ()");
+
                 fx.wipeOut 
                 (
                     {
@@ -639,6 +753,8 @@ define
             {
                 var _host = this;
                 
+                if (gDebug) console.log ("TWorksheet::_NotifyUIExpandNext ()");
+
                 fx.wipeIn 
                 (
                     {
@@ -654,6 +770,8 @@ define
             
             _NotifyUIMigrateEditor: function ()
             {
+                if (gDebug) console.log ("TWorksheet::_NotifyUIMigrateEditor ()");
+
                 this.fEditor.SetType (this.fExerciseNext.fContentType, this.fExerciseNext.fContentLang);
                 domConstruct.place (this.fEditor.domNode, this.fExerciseNext.fNodeWorkspace, "only");
                 this.fPreTransitionSequence.NotifyStepFinished ();
@@ -665,6 +783,8 @@ define
                 
                 var yNode;
                 var yTarget;
+
+                if (gDebug) console.log ("TWorksheet::_NotifyUIScrollWindow ()");
 
                 yNode       = domGeometry.position (this.fExerciseNext.fNodeWorkspace, false);
                 yTarget     = yNode.y - 50;
@@ -684,21 +804,23 @@ define
             
             _SystemCopyAllToClipboard: function ()
             {
+                if (gDebug) console.log ("TWorksheet::_SystemCopyAllToClipboard ()");
+
                 /* TODO: Develop (How do they do it on Github?) */
             },
             
-            _SystemFileLoadIntoCurrent: function ()
+            _SystemFileLoadCurrent: function ()
             {
-                var content;
-                
-                content                                 = this._SystemFileLoadText (this.fExerciseCurrent.fID);
-                this.fExerciseCurrent.fTextSolution     = content;
-                this.fEditor.SetContent         (content);
+                if (gDebug) console.log ("TWorksheet::_SystemFileLoadCurrent ()");
+
+                this.fEditor.SetContent         (this.fExerciseCurrent.fTextSolution);
                 this.fEditor.ClearFlagChanged   ();
             },
 
-            _SystemFileLoadText: function (exerciseID)
+            _SystemFileGetStoredText: function (exerciseID)
             {
+                if (gDebug) console.log ("TWorksheet::_SystemFileGetStoredText ()");
+
                 return "This is a dummy text"; /* TODO */
             },
             
@@ -706,6 +828,8 @@ define
             {
                 var content;
                 
+                if (gDebug) console.log ("TWorksheet::_SystemFileSave ()");
+
                 content                             = this.fEditor.GetContent ();
                 this.fExerciseCurrent.fTextSolution = content;
 // TODO               this.fHost.Save (this.fExerciseCurrent.fID, content);
