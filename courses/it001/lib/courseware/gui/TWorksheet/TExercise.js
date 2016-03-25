@@ -26,16 +26,15 @@ define
              */
             constructor: function ()
             {
-                this.fContentType            = "";
                 this.fContentLang            = "";
-                this.fID                     = "";
+                this.fContentType            = "";
                 this.fHasChanged             = false;
+                this.fID                     = "";
+                this.fIsOpen                 = false;
                 this.fNodeParent             = null;
                 this.fNodeText               = null;
                 this.fNodeToolbar            = null;
                 this.fNodeWorkspace          = null;
-                this.fNodeText               = "";
-                this.fIsNullObject           = true;
                 this.fObjButton              = null;
                 this.fTextQuestion           = "";
                 this.fTextSolution           = "";

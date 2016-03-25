@@ -12,7 +12,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = true;
+        var gDebug = false;
         
         var ESaveAction =
         {
@@ -157,6 +157,20 @@ define
                         handler:    function ()
                         {
                             this.Handle_Editing_Read ();
+                        }
+                    },
+                    {   /* Save the current answer. */
+                        event:                  "kSave",
+                        stateNext:              "kEditing",
+                        actions:
+                        {
+                            saveAction:         ESaveAction.kSave,
+                            doCollapseCurrent:  false,
+                            doExpandNext:       false
+                        },
+                        handler:    function ()
+                        {
+                            this.Handle_Editing_Save ();
                         }
                     },
                     {   /* Terminate worksheet. */

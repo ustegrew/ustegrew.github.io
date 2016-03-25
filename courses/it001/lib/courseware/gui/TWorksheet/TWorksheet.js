@@ -58,7 +58,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = true;
+        var gDebug = false;
         
         var TPreTransitionSequence = function (host)
         {
@@ -390,6 +390,17 @@ define
             },
             
             /**
+             * Event handler: Save the current answer.
+             */
+            Handle_Editing_Save: function ()
+            {
+                if (gDebug) console.log ("TWorksheet::Handle_Editing_Save ()");
+                
+                /* Do nothing here, all actions already done. */
+            },
+            
+
+            /**
              * Event handler: Terminate worksheet.
              */
             Handle_Editing_Terminate: function ()
@@ -598,6 +609,7 @@ define
                         objExercise.fContentLang            = fragments [1];
                         objExercise.fID                     = ndeProps.id;
                         objExercise.fHasChanged             = false;
+                        objExercise.fIsOpen                 = false;
                         objExercise.fTextQuestion           = ndeExercise.innerHTML;
                         objExercise.fTextSolution           = this._SystemFileGetStoredText (ndeProps.id);
                         objExercise.fNodeParent             = ndeExercise;
@@ -672,6 +684,10 @@ define
                 {
                     doOpen = true;
                 }
+                else if (! this.fExerciseCurrent.fIsOpen)
+                {
+                    doOpen = true;
+                }
                 
                 if (gDebug)
                 {
@@ -740,9 +756,10 @@ define
                 (
                     {
                         node:       this.fExerciseCurrent.fNodeWorkspace,
-                        duration:   100,
+                        duration:   250,
                         onEnd:      function () 
                         {
+                            _host.fExerciseCurrent.fIsOpen = false;
                             _host.fPreTransitionSequence.NotifyStepFinished ();
                         }
                     }
@@ -759,9 +776,10 @@ define
                 (
                     {
                         node:       this.fExerciseNext.fNodeWorkspace,
-                        duration:   100,
+                        duration:   250,
                         onEnd:      function ()
                         {
+                            _host.fExerciseNext.fIsOpen = true;
                             _host.fPreTransitionSequence.NotifyStepFinished ();
                         }
                     }
@@ -817,11 +835,11 @@ define
                 this.fEditor.ClearFlagChanged   ();
             },
 
-            _SystemFileGetStoredText: function (exerciseID)
+            _SystemFileGetStoredText: function (exerciseUID)
             {
                 if (gDebug) console.log ("TWorksheet::_SystemFileGetStoredText ()");
 
-                return "This is a dummy text"; /* TODO */
+                return "Exercise: " + exerciseUID; /* TODO */
             },
             
             _SystemFileSave: function ()
@@ -877,11 +895,6 @@ define
 
  [40]: For a new TController we create an empty dummy exercise as fExerciseCurrent,
        fExerciseNext. Setting it to null would create complications.
-
- [50]: Tests whether current exercise is an empty one - which means that it's the
-       first exercise the user opens since the hosting web page has been loaded.
-       Any exercise opened after the first one will have the fIsNullObject property 
-       set to false.
 
  [60]: The TController calls each event handler with this TWorksheet instance as context - therefore, 
        in all event handlers we can use the 'this' reference to refer to this TWorksheet instance.
