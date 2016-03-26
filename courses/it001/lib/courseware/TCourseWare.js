@@ -11,10 +11,10 @@ define
         "dojo/query",
         "require",
         "dojo/request/script",
-        "dojo/NodeList-manipulate",
         "courseware/util/validator/TValidatorJSON",
         "courseware/gui/TCourseWareGUI/TCourseWareGUI",
-        "courseware/storage/TLocalStorage"
+        "courseware/storage/TLocalStorage",
+        "dojo/NodeList-manipulate"
     ],
     function 
     (
@@ -387,7 +387,7 @@ define
              */
             constructor: function (params, srcNodeRef)
             {
-                this.fLocalStorage = new TLocalStorage ({driver:"compress"});
+                this.fLocalStorage = new TLocalStorage ({driver:"compression"});
             },
 
             /* -------------------------------------------------------------

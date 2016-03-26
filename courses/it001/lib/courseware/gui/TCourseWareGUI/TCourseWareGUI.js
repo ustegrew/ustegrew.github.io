@@ -183,7 +183,7 @@ define
              * @param   {type} srcNodeRef
              * @returns {undefined}
              */
-            constructor: function (params, srcNodeRef)
+            constructor: function (params)
             {
                 this.fHost = params.fHost;
             },
