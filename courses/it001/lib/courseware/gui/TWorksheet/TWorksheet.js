@@ -58,7 +58,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = false;
+        var gDebug = true;
         
         var TPreTransitionSequence = function (host)
         {
@@ -271,6 +271,33 @@ define
              */
             fModel: null,
             
+            GetCurrentSolution: function ()
+            {
+                var ret;
+                
+                ret = 
+                {
+                    id:         this.fExerciseCurrent.fID,
+                    content:    this.fExerciseCurrent.fTextSolution
+                };
+                
+                return ret;
+            },
+            
+            SetCurrentSolution: function (content)
+            {
+                this.fExerciseCurrent.fTextSolution = content;
+            },
+            
+            GetAllSolutions: function ()
+            {
+                var ret;
+                // TODO develop this
+                ret = [];
+                
+                return ret;
+            },
+            
             /** *****************************************************************************************************************
              * Event handlers - called from associated TController instance.    [60]
              ***************************************************************************************************************** **/
@@ -398,7 +425,6 @@ define
                 
                 /* Do nothing here, all actions already done. */
             },
-            
 
             /**
              * Event handler: Terminate worksheet.
@@ -421,8 +447,6 @@ define
             Handle_Null_Start: function ()
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Null_Start ()");
-
-                /* Do nothing here, all actions already done. */
             },
             
             /**
@@ -487,7 +511,13 @@ define
             constructor: function (params)
             {
                 this.fHost                      = params.fHost;
-                this.fHandlers                  = {onLoad: params.onLoad};
+                this.fHandlers                  = 
+                {
+                    onFinishedLoad:                params.onFinishedLoad,
+                    onRequestCopyAllToClipboard:   params.onRequestCopyAllToClipboard,
+                    onRequestLoadSolution:         params.onRequestLoadSolution,
+                    onRequestSaveSolution:         params.onRequestSaveSolution
+                };
 
                 this.fController                = new TController ({fHost: this});
                 this.fModel                     = new TModel ();
@@ -496,6 +526,19 @@ define
                 this.fExerciseCurrent           = null;
                 this.fExerciseNext              = null;
                 this.fPreTransitionSequence     = new TPreTransitionSequence (this);
+            },
+            
+            destructor: function ()
+            {
+                if (this.fEditor != null)
+                {
+                    this.fEditor.destructor ();
+                }
+                
+                if (this.fDlgDoSaveConfirm != null)
+                {
+                    this.fDlgDoSaveConfirm.destructor ();
+                }
             },
 
             startup: function ()
@@ -562,13 +605,13 @@ define
                     this.fEditor = new TExerciseEditGUI
                     (
                         {
-                            fHost:      window,
-                            fWidth:     "745px",                                /* [20] */
-                            fHeight:    "480px",                                /* [20] */
-                            onCancel:   function () {_host._NotifySystemControllerEvent.call (_host, "kRead"     );},
-                            onChange:   function () {_host._NotifySystemControllerEvent.call (_host, "kChange"   );},
-                            onLoad:     function () {},
-                            onSave:     function () {_host._NotifySystemControllerEvent.call (_host, "kSave"     );},
+                            fHost:              window,
+                            fWidth:             "745px",                                /* [20] */
+                            fHeight:            "480px",                                /* [20] */
+                            onFinishedChange:   function () {_host._NotifySystemControllerEvent.call (_host, "kChange"   );},
+                            onFinishedLoad:     function () {},
+                            onRequestCancel:    function () {_host._NotifySystemControllerEvent.call (_host, "kRead"     );},
+                            onRequestSave:      function () {_host._NotifySystemControllerEvent.call (_host, "kSave"     );},
                         }
                     );
                     this.fEditor.startup ();
@@ -611,7 +654,7 @@ define
                         objExercise.fHasChanged             = false;
                         objExercise.fIsOpen                 = false;
                         objExercise.fTextQuestion           = ndeExercise.innerHTML;
-                        objExercise.fTextSolution           = this._SystemFileGetStoredText (ndeProps.id);
+                        objExercise.fTextSolution           = "";
                         objExercise.fNodeParent             = ndeExercise;
                         objExercise.fNodeText               = domConstruct.create ("div", {'class': "exercise-text"     });
                         objExercise.fNodeToolbar            = domConstruct.create ("div", {"class": "exercise-toolbar"  });
@@ -620,16 +663,18 @@ define
                         objExercise.fObjButton              = new TButton
                         (
                             {
-                                exerciseUID:    objExercise.fID,
+                                exerciseID:     objExercise.fID,
                                 label:          "<img src=\"" + iconURLEdit + "\"/>",
                                 onClick: function () 
                                 {
-                                    _host._NotifySystemFileOpenExercise (this.exerciseUID);
+                                    _host._NotifySystemFileOpenExercise (this.exerciseID);
                                 }
                             }
                         )
                         objExercise.fObjButton.startup ();
                         this.fModel.Register (objExercise);
+                        this.fExerciseCurrent = objExercise;
+                        this.fHandlers.onRequestLoadSolution (this.fExerciseCurrent.fID);
                         
                         /* Set up GUI */
                         domAttr.set        (ndeExercise, "class", "exercise");
@@ -671,7 +716,7 @@ define
                 this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
-            _NotifySystemFileOpenExercise: function (exerciseUID)
+            _NotifySystemFileOpenExercise: function (exerciseID)
             {
                 var doOpen;
 
@@ -680,7 +725,7 @@ define
                 {
                     doOpen = true;
                 }
-                else if (exerciseUID != this.fExerciseCurrent.fID)
+                else if (exerciseID != this.fExerciseCurrent.fID)
                 {
                     doOpen = true;
                 }
@@ -693,17 +738,17 @@ define
                 {
                     if (doOpen)
                     {
-                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseUID + "')");
+                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseID + "')");
                     }
                     else
                     {
-                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseUID + "'): Cancelled, as it's already open.");
+                        console.log ("TWorksheet::_NotifySystemFileOpenExercise ('" + exerciseID + "'): Cancelled, as it's already open.");
                     }
                 }
                 
                 if (doOpen)
                 {
-                    this.fExerciseNext = this.fModel.GetByID (exerciseUID);
+                    this.fExerciseNext = this.fModel.GetByID (exerciseID);
                     this._NotifySystemControllerEvent ("kEdit");
                 }
             },
@@ -742,7 +787,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::_NotifySystemFileSaveConfirmed ()");
                 
-                this._SystemFileSave ();
+                this._SystemFileSaveCurrent ();
                 this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
@@ -824,7 +869,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::_SystemCopyAllToClipboard ()");
 
-                /* TODO: Develop (How do they do it on Github?) */
+                this.fHandlers.onRequestCopyAllToClipboard ();
             },
             
             _SystemFileLoadCurrent: function ()
@@ -835,23 +880,16 @@ define
                 this.fEditor.ClearFlagChanged   ();
             },
 
-            _SystemFileGetStoredText: function (exerciseUID)
-            {
-                if (gDebug) console.log ("TWorksheet::_SystemFileGetStoredText ()");
-
-                return "Exercise: " + exerciseUID; /* TODO */
-            },
-            
-            _SystemFileSave: function ()
+            _SystemFileSaveCurrent: function ()
             {
                 var content;
                 
-                if (gDebug) console.log ("TWorksheet::_SystemFileSave ()");
+                if (gDebug) console.log ("TWorksheet::_SystemFileSaveCurrent ()");
 
                 content                             = this.fEditor.GetContent ();
                 this.fExerciseCurrent.fTextSolution = content;
-// TODO               this.fHost.Save (this.fExerciseCurrent.fID, content);
                 this.fEditor.ClearFlagChanged ();
+                this.fHandlers.onRequestSaveSolution ();
             },
         };
     

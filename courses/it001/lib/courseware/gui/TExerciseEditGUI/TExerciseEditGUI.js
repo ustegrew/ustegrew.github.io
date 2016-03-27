@@ -38,7 +38,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = false;
+        var gDebug = true;
         
         var kObserverInterval = 1000;                                           /* [110] */
 
@@ -106,7 +106,7 @@ define
                     {
                         this.fContentOld                   = content;
                         this.fHost.fAPIEditor.fHasChanged  = true;
-                        this.fHost.fHandlers.onChange.call (this.fHost.fHost);
+                        this.fHost.fHandlers.onFinishedChange.call (this.fHost.fHost);
                     }
                     window.setTimeout (function () {_this._Run.call (_this)}, kObserverInterval);
                 }
@@ -170,11 +170,15 @@ define
             
             ClearFlagChanged : function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::ClearFlagChanged ()");
+                
                 this.fAPIEditor.fHasChanged = false;
             },
             
             GetContent: function () 
             {
+                if (gDebug) console.log ("TExerciseEditGUI::GetContent ()");
+                
                 var ret;
                 
                 ret = this.fAPIEditor.GetContent ();
@@ -184,6 +188,8 @@ define
             
             HasChanged: function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::HasChanged ()");
+                
                 var ret;
                 
                 ret = this.fAPIEditor.fHasChanged;
@@ -193,21 +199,29 @@ define
             
             SetContent: function (content)
             {
+                if (gDebug) console.log ("TExerciseEditGUI::SetContent ()");
+                
                 this.fAPIEditor.SetContent (content);
             },
             
             SetOberverContentChanged_Paused: function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::SetOberverContentChanged_Paused ()");
+                
                 this.fAPIEditor.SetObserverPaused ();
             },
             
             SetOberverContentChanged_Running: function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::SetOberverContentChanged_Running ()");
+                
                 this.fAPIEditor.SetObserverRunning ();
             },
             
             SetType: function (type, lang)
             {
+                if (gDebug) console.log ("TExerciseEditGUI::SetType ()");
+                
                 this._SetType (type, lang);
             },
             
@@ -227,6 +241,8 @@ define
              */
             constructor: function (params)
             {
+                if (gDebug) console.log ("TExerciseEditGUI::constructor ()");
+                
                 if ((typeof params.fHost !== 'object') ||  (params.fHost == null))
                 {
                     throw "TExerciseEditGUI::constructor (): params.fHost is " +
@@ -263,11 +279,25 @@ define
                 };
                 this.fHandlers =                                                /* [10] */
                 {
-                    onCancel:   params.onCancel,
-                    onChange:   params.onChange,
-                    onLoad:     params.onLoad,
-                    onSave:     params.onSave
+                    onFinishedChange:   params.onFinishedChange,
+                    onFinishedLoad:     params.onFinishedLoad,
+                    onRequestCancel:    params.onRequestCancel,
+                    onRequestSave:      params.onRequestSave
                 };
+            },
+            
+            destructor: function ()
+            {
+                this.fAPIEditor.SetObserverPaused ();
+                if (this.fAPIEditor.fHasEditor)                                 /* [20] */
+                {
+                    this.fAPIEditor.fHasEditor      = false;                    /* [20] */
+                    this.fAPIEditor.fEditor.destroy ();
+                    this.fAPIEditor.fEditor         = null;
+                    this.fAPIEditor.fEarlyContent   = null;
+                    domConstruct.destroy (this.fPnlWrapper);
+                    
+                }
             },
             
             /* -------------------------------------------------------------
@@ -301,6 +331,8 @@ define
              */
             startup: function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::startup ()");
+                
                 var _host = this;
                 
                 var pnlWrapper;
@@ -341,7 +373,7 @@ define
                     (
                         {
                             label:      "Save",
-                            onClick:    function () {_host.fHandlers.onSave.call (_host.fHost);}
+                            onClick:    function () {_host.fHandlers.onRequestSave.call (_host.fHost);}
                         }
                     )
                 );
@@ -355,7 +387,7 @@ define
                     (
                         {
                             label:      "Close",
-                            onClick:    function (){_host.fHandlers.onCancel.call (_host.fHost);}
+                            onClick:    function (){_host.fHandlers.onRequestCancel.call (_host.fHost);}
                         }
                     )
                 );
@@ -391,6 +423,8 @@ define
             
             _SetType: function (type, srcLang)
             {
+                if (gDebug) console.log ("TExerciseEditGUI::_SetType ('" + type + "', '" + srcLang + "')");
+                
                 var _host = this;
                 
                 var eType;
@@ -483,7 +517,6 @@ define
                         this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
                         (
                             {
-//                                fContent:       null,
                                 width:          this.fConfig.fWidth,
                                 height:         this.fConfig.fHeight,
                                 plugins:
@@ -500,20 +533,7 @@ define
                                         name:       "formatBlock",
                                         plainText:  true
                                     }
-                                ]//,
-//                                observeChanges: function ()                     /* [110] */
-//                                {
-//                                    var newContent;
-//                                    
-//                                    newContent = _host.fAPIEditor.fEditor.get ("value");            /* [111] */
-//                                    if (newContent !== _host.fAPIEditor.fEditor.fContent)
-//                                    {
-//                                        _host.fAPIEditor.fEditor.fContent   = newContent;
-//                                        _host.fAPIEditor.fHasChanged        = true;
-//                                        _host.fHandlers.onChange.call (_host);
-//                                    }
-//                                    window.setTimeout (_host.fAPIEditor.fEditor.observeChanges, 1000);
-//                                }                            
+                                ]
                             },
                             this.fPnlWrapperEdit
                         );
@@ -521,7 +541,6 @@ define
                         (
                             function ()
                             {
-//                                _host.fAPIEditor.fEditor.fContent   = _host.fAPIEditor.fEditor.get ("value");
                                 _host.fAPIEditor.fHasEditor         = true;             /* [20] */
                                 _host._HandleOnLoad.call (_host);
                             }
@@ -613,11 +632,13 @@ define
             
             _HandleOnLoad: function ()
             {
+                if (gDebug) console.log ("TExerciseEditGUI::_HandleOnLoad ()");
+                
                 if (this.fAPIEditor.fEarlyContent !== null)
                 {
                     this.fAPIEditor.SetContent (this.fAPIEditor.fEarlyContent);
                 }
-                this.fHandlers.onLoad.call (this.fHost);
+                this.fHandlers.onFinishedLoad.call (this.fHost);
             },
             
             _Log: function (msg)

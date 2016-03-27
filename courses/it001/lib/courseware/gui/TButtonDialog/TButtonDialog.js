@@ -90,6 +90,14 @@ define
                 this.fNodeContent   = null;
                 this.fNodeButtons   = null;
             },
+            
+            destructor: function ()
+            {
+                if (this.fDialog != null)
+                {
+                    this.fDialog.destroy ();
+                }
+            },
 
             /* -------------------------------------------------------------
              * Dijit overrides 

@@ -12,6 +12,7 @@ define
         "dijit/Toolbar",
         "dijit/form/Button",
         "jsdemo/TJSDemo",
+        "courseware/gui/TWorksheet/TWorksheet",
         "dojo/NodeList-dom",
         "course/it001/res/scripts/decl",                                        /* [1] */
         "course/it001/lessons/00/scripts/examples",
@@ -34,7 +35,8 @@ define
         Dialog,
         Toolbar,
         Button,
-        TJSDemo
+        TJSDemo,
+        TWorksheet
     )
     {
         /* Removes leading spaces and deletes the last empty line 
@@ -165,6 +167,38 @@ define
             );
         };
         
+        var InitializeWorksheet = function ()
+        {
+            if (window.it001.gWorksheet != null)
+            {
+                window.it001.gWorksheet.destructor ();
+            }
+            
+            window.it001.gWorksheet = new TWorksheet 
+            (
+                {
+                    fHost:                         window,
+                    onFinishedLoad: function () 
+                    {
+                        console.log("Worksheet loaded");
+                    },
+                    onRequestCopyAllToClipboard: function ()
+                    {
+                        console.log (JSON.stringify (window.it001.gWorksheet.GetAllSolutions ()));
+                    },
+                    onRequestLoadSolution: function (id) 
+                    {
+                        window.it001.gWorksheet.SetCurrentSolution ("Exercise: " + id);
+                    },
+                    onRequestSaveSolution: function () 
+                    {
+                        console.log (JSON.stringify (window.it001.gWorksheet.GetCurrentSolution ()));
+                    },
+                }
+            );
+            window.it001.gWorksheet.startup ();
+        };
+        
         window.it001.onLoadCourse = function ()
         {
             var repo;
@@ -195,6 +229,10 @@ define
             /* Remove leading spaces from each source code segment, 
              * preserving indentation - as well as, delete last line if empty.  [10] */
             NormalizeSourceListings ();
+            
+            /* Set up worksheet (for exercises)
+             **/
+            InitializeWorksheet ();
             
             /* Initialize example sections. This creates a menu with action items 
              * above each section */

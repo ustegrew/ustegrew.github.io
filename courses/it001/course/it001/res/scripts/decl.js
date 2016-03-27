@@ -17,6 +17,11 @@ define ([], function ()
     {
         window.it001.gProgramRepository = {};
     }
+    
+    if (! window.it001.hasOwnProperty ("gWorksheet"))
+    {
+        window.it001.gWorksheet = null;
+    }
 
     /* Sets some configuration parameters for the course.
      */
@@ -34,7 +39,6 @@ define ([], function ()
          *       TODO: Remove for production code.
          */
         debugShowPrograms: false,
-        
     };
 
     window.it001.gProgramRepository ["notImpl"] =

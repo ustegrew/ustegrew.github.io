@@ -73,8 +73,23 @@ require
         _wsheet  = new TWorksheet 
         (
             {
-                fHost:      window,
-                onLoad:     function () {console.log("Worksheet loaded");},
+                fHost:                         window,
+                onFinishedLoad: function () 
+                {
+                    console.log("Worksheet loaded");
+                },
+                onRequestCopyAllToClipboard: function ()
+                {
+                    console.log (JSON.stringify (_wsheet.GetAllSolutions ()));
+                },
+                onRequestLoadSolution: function (id) 
+                {
+                    _wsheet.SetCurrentSolution ("Exercise: " + id);
+                },
+                onRequestSaveSolution: function () 
+                {
+                    console.log (JSON.stringify (_wsheet.GetCurrentSolution ()));
+                },
             }
         );
         _wsheet.startup ();
