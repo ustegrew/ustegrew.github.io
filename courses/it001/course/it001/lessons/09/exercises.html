@@ -2,145 +2,173 @@
     <head>
     </head>
     <body>
-        <article>
-            <div class="note">
-                Just for these exercises, <b>disregard</b> the advice to <i>Google!</i> or 
-                <i>Be Lazy!</i> As a student you won't benefit from a ready made solution! However, 
-                I encourage you to use a search engine to research basic information when you need to do so. For 
-                example, for the exercise about <a target="_blank" href="#ex_stackitup">stacks</a>, you may want to find some more 
-                information on what stacks are before you start planning your program.
+        <!-- Placeholder for global worksheet menu -->
+        <div data-courseware-type="globalMenu">&nbsp;</div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.b855','type':'src/js'}">
+                <h2>Fractinello!</h2>
+                <p>
+                    No worries - this is not a call to invent a new flavour of italian ice cream! However, what 
+                    I'd like you to do is to write a program which adds two fractions! The program must present 
+                    the result in its simplest and creamiest form, like Mr. Fractinello!s Vanilla Milli! 
+                    Examples:<br/>
+                    <img src="course/it001/lessons/09/img/01.png"/>
+                </p>
             </div>
-
-            <h2>Fractinello!</h2>
-            <p>
-                No worries - this is not a call to invent a new flavour of italian ice cream! However, what 
-                I'd like you to do is to write a program which adds two fractions! The program must present 
-                the result in its simplest and creamiest form, like Mr. Fractinello!s Vanilla Milli! 
-                Examples:<br/>
-                <img src="course/it001/lessons/09/img/01.png"/>
-            </p>
-
-            <h2>Number land!</h2>
-            <p>
-                Write a program which converts a positive decimal integer number into a number in another 
-                number system. For the target system we allow bases between <tt>1</tt> and <tt>16</tt>. For
-                example, if we want to convert the decimal number 25 into its septinary (base 7) equivalent, 
-                the program would show the value 34.
-            </p>
-
-            <h2>Convert it!</h2>
-            <p>
-                Javascript provides a function <tt>parseInt (str)</tt> which converts a numerical string into
-                a number. Write a program which does the same. The program must reject invalid input (e.g. 
-                <tt>"3w5"</tt>) or strings that are longer than eight characters. Do not use implicit type 
-                casting (e.g. <tt>1 * "123"</tt>), and do not use any inbuilt Javascript conversion functions.
-            </p>
-
-            <h2>Let's eat Pie in Monte Carlo!</h2>
-            <p>
-                Sorry, it's not about travelling nor culinaric finesse, but about the Monte Carlo method of computation! 
-                Today we'll use it to compute the number &pi; (which is something in the region of 3.14). The idea
-                goes as follows:
-            </p>
-            <p>
-                Imagine a square piece of paper with a side length of 1 meter. On it we draw a quarter 
-                circle with a radius of 1 meter and the center point on one of the corners of the 
-                paper:<br/>
-                <img src="course/it001/lessons/09/img/02.png"/>
-            </p>
-            <p>
-                Now we put the paper on the floor next to a table. Then we climb on the table and
-                empty a pepper shaker all over the paper. After some shaking, the paper will look 
-                peppered like this:<br/>
-                <img src="course/it001/lessons/09/img/03.png"/>
-            </p>
-            <p>
-                Now we count the number of pepper grains inside the quarter circle, and the total number of 
-                grains on the paper. Here comes the surprise: The relationship between both counts will 
-                somehow contain an approximate of the number &pi; (PI = 3.14)!
-            </p>
-            <p>
-                After the long intro - here's your exercise: Write a program which simulates the above paper 
-                and pepper method to calculate an approximate value of the number &pi; (and print it to the console)! 
-            </p>
-
-            <h2><a name="ex_stackitup"></a>StackItUp!</h2>
-            <p>
-                A data structure which is often used in computing is the <em>stack</em>. It's mostly used when 
-                a program needs to remember data for later use, before going off to do something else. A stack 
-                inserts and retrieves data items at one end. Inserting an item is called <em>pushing</em>, and 
-                retrieving an item is called <em>popping</em>. Any popped item is removed from the stack. This
-                works quite similar to adding and removing coins to/from a stack:<br/>
-                <img src="course/it001/lessons/09/img/04.png"/>
-            </p>
-            <p>
-                Your task (should you accept it; personally I think you have little choice in this matter), is 
-                to write a program which implments a stack. The program must support these operations:
-            </p>
-            <table class="itemization">
-                <tr>
-                    <td><tt>Push (item)</tt></td>
-                    <td>Pushes <tt>item</tt> onto the stack.</td>
-                </tr>
-                <tr>
-                    <td><tt>item = Pop ()</tt></td>
-                    <td>Returns the stack's top element and deletes it from the stack.</td>
-                </tr>
-                <tr>
-                    <td><tt>n = GetSize ()</tt></td>
-                    <td>Returns the curent number of elements stored in the stack.</td>
-                </tr>
-            </table>
-            <p>
-                Together with these operations, identify weaknesses in your design and address these by 
-                building in some security - e.g. ensuring that an error message is printed to the console if
-                someone tries to pop an element off an empty stack!
-            </p>
-            <div class="note">
-                Javascript has got some inbuilt functions related to pushing onto / popping from stacks 
-                (e.g. <tt>Aray.push ()</tt>, <tt>Array.pop ())</tt>, but don't use these! Instead, write 
-                your own code which does the pushing and popping!
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.2502','type':'src/js'}">
+                <h2>Number land!</h2>
+                <p>
+                    Write a program which converts a positive decimal integer number into a number in another 
+                    number system. For the target system we allow bases between <tt>1</tt> and <tt>16</tt>. For
+                    example, if we want to convert the decimal number 25 into its septinary (base 7) equivalent, 
+                    the program would show the value 34.
+                </p>
             </div>
-
-            <h2>All backwards...</h2>
-            <p>
-                Using the stack design you developed in the <a target="_blank" href="#ex_stackitup">previous exercise</a>, 
-                write a program which reverses a string!
-            </p>
-
-            <h2>Simultanelicious!</h2>
-            <p>
-                Here's a system of simultaneous equations:
-            </p>
-            <div class="example">
-                <pre class="prettyprint">
-                    2a + 5b = 29
-                    7a - 2b = 4
-                </pre>                      
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.a329','type':'src/js'}">
+                <h2>Convert it!</h2>
+                <p>
+                    Javascript provides a function <tt>parseInt (str)</tt> which converts a numerical string into
+                    a number. Write a program which does the same. The program must reject invalid input (e.g. 
+                    <tt>"3w5"</tt>) or strings that are longer than eight characters. Do not use implicit type 
+                    casting (e.g. <tt>1 * "123"</tt>), and do not use any inbuilt Javascript conversion functions.
+                </p>
             </div>
-            <p>
-                The solution to this system is <tt>a = 2</tt>, <tt>b = 5</tt>. Here's a system which is unsolvable, 
-                because it does not have any solution:
-            </p>
-            <div class="example">
-                <pre class="prettyprint">
-                    2x + 3y = 5
-                    2x + 3y = 4
-                </pre>
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.7c1a','type':'src/js'}">
+                <h2>Let's eat Pie in Monte Carlo!</h2>
+                <p>
+                    Sorry, it's not about travelling nor culinaric finesse, but about the Monte Carlo method of computation! 
+                    Today we'll use it to compute the number &pi; (which is something in the region of 3.14). The idea
+                    goes as follows:
+                </p>
+                <p>
+                    Imagine a square piece of paper with a side length of 1 meter. On it we draw a quarter 
+                    circle with a radius of 1 meter and the center point on one of the corners of the 
+                    paper:<br/>
+                    <img src="course/it001/lessons/09/img/02.png"/>
+                </p>
+                <p>
+                    Now we put the paper on the floor next to a table. Then we climb on the table and
+                    empty a pepper shaker all over the paper. After some shaking, the paper will look 
+                    peppered like this:<br/>
+                    <img src="course/it001/lessons/09/img/03.png"/>
+                </p>
+                <p>
+                    Now we count the number of pepper grains inside the quarter circle, and the total number of 
+                    grains on the paper. Here comes the surprise: The relationship between both counts will 
+                    somehow contain an approximate of the number &pi; (PI = 3.14)!
+                </p>
+                <p>
+                    After the long intro - here's your exercise: Write a program which simulates the above paper 
+                    and pepper method to calculate an approximate value of the number &pi; (and print it to the console)! 
+                </p>
             </div>
-            <p>
-                And here's a system which is unsolvable because it does have an infinite amount of solutions:
-            </p>
-            <div class="example">
-                <pre class="prettyprint">
-                    x + y = 2
-                    x + y = 2
-                </pre>                            
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.27c8','type':'src/js'}">
+                <h2>StackItUp!</h2>
+                <p>
+                    A data structure which is often used in computing is the <em>stack</em>. It's mostly used when 
+                    a program needs to remember data for later use, before going off to do something else. A stack 
+                    inserts and retrieves data items at one end. Inserting an item is called <em>pushing</em>, and 
+                    retrieving an item is called <em>popping</em>. Any popped item is removed from the stack. This
+                    works quite similar to adding and removing coins to/from a stack:<br/>
+                    <img src="course/it001/lessons/09/img/04.png"/>
+                </p>
+                <p>
+                    Your task (should you accept it; personally I think you have little choice in this matter), is 
+                    to write a program which implments a stack. The program must support these operations:
+                </p>
+                <table class="itemization">
+                    <tr>
+                        <td><tt>Push (item)</tt></td>
+                        <td>Pushes <tt>item</tt> onto the stack.</td>
+                    </tr>
+                    <tr>
+                        <td><tt>item = Pop ()</tt></td>
+                        <td>Returns the stack's top element and deletes it from the stack.</td>
+                    </tr>
+                    <tr>
+                        <td><tt>n = GetSize ()</tt></td>
+                        <td>Returns the curent number of elements stored in the stack.</td>
+                    </tr>
+                </table>
+                <p>
+                    Together with these operations, identify weaknesses in your design and address these by 
+                    building in some security - e.g. ensuring that an error message is printed to the console if
+                    someone tries to pop an element off an empty stack!
+                </p>
+                <div class="note">
+                    Javascript has got some inbuilt functions related to pushing onto / popping from stacks 
+                    (e.g. <tt>Aray.push ()</tt>, <tt>Array.pop ())</tt>, but don't use these! Instead, write 
+                    your own code which does the pushing and popping!
+                </div>
             </div>
-            <p>
-                Write a program which takes any system of two equations with two variables as input and either 
-                provides the solution or indicates that the system is unsolvable!
-            </p>
-        </article>
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.23ac','type':'src/js'}">
+                <h2>All backwards...</h2>
+                <p>
+                    Using the stack design you developed in the previous exercise, 
+                    write a program which reverses a string!
+                </p>
+            </div>
+        </div>
+        
+        <!-- Exercise -->
+        <div class="exercises">
+            <div data-courseware-type="exercise" data-courseware-props="{'id':'09.34d4','type':'src/js'}">
+                <h2>Simultanelicious!</h2>
+                <p>
+                    Here's a system of simultaneous equations:
+                </p>
+                <div class="example">
+                    <pre class="prettyprint">
+                        2a + 5b = 29
+                        7a - 2b = 4
+                    </pre>                      
+                </div>
+                <p>
+                    The solution to this system is <tt>a = 2</tt>, <tt>b = 5</tt>. Here's a system which is unsolvable, 
+                    because it does not have any solution:
+                </p>
+                <div class="example">
+                    <pre class="prettyprint">
+                        2x + 3y = 5
+                        2x + 3y = 4
+                    </pre>
+                </div>
+                <p>
+                    And here's a system which is unsolvable because it does have an infinite amount of solutions:
+                </p>
+                <div class="example">
+                    <pre class="prettyprint">
+                        x + y = 2
+                        x + y = 2
+                    </pre>                            
+                </div>
+                <p>
+                    Write a program which takes any system of two equations with two variables as input and either 
+                    provides the solution or indicates that the system is unsolvable!
+                </p>
+            </div>
+        </div>
     </body>
 </html>

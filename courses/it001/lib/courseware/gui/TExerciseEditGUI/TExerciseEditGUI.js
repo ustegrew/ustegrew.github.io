@@ -523,8 +523,9 @@ define
                                 [
                                     'cut', 'copy', 'paste',                         '|',
                                     'undo','redo',                                  '|',
-                                    'bold','italic','underline',                    '|', 
-                                    'justifyLeft', 'justifyCenter', 'justifyRight'
+                                    'bold','italic','underline',                    '|',
+                                    'justifyLeft', 'justifyCenter', 'justifyRight', '|',
+                                    'insertOrderedList','insertUnorderedList'
                                 ],
                                 extraPlugins:   
                                 [

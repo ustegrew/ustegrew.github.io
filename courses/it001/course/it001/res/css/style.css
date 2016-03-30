@@ -306,14 +306,19 @@ ol.exercises > li > ol > li
 
 div.exercises
 {
+	border-radius:					10px;
+	background-color:				#bfd9ff;
+	margin-top:						10px;
+    padding-top: 					5px;
+    padding-bottom: 				10px;
 }
 
 div.exercise
 {
-    position:                       relative;
     margin-bottom:                  10px;
     margin-left:                    50px;
     margin-top:                     3em !important;
+    position:                       relative;
     width:                          800px;
 }
 
