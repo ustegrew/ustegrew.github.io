@@ -18,11 +18,6 @@ define ([], function ()
         window.it001.gProgramRepository = {};
     }
     
-    if (! window.it001.hasOwnProperty ("gWorksheet"))
-    {
-        window.it001.gWorksheet = null;
-    }
-
     /* Sets some configuration parameters for the course.
      */
     window.it001.config =

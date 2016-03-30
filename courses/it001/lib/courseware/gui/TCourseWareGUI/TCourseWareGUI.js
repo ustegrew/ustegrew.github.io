@@ -130,7 +130,31 @@ define
              * @private
              */
             fPnlHeading: null,
+            
+            /**
+             * The panel holding the entire CourseWare UI.
+             * 
+             * @type        dijit/layout/BorderContainer
+             * @private
+             */
+            fPnlMain: null,
 
+            /**
+             * The panel holding the content tree.
+             * 
+             * @type        dijit/layout/ContentPane
+             * @private
+             */
+            fPnlMainL: null,
+
+            /**
+             * The panel holding the article and exercises.
+             * 
+             * @type        dijit/layout/ContentPane
+             * @private
+             */
+            fPnlMainR: null,
+            
             /**
              * The ID of the data's root node.
              * 
@@ -146,6 +170,11 @@ define
              * @private
              */
             fTree: null,
+            
+            /**
+             * The worksheet module, for the student to work on the exercises.
+             */
+            fWorksheet: null,
             
             /**
              * Loads the course as specified by the descriptor. This 
@@ -252,6 +281,7 @@ define
                         style:      "width: 100%;height: 100%"
                     }
                 );
+                /* LH panel (content tree) */
                 pnlMainL = new ContentPane
                 (
                     {
@@ -260,12 +290,17 @@ define
                         style:      "width: 250px;"
                     }
                 );
+                /* RH panel (article + exercises) */
                 pnlMainR = new ContentPane
                 (
                     {
                         region:     "center"
                     }
                 );
+                
+                this.fPnlMain   = pnlMain;                                      /* <--- Property: fPnlMain                      */
+                this.fPnlMainL  = pnlMainL;                                     /* <--- Property: fPnlMainL                     */
+                this.fPnlMainR  = pnlMainR;                                     /* <--- Property: fPnlMainR                     */
 
                 /* Setup wrappers for LH / RH panel. wrappers provide scroll bar. */
                 pnlMainLCnt = domConstruct.place 
@@ -392,7 +427,7 @@ define
                         _host.fLoadState.hasArticle = true;
                         if (_host.fLoadState.hasArticle  &&  _host.fLoadState.hasExercise)
                         {
-                            _host.fHost.NotifyHasLoadedArticle ();
+                            _host._NotifyFinishedLoadArticle ();
                         }
                     }
                 );
@@ -405,7 +440,7 @@ define
                         _host.fLoadState.hasExercise = true;
                         if (_host.fLoadState.hasArticle  &&  _host.fLoadState.hasExercise)
                         {
-                            _host.fHost.NotifyHasLoadedArticle ();
+                            _host._NotifyFinishedLoadArticle ();
                         }
                     }
                 );
@@ -476,6 +511,44 @@ define
             },
     
             /**
+             * Converts the exercise part into a worksheet, so the student can work on the solutions.
+             */
+            _InitializeWorksheet: function ()
+            {
+                var _this = this;
+                
+                if (this.fWorksheet != null)
+                {
+                    this.fWorksheet.destructor ();
+                }
+                
+                this.fWorksheet = new TWorksheet 
+                (
+                    {
+                        fHost:          this,
+                        fNodeAnchor:    this.fPnlMainR.domNode.firstChild,
+                        onFinishedLoad: function () 
+                        {
+                            console.log("Worksheet loaded");
+                        },
+                        onRequestCopyAllToClipboard: function ()
+                        {
+                            console.log (JSON.stringify (_this.fWorksheet.GetAllSolutions ()));
+                        },
+                        onRequestLoadSolution: function (id) 
+                        {
+                            _this.fWorksheet.SetCurrentSolution ("Exercise: " + id);
+                        },
+                        onRequestSaveSolution: function () 
+                        {
+                            console.log (JSON.stringify (_this.fWorksheet.GetCurrentSolution ()));
+                        },
+                    }
+                );
+                this.fWorksheet.startup ();
+            },
+
+            /**
              * Loads the article (lesson) as specified by the descriptor with the given <code>id</code>.
              * 
              * @param   {JSObject}    descriptor      The article's descriptor 
@@ -540,6 +613,12 @@ define
             _LoadExternal: function (item)
             {
                 this.fPnlHeading.innerHTML      = item.heading;
+            },
+            
+            _NotifyFinishedLoadArticle: function ()
+            {
+                this._InitializeWorksheet ();
+                this.fHost.NotifyHasLoadedArticle ();
             }
         };
     

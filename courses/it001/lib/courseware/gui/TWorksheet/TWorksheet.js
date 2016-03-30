@@ -58,7 +58,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = true;
+        var gDebug = false;
         
         var TPreTransitionSequence = function (host)
         {
@@ -270,6 +270,13 @@ define
              * to each exercise element.
              */
             fModel: null,
+            
+            /**
+             * The anchor node against which the work sheet is anchored, e.g. the content panel
+             * in which the worksheet is located. Needed for certain effects, such as scrolling 
+             * the active solution into view.
+             */
+            fNodeAnchor: null,
             
             GetCurrentSolution: function ()
             {
@@ -511,6 +518,7 @@ define
             constructor: function (params)
             {
                 this.fHost                      = params.fHost;
+                this.fNodeAnchor                = params.fNodeAnchor;
                 this.fHandlers                  = 
                 {
                     onFinishedLoad:                params.onFinishedLoad,
@@ -855,7 +863,7 @@ define
                 (
                     {
                         target:     {x:0,y:yTarget},
-                        win:        window,
+                        win:        this.fNodeAnchor,
                         duration:   500,
                         onEnd:  function ()
                         {
