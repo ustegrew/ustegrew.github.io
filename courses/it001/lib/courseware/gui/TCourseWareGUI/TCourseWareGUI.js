@@ -6,6 +6,7 @@ define
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dojo/Deferred",
         "dojo/dom",
         "dojo/dom-construct",
         "dojo/on",
@@ -14,12 +15,14 @@ define
         "dijit/Tree",
         "dijit/layout/BorderContainer", 
         "dijit/layout/ContentPane",
-        "dijit/TitlePane"
+        "dijit/TitlePane",
+        "courseware/gui/TWorksheet/TWorksheet"
     ],
     function 
     (
         declare,
         _WidgetBase,
+        TDeferred,
         dom,
         domConstruct,
         on,
@@ -28,7 +31,8 @@ define
         Tree,
         BorderContainer,
         ContentPane,
-        TitlePane
+        TitlePane,
+        TWorksheet
     )
     {
         var TCourseWareGUI;
@@ -215,6 +219,14 @@ define
             constructor: function (params)
             {
                 this.fHost = params.fHost;
+            },
+            
+            destroy: function ()
+            {
+                if (this.fWorksheet != null)
+                {
+                    this.fWorksheet.destroy ();
+                }
             },
             
             /* -------------------------------------------------------------
@@ -511,44 +523,6 @@ define
             },
     
             /**
-             * Converts the exercise part into a worksheet, so the student can work on the solutions.
-             */
-            _InitializeWorksheet: function ()
-            {
-                var _this = this;
-                
-                if (this.fWorksheet != null)
-                {
-                    this.fWorksheet.destructor ();
-                }
-                
-                this.fWorksheet = new TWorksheet 
-                (
-                    {
-                        fHost:          this,
-                        fNodeAnchor:    this.fPnlMainR.domNode.firstChild,
-                        onFinishedLoad: function () 
-                        {
-                            console.log("Worksheet loaded");
-                        },
-                        onRequestCopyAllToClipboard: function ()
-                        {
-                            console.log (JSON.stringify (_this.fWorksheet.GetAllSolutions ()));
-                        },
-                        onRequestLoadSolution: function (id) 
-                        {
-                            _this.fWorksheet.SetCurrentSolution ("Exercise: " + id);
-                        },
-                        onRequestSaveSolution: function () 
-                        {
-                            console.log (JSON.stringify (_this.fWorksheet.GetCurrentSolution ()));
-                        },
-                    }
-                );
-                this.fWorksheet.startup ();
-            },
-
-            /**
              * Loads the article (lesson) as specified by the descriptor with the given <code>id</code>.
              * 
              * @param   {JSObject}    descriptor      The article's descriptor 
@@ -556,27 +530,54 @@ define
              */
             _LoadArticle: function (descriptor)
             {
+                var _this = this;
                 var cat;
+                var d;
                 
                 cat = descriptor.category;
                 this._AssertKnownCategory (cat);
-                if (cat === "folder")                                           /* [11] */
+
+                d = new TDeferred ();
+                if (this.fWorksheet != null)
                 {
-                    this._LoadFolder (descriptor);
+                    this.fWorksheet.RequestTerminate().promise.then
+                    (
+                        function ()
+                        {
+                            _this.fWorksheet.destroy ();
+                            _this.fWorksheet = null;
+                            d.resolve ();
+                        }
+                    );
                 }
-                else if (cat === "lesson")
+                else
                 {
-                    this._LoadLesson (descriptor);
+                    d.resolve ();
                 }
-                else if (cat === "external")
-                {
-                    this._LoadExternal (descriptor);
-                }
+                
+                d.promise.then
+                (
+                    function ()
+                    {
+                        if (cat === "folder")                                           /* [11] */
+                        {
+                            _this._LoadFolder (descriptor);
+                        }
+                        else if (cat === "lesson")
+                        {
+                            _this._LoadLesson (descriptor);
+                        }
+                        else if (cat === "external")
+                        {
+                            _this._LoadExternal (descriptor);
+                        }
+                    }
+                );
             },
 
             _LoadFolder: function (item)
             {
-                this.fPnlHeading.innerHTML      = item.heading;
+                this.fPnlHeading.innerHTML = item.heading;
             },
 
             _LoadLesson: function (item)
@@ -605,20 +606,94 @@ define
                 (
                     function ()
                     {
-                        _this.fPnlExercises.set ("open", false);
+                        var d;
+                        var p;
+                        
+                        d = _this._Worksheet_Initialize ();
+                        p = d.promise;
+                        
+                        return p; 
+                    }
+                ).then
+                (
+                    function ()
+                    {
+                        return _this.fPnlExercises.set ("open", false);
                     }
                 );
             },
 
             _LoadExternal: function (item)
             {
-                this.fPnlHeading.innerHTML      = item.heading;
+                this.fPnlHeading.innerHTML = item.heading;
             },
             
             _NotifyFinishedLoadArticle: function ()
             {
-                this._InitializeWorksheet ();
                 this.fHost.NotifyHasLoadedArticle ();
+            },
+            
+            _Worksheet_Create: function ()
+            {
+                var _this = this;
+                
+                this.fWorksheet = new TWorksheet 
+                (
+                    {
+                        fHost:          this,
+                        fNodeAnchor:    this.fPnlMainR.domNode.firstChild,
+                        onFinishedLoad: function () 
+                        {
+                            console.log ("Worksheet loaded");
+                        },
+                        onRequestCopyAllToClipboard: function ()
+                        {
+                            console.log (JSON.stringify (_this.fWorksheet.GetAllSolutions ()));
+                        },
+                        onRequestLoadSolution: function (id) 
+                        {
+                            _this.fWorksheet.SetCurrentSolution ("Exercise: " + id);
+                        },
+                        onRequestSaveSolution: function () 
+                        {
+                            console.log (JSON.stringify (_this.fWorksheet.GetCurrentSolution ()));
+                        }
+                    }
+                );
+                this.fWorksheet.startup ();
+            },
+            
+            /**
+             * Converts the exercise part into a worksheet, so the student can work on the solutions.
+             */
+            _Worksheet_Initialize: function ()
+            {
+                var _this = this;
+                var d0;
+                var d1;
+                
+                d0 = new TDeferred ();
+                
+                if (this.fWorksheet != null)
+                {
+                    d1 = this.fWorksheet.RequestTerminate ();
+                    d1.promise.then
+                    (
+                        function ()
+                        {
+                            _this.fWorksheet.destroy ();
+                            _this._Worksheet_Create ();
+                            d0.resolve ();
+                        }
+                    );
+                }
+                else
+                {
+                    _this._Worksheet_Create ();
+                    d0.resolve ();
+                }
+                
+                return d0;
             }
         };
     

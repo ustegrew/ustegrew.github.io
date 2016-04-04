@@ -62,6 +62,137 @@ define
         /* Debug flag - for that extra info in hard places! */
         var gDebug = true;
         
+        
+        
+        var TPreTransitionSequence = function (host)
+        {
+            var kActionSystemFileSave = function (actions)
+            {
+                if (gDebug)
+                {
+                    console.groupCollapsed ("TWorksheet::TPreTransitionSequence::kActionSystemFileSave (actions)");
+                    console.log ("actions: " + JSON.stringify (actions));
+                    console.groupEnd ();
+                }
+                this.fHost._NotifySystemFileSave.call (this.fHost, actions);
+            };
+            
+            var kActionSystemControllerEvent = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionSystemControllerEvent ()");
+                this.fHost._NotifySystemControllerEvent.call (this.fHost, "kSuccess");
+            };
+            
+            var kActionSystemEditorChangeObserverSetPaused = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionSystemEditorChangeObserverSetPaused ()");
+                this.fHost._NotifySystemEditorChangeObserverSetPaused.call (this.fHost);
+            };
+            
+            var kActionUICollapseCurrent = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUICollapseCurrent ()");
+                this.fHost._NotifyUICollapseCurrent.call (this.fHost);
+            };
+            
+            var kActionUIExpandNext = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIExpandNext ()");
+                this.fHost._NotifyUIExpandNext.call (this.fHost);
+            };
+            
+            var kActionUIMigrateEditor = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIMigrateEditor ()");
+                this.fHost._NotifyUIMigrateEditor.call (this.fHost);
+            };
+            
+            var kActionUIScrollWindow = function ()
+            {
+                if (gDebug) console.log ("TWorksheet::TPreTransitionSequence::kActionUIScrollWindow ()");
+                this.fHost._NotifyUIScrollWindow.call (this.fHost);
+            };
+
+            var TProgram = function (host)
+            {
+                this.fCounter   = -1;
+                this.fHost      = host;
+                this.fSteps     = [];
+                this.AddStep = function (functor, param)
+                {
+                    var step;
+                    
+                    step =
+                    {
+                        functor:    functor,
+                        param:      param
+                    }
+                    this.fSteps.push (step);
+                };
+                this.NotifyDoNextStep = function ()
+                {
+                    var s;
+                    
+                    if (this.fCounter < this.fSteps.length - 1)
+                    {
+                        this.fCounter++;
+                        s = this.fSteps [this.fCounter];
+                        s.functor.call (this, s.param);
+                    }
+                };
+            };
+            
+            this.fHost      = host;
+            
+            this.NotifyStepFinished = function ()
+            {
+                this.fProgram.NotifyDoNextStep ();
+            };
+            
+            this.Run = function (actions)
+            {
+                var doCollapse;
+                var doExpand;
+                
+                this.fProgram = new TProgram (this.fHost);
+                
+                /* 1. Save current exercise if it is requested. */
+                this.fProgram.AddStep (kActionSystemFileSave,                               actions);
+                
+                /* 2. Collapse current exercise or migrate editor. 
+                 *    If doExpand is true then we also migrate the editor. */
+                doCollapse  = actions.doCollapseCurrent;
+                doExpand    = actions.doExpandNext;
+                if ((! doCollapse) && (! doExpand))
+                {
+                }
+                else if ((! doCollapse) && (doExpand))
+                {
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUIMigrateEditor,                          null);
+                    this.fProgram.AddStep (kActionUIExpandNext,                             null);
+                    this.fProgram.AddStep (kActionUIScrollWindow,                           null);
+                }
+                else if ((doCollapse) && (! doExpand))
+                {
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUICollapseCurrent,                        null);
+                }
+                else if ((doCollapse) && (doExpand))
+                {
+                    this.fProgram.AddStep (kActionSystemEditorChangeObserverSetPaused,      null);
+                    this.fProgram.AddStep (kActionUICollapseCurrent,                        null);
+                    this.fProgram.AddStep (kActionUIMigrateEditor,                          null);
+                    this.fProgram.AddStep (kActionUIExpandNext,                             null);
+                    this.fProgram.AddStep (kActionUIScrollWindow,                           null);
+                }
+                
+                this.fProgram.AddStep (kActionSystemControllerEvent,                        null);
+
+                this.fProgram.NotifyDoNextStep ();
+            };
+        };
+        
         var kSchemaPropertiesExercise =
         {
             "$schema":      "http://json-schema.org/draft-03/schema#",
@@ -151,14 +282,6 @@ define
              */
             fNodeAnchor: null,
             
-            /**
-             * A Deferred object to facilitate clean termination of this worksheet 
-             * (e.g. We'd like to save when the user has a solution open with unsaved changes).
-             * 
-             * @type    dojo/Deferred
-             */
-            fSemaphore: null,
-            
             GetAllSolutions: function ()
             {
                 var ret;
@@ -181,17 +304,14 @@ define
                 return ret;
             },
             
-            RequestTerminate: function ()
-            {
-                this.fSemaphore = new TDeferred ();
-                this.fController.Notify ("kTerminate");
-                
-                return this.fSemaphore;
-            },
-            
             SetCurrentSolution: function (content)
             {
                 this.fExerciseCurrent.fTextSolution = content;
+            },
+            
+            RequestTerminate: function ()
+            {
+                this.fController.Notify ("kTerminate");
             },
             
             /** *****************************************************************************************************************
@@ -262,7 +382,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Changing_Terminate ()");
                 
-                this.fSemaphore.resolve ();
+                this.fHandlers.onFinishedTerminate ();
             },
             
             /**
@@ -329,7 +449,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Editing_Terminate ()");
 
-                this.fSemaphore.resolve ();
+                this.fHandlers.onFinishedTerminate ();
             },
             
             /**
@@ -379,7 +499,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Reading_Terminate ()");
                 
-                this.fSemaphore.resolve ();
+                this.fHandlers.onFinishedTerminate ();
             },
             
             /** *****************************************************************************************************************
@@ -391,88 +511,18 @@ define
              */
             NotifyPreTransitionActions: function (actions)
             {
-                var _host = this; 
+                var def;
                 
-                var doC;
-                var doE;
-                var d0;
-                var d1;
-
                 if (gDebug)
                 {
                     console.groupCollapsed ("TWorksheet::NotifyPreTransitionActions (actions)");
                     console.log ("actions: " + JSON.stringify (actions));
                     console.groupEnd ();
                 }
-
-                d0 = this._NotifySystemFileSave_PreflightCheck (actions);
-                d0.promise.then
-                (
-                    function (decision)
-                    {
-                        return _host._NotifySystemFileSave (decision);           /* [80] */
-                    }
-                ).then
-                (
-                    function ()
-                    {
-                        doC = actions.doCollapseCurrent;
-                        doE = actions.doExpandNext;
-                        
-                        if ((! doC)  &&  (! doE))
-                        {
-                            _host._NotifySystemControllerEvent ("kSuccess");     /* [90] */
-                        }
-                        else if ((! doC)  &&  (  doE))
-                        {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
-                            (
-                                function () {return _host._NotifyUIMigrateEditor ();}
-                            ).then
-                            (
-                                function () {return _host._NotifyUIExpandNext ();}
-                            ).then
-                            (
-                                function () {return _host._NotifyUIScrollWindow ();}
-                            ).then
-                            (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
-                            );
-                        }
-                        else if ((  doC)  &&  (! doE))
-                        {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
-                            (
-                                function () {return _host._NotifyUICollapseCurrent ();}
-                            ).then
-                            (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
-                            );
-                        }
-                        else if ((  doC)  &&  (  doE))
-                        {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
-                            (
-                                function () {return _host._NotifyUICollapseCurrent ();}
-                            ).then
-                            (
-                                function () {return _host._NotifyUIMigrateEditor ();}
-                            ).then
-                            (
-                                function () {return _host._NotifyUIExpandNext ();}
-                            ).then
-                            (
-                                function () {return _host._NotifyUIScrollWindow ();}
-                            ).then
-                            (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
-                            );
-                        }
-                    }
-                );
+                
+                
+//                this.fPreTransitionSequence.Run (actions);
+                
             },
             
             /**
@@ -485,6 +535,7 @@ define
                 this.fHandlers                  = 
                 {
                     onFinishedLoad:                params.onFinishedLoad,
+                    onFinishedTerminate:           params.onFinishedTerminate,
                     onRequestCopyAllToClipboard:   params.onRequestCopyAllToClipboard,
                     onRequestLoadSolution:         params.onRequestLoadSolution,
                     onRequestSaveSolution:         params.onRequestSaveSolution
@@ -496,6 +547,7 @@ define
                 this.fDlgDoSaveConfirm          = null;
                 this.fExerciseCurrent           = null;
                 this.fExerciseNext              = null;
+                this.fPreTransitionSequence     = new TPreTransitionSequence (this);
             },
             
             destroy: function ()
@@ -590,16 +642,16 @@ define
                     this.fDlgDoSaveConfirm = new TButtonDialog
                     (
                         {
-                            "host":             this,
+                            "host":     this,
                             "buttons":
                             [
                                 {
                                     label:      "Yes",
-                                    onClick:    function () {_host.fDlgDoSaveConfirm.fSemaphore.resolve (true);}    /* [70] */
+                                    onClick:    function () {_host._NotifySystemFileSaveConfirmed.call (_host);}
                                 },
                                 {
                                     label:      "No",
-                                    onClick:    function () {_host.fDlgDoSaveConfirm.fSemaphore.resolve (false);}   /* [70] */
+                                    onClick:    function () {_host._NotifySystemFileSaveAborted.call (_host);}
                                 }
                             ]
                         }
@@ -672,30 +724,18 @@ define
             
             _NotifySystemEditorChangeObserverSetPaused: function ()
             {
-                var d;
-                
                 if (gDebug) console.log ("TWorksheet::_NotifySystemEditorChangeObserverSetPaused ()");
 
-                d = new TDeferred ();
-                
                 this.fEditor.SetOberverContentChanged_Paused.call (this.fEditor);
-                d.resolve ();
-                
-                return d;
+                this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
             _NotifySystemEditorChangeObserverSetRunning: function ()
             {
-                var d;
-
                 if (gDebug) console.log ("TWorksheet::_NotifySystemEditorChangeObserverSetRunning ()");
 
-                d = new TDeferred ();
-                
                 this.fEditor.SetOberverContentChanged_Running.call (this.fEditor);
-                d.resolve ();
-                
-                return d;
+                this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
             _NotifySystemFileOpenExercise: function (exerciseID)
@@ -735,62 +775,50 @@ define
                 }
             },
             
-            _NotifySystemFileSave_PreflightCheck: function (actions)
+            _NotifySystemFileSave: function (actions)
             {
-                var d;
-                
                 if (gDebug)
                 {
-                    console.groupCollapsed ("_NotifySystemFileSave_PreflightCheck (actions)");
+                    console.groupCollapsed ("TWorksheet::_NotifySystemFileSave (actions)");
                     console.log ("actions: " + JSON.stringify (actions));
                     console.groupEnd ();
                 }
-                  
-                d = new TDeferred ();
                 
                 if (actions.saveAction == this.fController.ESaveAction.kSave)
                 {
-                    d.resolve (true);
+                    this._NotifySystemFileSaveConfirmed ();
                 }
                 else if (actions.saveAction == this.fController.ESaveAction.kSaveConfirm)
                 {
-                    this.fDlgDoSaveConfirm.fSemaphore = d;                      /* [70] */
                     this.fDlgDoSaveConfirm.Show ("Unsaved changes...", "Would you like to save?");
                 }
                 else
                 {
-                    d.resolve (false);
+                    this.fPreTransitionSequence.NotifyStepFinished ();
                 }
-                
-                return d;
             },
-
-            _NotifySystemFileSave: function (decision)
+            
+            _NotifySystemFileSaveAborted: function ()
             {
-                var d;
+                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSaveAborted ()");
                 
-                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSave (" + decision + ")");
+                this.fPreTransitionSequence.NotifyStepFinished ();
+            },
+            
+            _NotifySystemFileSaveConfirmed: function ()
+            {
+                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSaveConfirmed ()");
                 
-                d = new TDeferred ();
-                
-                if (decision == true)
-                {
-                    this._SystemFileSaveCurrent ();
-                }
-                d.resolve ();
-                
-                return d;
+                this._SystemFileSaveCurrent ();
+                this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
             _NotifyUICollapseCurrent: function ()
             {
                 var _host = this;
-                var d;
                 
                 if (gDebug) console.log ("TWorksheet::_NotifyUICollapseCurrent ()");
-                
-                d = new TDeferred ();
-                
+
                 fx.wipeOut 
                 (
                     {
@@ -799,23 +827,18 @@ define
                         onEnd:      function () 
                         {
                             _host.fExerciseCurrent.fIsOpen = false;
-                            d.resolve ();
+                            _host.fPreTransitionSequence.NotifyStepFinished ();
                         }
                     }
                 ).play ();
-                
-                return d;
             },
             
             _NotifyUIExpandNext: function ()
             {
                 var _host = this;
-                var d;
                 
                 if (gDebug) console.log ("TWorksheet::_NotifyUIExpandNext ()");
 
-                d = new TDeferred ();
-                
                 fx.wipeIn 
                 (
                     {
@@ -824,27 +847,19 @@ define
                         onEnd:      function ()
                         {
                             _host.fExerciseNext.fIsOpen = true;
-                            d.resolve ();
+                            _host.fPreTransitionSequence.NotifyStepFinished ();
                         }
                     }
                 ).play ();
-                
-                return d;
             },
             
             _NotifyUIMigrateEditor: function ()
             {
-                var d;
-                
                 if (gDebug) console.log ("TWorksheet::_NotifyUIMigrateEditor ()");
 
-                d = new TDeferred ();
-                
                 this.fEditor.SetType (this.fExerciseNext.fContentType, this.fExerciseNext.fContentLang);
                 domConstruct.place (this.fEditor.domNode, this.fExerciseNext.fNodeWorkspace, "only");
-                d.resolve ();
-                
-                return d;
+                this.fPreTransitionSequence.NotifyStepFinished ();
             },
             
             _NotifyUIScrollWindow: function ()
@@ -853,11 +868,9 @@ define
                 
                 var yNode;
                 var yTarget;
-                var d;
 
                 if (gDebug) console.log ("TWorksheet::_NotifyUIScrollWindow ()");
 
-                d           = new TDeferred ();
                 yNode       = domGeometry.position (this.fExerciseNext.fNodeWorkspace, false);
                 yTarget     = yNode.y - 50;
                 wndScroll
@@ -868,12 +881,10 @@ define
                         duration:   500,
                         onEnd:  function ()
                         {
-                            d.resolve ();
+                            _host.fPreTransitionSequence.NotifyStepFinished ();
                         }
                     }
                 ).play ();
-                
-                return d;
             },
             
             _SystemCopyAllToClipboard: function ()
@@ -947,12 +958,5 @@ define
 
  [60]: The TController calls each event handler with this TWorksheet instance as context - therefore, 
        in all event handlers we can use the 'this' reference to refer to this TWorksheet instance.
-       
- [70]: Type dojo/Deferred. Works with the dojo promises framework. I didn't know what better name to choose than 'Semaphore'.
-
- [80]: Normally I don't like to put a function call into a return statement, but in this case 
-       it made no sense to create a local variable.
-
- [90]: This statement appears in each branch of the enclosing if-else construct and could be relocated
-       at the end - but it feels better design to leave it this way. 
+          
  */

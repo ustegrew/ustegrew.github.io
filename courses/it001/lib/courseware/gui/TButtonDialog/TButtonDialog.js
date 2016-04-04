@@ -84,6 +84,7 @@ define
             constructor: function (params)
             {
                 JSObjectValidator.AssertValid (params, kSchemaParams, "constructor");
+                this.fSemaphore     = null;
                 this.fDescriptors   = params.buttons;
                 this.fDialog        = null;
                 this.fHost          = params.host;
@@ -91,11 +92,11 @@ define
                 this.fNodeButtons   = null;
             },
             
-            destructor: function ()
+            destroy: function ()
             {
                 if (this.fDialog != null)
                 {
-                    this.fDialog.destroy ();
+                    this.fDialog.destroyRecursive ();
                 }
             },
 

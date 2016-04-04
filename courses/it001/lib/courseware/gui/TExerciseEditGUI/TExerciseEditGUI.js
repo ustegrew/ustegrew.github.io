@@ -175,6 +175,13 @@ define
                 this.fAPIEditor.fHasChanged = false;
             },
             
+            Destroy: function ()
+            {
+                if (gDebug) console.log ("TExerciseEditGUI::Destroy ()");
+
+                this.fAPIEditor.Destroy ();
+            },
+
             GetContent: function () 
             {
                 if (gDebug) console.log ("TExerciseEditGUI::GetContent ()");
@@ -261,6 +268,7 @@ define
                     fHasEditor:                 false,                                  /* [20] */
                     fHasChanged:                false,
                     fObserverContentChanged:    this.fObserver_ContentChanged,
+                    Destroy:                    null,
                     GetContent:                 null,
                     SetContent:                 null,
                     SetObserverPaused: function ()
@@ -286,18 +294,11 @@ define
                 };
             },
             
-            destructor: function ()
+            destroy: function ()
             {
-                this.fAPIEditor.SetObserverPaused ();
-                if (this.fAPIEditor.fHasEditor)                                 /* [20] */
-                {
-                    this.fAPIEditor.fHasEditor      = false;                    /* [20] */
-                    this.fAPIEditor.fEditor.destroy ();
-                    this.fAPIEditor.fEditor         = null;
-                    this.fAPIEditor.fEarlyContent   = null;
-                    domConstruct.destroy (this.fPnlWrapper);
-                    
-                }
+                if (gDebug) console.log ("TExerciseEditGUI::destroy ()");
+
+                this.fAPIEditor.Destroy ();
             },
             
             /* -------------------------------------------------------------
@@ -344,14 +345,20 @@ define
 
                 this.fAPIEditor.fHasEditor = false;                             /* [20] */
                 
+                this.fAPIEditor.Destroy = function ()
+                {
+                    if (gDebug) console.log ("TExerciseEditGUI::fAPIEditor::Destroy () [initial version]");
+                    /* Do nothing else. [23] */
+                }
+                
                 this.fAPIEditor.GetContent = function ()
                 {
-                    _host._Log ("fAPIEditor.GetContent: Has not been set. Did you call SetType (...)?");
+                    _host._Log ("fAPIEditor.GetContent (): Has not been set. Did you call SetType (...)?");
                 };
                 
                 this.fAPIEditor.SetContent = function ()
                 {
-                    _host._Log ("fAPIEditor.SetContent: Has not been set. Did you call SetType (...)?");
+                    _host._Log ("fAPIEditor.SetContent (): Has not been set. Did you call SetType (...)?");
                 }
 
                 /**
@@ -431,14 +438,7 @@ define
                 var eLang;
                 var wrStyle;
                 
-                if (this.fAPIEditor.fHasEditor)                                 /* [20] */
-                {
-                    this.fAPIEditor.fHasEditor      = false;                    /* [20] */
-                    this.fAPIEditor.fEditor.destroy ();
-                    this.fAPIEditor.fEditor         = null;
-                    this.fAPIEditor.fEarlyContent   = null;
-                    domConstruct.destroy (this.fPnlWrapperEdit);
-                }
+                this.fAPIEditor.Destroy ();
                 
                 if (type === "rtf")
                 {
@@ -487,6 +487,19 @@ define
                                 style: wrStyle
                             }
                         );
+                        this.fAPIEditor.Destroy = function ()
+                        {
+                            if (gDebug) console.log ("TExerciseEditGUI::fAPIEditor::Destroy ()  [kRichText version]");
+
+                            _host.fAPIEditor.SetObserverPaused ();
+                            if (_host.fAPIEditor.fHasEditor)
+                            {
+                                _host.fAPIEditor.fEditor.destroy ();
+                                _host.fAPIEditor.fHasEditor      = false;
+                                _host.fAPIEditor.fEditor         = null;
+                                _host.fAPIEditor.fEarlyContent   = null;
+                            }
+                        };
                         this.fAPIEditor.GetContent = function ()                /* [100] */
                         {
                             var ret;
@@ -571,6 +584,19 @@ define
                                 srcType = "plain_text";
                         }
                         
+                        this.fAPIEditor.Destroy = function ()
+                        {
+                            if (gDebug) console.log ("TExerciseEditGUI::fAPIEditor::Destroy () [kAceEdit version]");
+
+                            _host.fAPIEditor.SetObserverPaused ();
+                            if (_host.fAPIEditor.fHasEditor)
+                            {
+                                _host.fAPIEditor.fEditor.destroy ();
+                                _host.fAPIEditor.fHasEditor      = false;
+                                _host.fAPIEditor.fEditor         = null;
+                                _host.fAPIEditor.fEarlyContent   = null;
+                            }
+                        };
                         this.fAPIEditor.GetContent = function ()                /* [100] */
                         {
                             var ret;
@@ -685,6 +711,13 @@ define
         or implement some discovery mechanism). Better to let this component discover
         the value automatically.
         Logged as issue#12 on github [https://github.com/ustegrew/ustegrew.github.io/issues/12]
+        
+[23]:   We won't log the call to the Destroy function, even if _SetType() hasn't been 
+        called yet. Otherwise, calling _SetType () for the first time would create a
+        log entry (which is annoying). This could be mitigated by introducing some flag 
+        (e.g. boolean fHasBeenSetBefore). However, the benefits of this feature are 
+        negligible and the cost is yet another obscure feature (makes the code harder to 
+        maintain). Not worth doing.        
 
 [100]:  It's important to set the editor's event handlers BEFORE creating the 
         actual editor. This is critical, especially with the Ace editor, as that 

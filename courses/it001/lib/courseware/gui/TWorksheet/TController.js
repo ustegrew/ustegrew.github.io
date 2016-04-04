@@ -12,7 +12,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = false;
+        var gDebug = true;
         
         var ESaveAction =
         {
