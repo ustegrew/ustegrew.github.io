@@ -405,8 +405,7 @@ define
                     console.groupEnd ();
                 }
 
-                d0 = this._NotifySystemFileSave_PreflightCheck (actions);
-                d0.promise.then
+                this._NotifySystemFileSave_PreflightCheck (actions).then
                 (
                     function (decision)
                     {
@@ -425,8 +424,7 @@ define
                         }
                         else if ((! doC)  &&  (  doE))
                         {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
+                            _host._NotifySystemEditorChangeObserverSetPaused ().then
                             (
                                 function () {return _host._NotifyUIMigrateEditor ();}
                             ).then
@@ -442,8 +440,7 @@ define
                         }
                         else if ((  doC)  &&  (! doE))
                         {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
+                            _host._NotifySystemEditorChangeObserverSetPaused ().then
                             (
                                 function () {return _host._NotifyUICollapseCurrent ();}
                             ).then
@@ -453,8 +450,7 @@ define
                         }
                         else if ((  doC)  &&  (  doE))
                         {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ();
-                            d1.promise.then
+                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ().then
                             (
                                 function () {return _host._NotifyUICollapseCurrent ();}
                             ).then

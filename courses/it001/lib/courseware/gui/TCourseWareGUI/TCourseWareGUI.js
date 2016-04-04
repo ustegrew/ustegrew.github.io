@@ -540,7 +540,7 @@ define
                 d = new TDeferred ();
                 if (this.fWorksheet != null)
                 {
-                    this.fWorksheet.RequestTerminate().promise.then
+                    this.fWorksheet.RequestTerminate().then
                     (
                         function ()
                         {
@@ -555,7 +555,7 @@ define
                     d.resolve ();
                 }
                 
-                d.promise.then
+                d.then
                 (
                     function ()
                     {
@@ -573,6 +573,56 @@ define
                         }
                     }
                 );
+
+//                var _this = this;
+//                var cat;
+//                
+//                cat = descriptor.category;
+//                this._AssertKnownCategory (cat);
+//
+//                (
+//                    function ()
+//                    {
+//                        var d;
+//                        
+//                        d = new TDeferred ();
+//                        if (this.fWorksheet != null)
+//                        {
+//                            this.fWorksheet.RequestTerminate().then
+//                            (
+//                                function ()
+//                                {
+//                                    _this.fWorksheet.destroy ();
+//                                    _this.fWorksheet = null;
+//                                    d.resolve ();
+//                                }
+//                            );
+//                        }
+//                        else
+//                        {
+//                            d.resolve ();
+//                        }
+//                        
+//                        return d;
+//                    }
+//                )().then // For some reason, the .then part executes before d is resolved... 
+//                (
+//                    function ()
+//                    {
+//                        if (cat === "folder")                                           /* [11] */
+//                        {
+//                            _this._LoadFolder (descriptor);
+//                        }
+//                        else if (cat === "lesson")
+//                        {
+//                            _this._LoadLesson (descriptor);
+//                        }
+//                        else if (cat === "external")
+//                        {
+//                            _this._LoadExternal (descriptor);
+//                        }
+//                    }
+//                );
             },
 
             _LoadFolder: function (item)
@@ -669,31 +719,29 @@ define
             _Worksheet_Initialize: function ()
             {
                 var _this = this;
-                var d0;
-                var d1;
+                var d;
                 
-                d0 = new TDeferred ();
+                d = new TDeferred ();
                 
                 if (this.fWorksheet != null)
                 {
-                    d1 = this.fWorksheet.RequestTerminate ();
-                    d1.promise.then
+                    this.fWorksheet.RequestTerminate ().then
                     (
                         function ()
                         {
                             _this.fWorksheet.destroy ();
                             _this._Worksheet_Create ();
-                            d0.resolve ();
+                            d.resolve ();
                         }
                     );
                 }
                 else
                 {
                     _this._Worksheet_Create ();
-                    d0.resolve ();
+                    d.resolve ();
                 }
                 
-                return d0;
+                return d;
             }
         };
     
