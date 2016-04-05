@@ -12,7 +12,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = true;
+        var gDebug = false;
         
         var ESaveAction =
         {
@@ -401,9 +401,8 @@ define
                 {
                     if (gDebug)
                     {
-                        console.groupCollapsed ("TController::_GetTransition ('" + event + "')");
+                        console.log ("TController::_GetTransition ('" + event + "')");
                         console.log ("Found: " + JSON.stringify (ret));
-                        console.groupEnd ();
                     };
                 }
                 else

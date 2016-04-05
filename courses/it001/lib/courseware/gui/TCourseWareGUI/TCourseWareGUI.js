@@ -573,56 +573,6 @@ define
                         }
                     }
                 );
-
-//                var _this = this;
-//                var cat;
-//                
-//                cat = descriptor.category;
-//                this._AssertKnownCategory (cat);
-//
-//                (
-//                    function ()
-//                    {
-//                        var d;
-//                        
-//                        d = new TDeferred ();
-//                        if (this.fWorksheet != null)
-//                        {
-//                            this.fWorksheet.RequestTerminate().then
-//                            (
-//                                function ()
-//                                {
-//                                    _this.fWorksheet.destroy ();
-//                                    _this.fWorksheet = null;
-//                                    d.resolve ();
-//                                }
-//                            );
-//                        }
-//                        else
-//                        {
-//                            d.resolve ();
-//                        }
-//                        
-//                        return d;
-//                    }
-//                )().then // For some reason, the .then part executes before d is resolved... 
-//                (
-//                    function ()
-//                    {
-//                        if (cat === "folder")                                           /* [11] */
-//                        {
-//                            _this._LoadFolder (descriptor);
-//                        }
-//                        else if (cat === "lesson")
-//                        {
-//                            _this._LoadLesson (descriptor);
-//                        }
-//                        else if (cat === "external")
-//                        {
-//                            _this._LoadExternal (descriptor);
-//                        }
-//                    }
-//                );
             },
 
             _LoadFolder: function (item)

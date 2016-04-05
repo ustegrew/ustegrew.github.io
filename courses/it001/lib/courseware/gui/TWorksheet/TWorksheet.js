@@ -6,6 +6,7 @@ define
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dojo/has",
         "require",                                                              /* [10] */
         "dojo/Deferred",
         "dojo/query",
@@ -28,12 +29,14 @@ define
         "./TModel",
         "./TController",
         "../TExerciseEditGUI/TExerciseEditGUI",
-        "../TButtonDialog/TButtonDialog"
+        "../TButtonDialog/TButtonDialog",
+        "dojo/_base/sniff"
     ],
     function 
     (
         declare,
         _WidgetBase,
+        has,
         _require,
         TDeferred,
         domQuery,
@@ -60,7 +63,7 @@ define
     )
     {
         /* Debug flag - for that extra info in hard places! */
-        var gDebug = true;
+        var gDebug = false;
         
         var kSchemaPropertiesExercise =
         {
@@ -395,14 +398,11 @@ define
                 
                 var doC;
                 var doE;
-                var d0;
-                var d1;
 
                 if (gDebug)
                 {
-                    console.groupCollapsed ("TWorksheet::NotifyPreTransitionActions (actions)");
+                    console.log ("TWorksheet::NotifyPreTransitionActions (actions)");
                     console.log ("actions: " + JSON.stringify (actions));
-                    console.groupEnd ();
                 }
 
                 this._NotifySystemFileSave_PreflightCheck (actions).then
@@ -450,7 +450,7 @@ define
                         }
                         else if ((  doC)  &&  (  doE))
                         {
-                            d1 = _host._NotifySystemEditorChangeObserverSetPaused ().then
+                            _host._NotifySystemEditorChangeObserverSetPaused ().then
                             (
                                 function () {return _host._NotifyUICollapseCurrent ();}
                             ).then
@@ -737,9 +737,8 @@ define
                 
                 if (gDebug)
                 {
-                    console.groupCollapsed ("_NotifySystemFileSave_PreflightCheck (actions)");
+                    console.log ("_NotifySystemFileSave_PreflightCheck (actions)");
                     console.log ("actions: " + JSON.stringify (actions));
-                    console.groupEnd ();
                 }
                   
                 d = new TDeferred ();
@@ -783,7 +782,10 @@ define
                 var _host = this;
                 var d;
                 
-                if (gDebug) console.log ("TWorksheet::_NotifyUICollapseCurrent ()");
+                if (gDebug)
+                {
+                    console.log ("TWorksheet::_NotifyUICollapseCurrent ()");
+                }
                 
                 d = new TDeferred ();
                 
@@ -808,7 +810,10 @@ define
                 var _host = this;
                 var d;
                 
-                if (gDebug) console.log ("TWorksheet::_NotifyUIExpandNext ()");
+                if (gDebug)
+                {
+                    console.log ("TWorksheet::_NotifyUIExpandNext ()");
+                }
 
                 d = new TDeferred ();
                 
@@ -832,7 +837,10 @@ define
             {
                 var d;
                 
-                if (gDebug) console.log ("TWorksheet::_NotifyUIMigrateEditor ()");
+                if (gDebug)
+                {
+                    console.log ("TWorksheet::_NotifyUIMigrateEditor ()");
+                }
 
                 d = new TDeferred ();
                 
@@ -851,11 +859,15 @@ define
                 var yTarget;
                 var d;
 
-                if (gDebug) console.log ("TWorksheet::_NotifyUIScrollWindow ()");
+                if (gDebug)
+                {
+                    console.log ("TWorksheet::_NotifyUIScrollWindow ()");
+                }
 
                 d           = new TDeferred ();
-                yNode       = domGeometry.position (this.fExerciseNext.fNodeWorkspace, false);
-                yTarget     = yNode.y - 50;
+                yNode       = this._UIGetPosition (this.fExerciseNext.fNodeWorkspace);
+                yTarget     = yNode.y - 50;                                     /* [110] */
+                
                 wndScroll
                 (
                     {
@@ -868,7 +880,7 @@ define
                         }
                     }
                 ).play ();
-                
+
                 return d;
             },
             
@@ -898,6 +910,62 @@ define
                 this.fEditor.ClearFlagChanged ();
                 this.fHandlers.onRequestSaveSolution ();
             },
+            
+            /**
+             * Returns the position of the given element on the screen. It's always the position
+             * of the top left corner of the element looked for.                [100]
+             */
+            _UIGetPosition: function (el)
+            {
+                var xPos = 0;
+                var yPos = 0;
+                var pos  = null;
+                var ret;
+                
+                if (has ("ff"))
+                {   /* For Firefox - we can't use dojo/dom-geometry */
+                    while (el)
+                    {
+                        if (el.tagName == "BODY")
+                        {
+                            // deal with browser quirks with
+                            // body/window/document and page scroll
+                            var xScroll =    el.scrollLeft
+                                          || document.documentElement.scrollLeft;
+                            var yScroll =    el.scrollTop
+                                          || document.documentElement.scrollTop;
+
+                            xPos += (el.offsetLeft - xScroll + el.clientLeft);
+                            yPos += (el.offsetTop - yScroll + el.clientTop);
+                        } else
+                        {
+                            // for all other non-BODY elements
+                            xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                            yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+                        }
+
+                        el = el.offsetParent;
+                    }
+                    ypos -= 50;
+                    
+                    ret = 
+                    {
+                        x: xPos,
+                        y: yPos
+                    };
+                }
+                else
+                {   /* All other browsers seem to be ok with dojo/dom-geometry */
+                    pos = domGeometry.position (el, false);
+                    ret =
+                    {
+                        x: pos.x,
+                        y: pos.y
+                    };
+                }
+                
+                return ret;
+            }
         };
     
         ret = declare ("TWorksheet", [_WidgetBase], TWorksheet);
@@ -909,46 +977,55 @@ define
 
 /*
  
- [10]: We have to include dojo.require, otherwise require.toUrl fails with an error
-       "require.toUrl: Not a function". Reason is that by the time we call this function,
-       dojo has 'packaged' the toUrl function inside the global require.original 
-       property. Requiring 'require' gives us an unpackaged require module which 
-       offers the toUrl function.
+ [10]:     We have to include dojo.require, otherwise require.toUrl fails with an error
+           "require.toUrl: Not a function". Reason is that by the time we call this function,
+           dojo has 'packaged' the toUrl function inside the global require.original 
+           property. Requiring 'require' gives us an unpackaged require module which 
+           offers the toUrl function.
 
- [20]: Needs refactoring: TExerciseEditGUI should autodiscover. Works for now. 
-       Logged as issue#12 [https://github.com/ustegrew/ustegrew.github.io/issues/12]
+ [20]:     Needs refactoring: TExerciseEditGUI should autodiscover. Works for now. 
+           Logged as issue#12 [https://github.com/ustegrew/ustegrew.github.io/issues/12]
 
- [30]: According to specs, JSON strings can't use single quotes to terminate strings. However,
-       this complicates the HTML coding of the web pages where we get the JSON string from -
-       we'll have to code constructs such as:
-           <div data-courseware-type="exercise" data-courseware-props='{"id":"08.13f2"}'>
-       Which quickly turn to a maintenance nightmare if there are multiple such tags in
-       the project. It would be yet another rule to consider when writing the web pages.
-       Therefore we'll just replace double quotes by single quotes which allows us to write:
-           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2'}">
-       This doesn't cover the case where strings contain single quotes, e.g.:
-           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That's a nice ID'}">
-       If we encounter this problem in this class, then we could solve it by allowing 
-       single quotes to be escaped (The JSON specs don't allow it), and to then use several 
-       successive string replacements:
-           1: Replace each \' by some other character
-           2: Replace each ' by "
-           3. JSON parse to object
-           4. Recursively walk the new object, replacing each occurence of other-character with '
-       Or we simply say: Don't use single quotes in strings!
-           <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That is a nice ID'}">
+ [30]:     According to specs, JSON strings can't use single quotes to terminate strings. However,
+           this complicates the HTML coding of the web pages where we get the JSON string from -
+           we'll have to code constructs such as:
+               <div data-courseware-type="exercise" data-courseware-props='{"id":"08.13f2"}'>
+           Which quickly turn to a maintenance nightmare if there are multiple such tags in
+           the project. It would be yet another rule to consider when writing the web pages.
+           Therefore we'll just replace double quotes by single quotes which allows us to write:
+               <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2'}">
+           This doesn't cover the case where strings contain single quotes, e.g.:
+               <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That's a nice ID'}">
+           If we encounter this problem in this class, then we could solve it by allowing 
+           single quotes to be escaped (The JSON specs don't allow it), and to then use several 
+           successive string replacements:
+                   1: Replace each \' by some other character
+                   2: Replace each ' by "
+                   3. JSON parse to object
+                   4. Recursively walk the new object, replacing each occurence of other-character with '
+           Or we simply say: Don't use single quotes in strings!
+               <div data-courseware-type="exercise" data-courseware-props="{'id':'08.13f2', 'description':'That is a nice ID'}">
 
- [40]: For a new TController we create an empty dummy exercise as fExerciseCurrent,
-       fExerciseNext. Setting it to null would create complications.
+ [40]:     For a new TController we create an empty dummy exercise as fExerciseCurrent,
+           fExerciseNext. Setting it to null would create complications.
 
- [60]: The TController calls each event handler with this TWorksheet instance as context - therefore, 
-       in all event handlers we can use the 'this' reference to refer to this TWorksheet instance.
+ [60]:     The TController calls each event handler with this TWorksheet instance as context - therefore, 
+           in all event handlers we can use the 'this' reference to refer to this TWorksheet instance.
        
- [70]: Type dojo/Deferred. Works with the dojo promises framework. I didn't know what better name to choose than 'Semaphore'.
+ [70]:     Type dojo/Deferred. Works with the dojo promises framework. I didn't know what better name to choose than 'Semaphore'.
 
- [80]: Normally I don't like to put a function call into a return statement, but in this case 
-       it made no sense to create a local variable.
+ [80]:     Normally I don't like to put a function call into a return statement, but in this case 
+           it made no sense to create a local variable.
 
- [90]: This statement appears in each branch of the enclosing if-else construct and could be relocated
-       at the end - but it feels better design to leave it this way. 
+ [90]:     This statement appears in each branch of the enclosing if-else construct and could be relocated
+           at the end - but it feels better design to leave it this way. 
+       
+ [100]:    Cross platform compatible way of finding the element's position:
+           * In Firefox:    We use a method courtesy https://www.kirupa.com/html5/get_element_position_using_javascript.htm
+           * Chrome/Safari: dojo/dom-geometry works.
+           For Firefox, we introduce an additional offset of -50px
+           
+ [110]:    Offset of -50px - Equivalent to three or four lines of text, so the user can see the last part of 
+           the current exercise. 
+
  */
