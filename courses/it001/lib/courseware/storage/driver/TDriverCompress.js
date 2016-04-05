@@ -46,15 +46,19 @@ define
                 var record;
                 var ret;
                 
-                stor    = this.fStore.getItem (key);
-                record  = JSON.parse (stor);
-                if (record.isCompressed)
+                ret  = null;
+                stor = this.fStore.getItem (key);
+                if (stor !== null)
                 {
-                    ret = compressor.decompressFromBase64 (record.data);
-                }
-                else
-                {
-                    ret = record.data;
+                    record  = JSON.parse (stor);
+                    if (record.isCompressed)
+                    {
+                        ret = compressor.decompressFromBase64 (record.data);
+                    }
+                    else
+                    {
+                        ret = record.data;
+                    }
                 }
                 
                 return ret;

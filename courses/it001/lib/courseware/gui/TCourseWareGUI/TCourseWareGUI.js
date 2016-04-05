@@ -604,22 +604,10 @@ define
                 this.fPnlArticle.set    ("href",  item.urlArticle);
                 this.fPnlExercises.set  ("href",  item.urlExercises).then
                 (
-                    function ()
-                    {
-                        var d;
-                        var p;
-                        
-                        d = _this._Worksheet_Initialize ();
-                        p = d.promise;
-                        
-                        return p; 
-                    }
+                    function () {return _this._Worksheet_Initialize ();}
                 ).then
                 (
-                    function ()
-                    {
-                        return _this.fPnlExercises.set ("open", false);
-                    }
+                    function () {return _this.fPnlExercises.set ("open", false);}
                 );
             },
 
@@ -652,15 +640,31 @@ define
                         },
                         onRequestLoadSolution: function (id) 
                         {
-                            _this.fWorksheet.SetCurrentSolution ("Exercise: " + id);
+                            _this._Worksheet_LoadSolution (id);
                         },
                         onRequestSaveSolution: function () 
                         {
-                            console.log (JSON.stringify (_this.fWorksheet.GetCurrentSolution ()));
+                            _this._Worksheet_SaveSolution ();
                         }
                     }
                 );
                 this.fWorksheet.startup ();
+            },
+            
+            _Worksheet_LoadSolution: function (id)
+            {
+                var record;
+                
+                record = this.fHost.ExerciseSolutionLoad (id);
+                this.fWorksheet.SetCurrentSolution (record.data);
+            },
+            
+            _Worksheet_SaveSolution: function ()
+            {
+                var e;
+                
+                e = this.fWorksheet.GetCurrentSolution ();
+                this.fHost.ExerciseSolutionSave        (e.id, e.content);
             },
             
             /**

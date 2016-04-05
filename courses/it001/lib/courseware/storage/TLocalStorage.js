@@ -54,10 +54,7 @@ define
                 var ret;
                 
                 ret = this.fDriver.Get (key);
-                if ((ret === null)  &&  (typeof defaultValue === 'string'))
-                {
-                    ret = defaultValue;
-                }
+                ret = (ret !== null)  ?  ret : "" + defaultValue;
                 
                 return ret;
             },

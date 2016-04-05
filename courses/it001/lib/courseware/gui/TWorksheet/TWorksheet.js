@@ -164,10 +164,22 @@ define
             
             GetAllSolutions: function ()
             {
+                var i;
+                var n;
+                var e;
                 var ret;
-                // TODO develop this
-                ret = [];
                 
+                ret = [];
+                n   = this.fModel.GetNumElements ();
+                if (n >= 1)
+                {
+                    for (i = 0; i < n; i++)
+                    {
+                        e = GetByIndex (i);
+                        ret.push (e);
+                    }
+                }
+                    
                 return ret;
             },
             
@@ -476,6 +488,8 @@ define
              */
             constructor: function (params)
             {
+                if (gDebug) console.log ("TWorksheet::constructor ()");
+                
                 this.fHost                      = params.fHost;
                 this.fNodeAnchor                = params.fNodeAnchor;
                 this.fHandlers                  = 
@@ -496,6 +510,8 @@ define
             
             destroy: function ()
             {
+                if (gDebug) console.log ("TWorksheet::destroy ()");
+
                 if (this.fEditor != null)
                 {
                     this.fEditor.destroy ();
@@ -511,6 +527,8 @@ define
             {
                 var _host           = this;
                 var kImgBaseURL     = _require.toUrl ("courseware/img");
+
+                if (gDebug) console.log ("TWorksheet::startup ()");
                 
                 var list;
                 var i;
@@ -946,7 +964,7 @@ define
 
                         el = el.offsetParent;
                     }
-                    ypos -= 50;
+                    yPos -= 50;
                     
                     ret = 
                     {

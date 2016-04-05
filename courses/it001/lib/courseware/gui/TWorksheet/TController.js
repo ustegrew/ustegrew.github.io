@@ -418,6 +418,8 @@ define
             
             constructor: function (params)
             {
+                if (gDebug) console.log ("TController::constructor ()");
+
                 this.fHost  = params.fHost;
                 this.fState = "kNull";
                 this.fStack = [];

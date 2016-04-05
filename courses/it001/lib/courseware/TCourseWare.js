@@ -308,15 +308,19 @@ define
                 var data;
                 var ret;
                 
-                data = this.fLocalStorage.Get (id, "");
-                ret  = {id:id, data:data};
+                data = this.fLocalStorage.Get (id, "Your solution here...");
+                ret  = 
+                {
+                    id:     id, 
+                    data:   data
+                };
                 
                 return ret;
             },
             
-            ExerciseSolutionSave: function (record)
+            ExerciseSolutionSave: function (id, content)
             {
-                this.fLocalStorage.Set (record.id, record.data);
+                this.fLocalStorage.Set (id, content);
             },
 
             _LoadCourse: function (descriptor)
