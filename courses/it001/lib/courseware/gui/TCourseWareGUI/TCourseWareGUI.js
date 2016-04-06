@@ -634,10 +634,6 @@ define
                         {
                             console.log ("Worksheet loaded");
                         },
-                        onRequestCopyAllToClipboard: function ()
-                        {
-                            console.log (JSON.stringify (_this.fWorksheet.GetAllSolutions ()));
-                        },
                         onRequestLoadSolution: function (id) 
                         {
                             _this._Worksheet_LoadSolution (id);

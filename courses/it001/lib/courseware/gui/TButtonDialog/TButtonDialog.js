@@ -84,7 +84,7 @@ define
             constructor: function (params)
             {
                 JSObjectValidator.AssertValid (params, kSchemaParams, "constructor");
-                this.fSemaphore     = null;
+                this.fSemaphore     = null; // of type dojo/Deferred if we want to use this dialog asynchronously.
                 this.fDescriptors   = params.buttons;
                 this.fDialog        = null;
                 this.fHost          = params.host;

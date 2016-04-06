@@ -28,9 +28,11 @@ define
         "./TExercise",
         "./TModel",
         "./TController",
+        "../TTextWindow/TTextWindow",
         "../TExerciseEditGUI/TExerciseEditGUI",
         "../TButtonDialog/TButtonDialog",
-        "dojo/_base/sniff"
+        "dojo/_base/sniff",
+        "dojox/html/format"
     ],
     function 
     (
@@ -58,6 +60,7 @@ define
         TExercise,
         TModel,
         TController,
+        TTextWindow,
         TExerciseEditGUI,
         TButtonDialog
     )
@@ -114,6 +117,12 @@ define
              * @type    TButtonDialog
              */
             fDlgDoSaveConfirm: null,
+            
+            /**
+             * The message box containing the saved exercises when the user
+             * request them to be copied to the clipboard.
+             */
+            fDlgExerciseSolutions: null,
 
             /**
              * The editor for the user to edit the solutions to the exercises.
@@ -235,7 +244,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Changing_CopyAll ()");
                 
-                this._SystemCopyAllToClipboard (); 
+                this._SystemCollectSolutions (); 
             },
             
             /**
@@ -302,7 +311,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Editing_CopyAll ()");
                 
-                this._SystemCopyAllToClipboard ();
+                this._SystemCollectSolutions ();
             },
             
             /**
@@ -372,7 +381,7 @@ define
             {
                 if (gDebug) console.log ("TWorksheet::Handle_Reading_CopyAll ()");
                 
-                this._SystemCopyAllToClipboard ();
+                this._SystemCollectSolutions ();
             },
             
             /**
@@ -495,17 +504,17 @@ define
                 this.fHandlers                  = 
                 {
                     onFinishedLoad:                params.onFinishedLoad,
-                    onRequestCopyAllToClipboard:   params.onRequestCopyAllToClipboard,
                     onRequestLoadSolution:         params.onRequestLoadSolution,
                     onRequestSaveSolution:         params.onRequestSaveSolution
                 };
 
                 this.fController                = new TController ({fHost: this});
                 this.fModel                     = new TModel ();
-                this.fEditor                    = null;
-                this.fDlgDoSaveConfirm          = null;
                 this.fExerciseCurrent           = null;
                 this.fExerciseNext              = null;
+                this.fEditor                    = null;
+                this.fDlgDoSaveConfirm          = null;
+                this.fDlgExerciseSolutions      = null;
             },
             
             destroy: function ()
@@ -515,11 +524,19 @@ define
                 if (this.fEditor != null)
                 {
                     this.fEditor.destroy ();
+                    this.fEditor = null;
                 }
                 
                 if (this.fDlgDoSaveConfirm != null)
                 {
                     this.fDlgDoSaveConfirm.destroy ();
+                    this.fDlgDoSaveConfirm = null;
+                }
+                
+                if (this.fDlgExerciseSolutions != null)
+                {
+                    this.fDlgExerciseSolutions.destroy ();
+                    this.fDlgExerciseSolutions = null;
                 }
             },
 
@@ -580,6 +597,12 @@ define
                 )
                 globalMenuBar.startup ();
                 domConstruct.place (globalMenuBar.domNode, ndeGlobalMenu, "only");
+                
+                /**
+                 * Create dialog which collates all user supplied solutions for this worksheet 
+                 */
+                this.fDlgExerciseSolutions = new TTextWindow ();
+                this.fDlgExerciseSolutions.startup ();
                 
                 /* Set up exercises */
                 ndeListExercises = domQuery ("*[data-courseware-type=\"exercise\"]");
@@ -902,11 +925,40 @@ define
                 return d;
             },
             
-            _SystemCopyAllToClipboard: function ()
+            _SystemCollectSolutions: function ()
             {
-                if (gDebug) console.log ("TWorksheet::_SystemCopyAllToClipboard ()");
-
-                this.fHandlers.onRequestCopyAllToClipboard ();
+                var i;
+                var n;
+                var e;
+                var s;
+                var isS;
+                var ss;
+                
+                if (gDebug) console.log ("TWorksheet::_SystemCollectSolutions ()");
+                
+                n = this.fModel.GetNumElements ();
+                if (n >= 1)
+                {
+                    ss = "";
+                    for (i = 0; i < n; i++)
+                    {
+                        e   = this.fModel.GetByIndex (i);
+                        s   = e.fTextSolution;
+                        
+                        isS = ((typeof s) == "string")  &&  (s.length >= 1);
+                        s   = isS  ?  dojox.html.format.prettyPrint (s) : "No answer yet."
+                        ss += "------------------------------------------------------\n" +
+                              "Question " + (i+1) + ":\n" + 
+                              "------------------------------------------------------\n" +
+                              s + "\n\n";
+                    }
+                }
+                else
+                {
+                    ss = "No exercises in this lesson.";
+                }
+                
+                this.fDlgExerciseSolutions.Show ("Your solutions", "Copy the text below to the clipboard.", ss);
             },
             
             _SystemFileLoadCurrent: function ()

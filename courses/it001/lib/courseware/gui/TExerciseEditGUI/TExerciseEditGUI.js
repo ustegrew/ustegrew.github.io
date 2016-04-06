@@ -595,11 +595,11 @@ define
                                     height:         this.fConfig.fHeight,
                                     plugins:
                                     [
-                                        'cut', 'copy', 'paste',                         '|',
-                                        'undo','redo',                                  '|',
-                                        'bold','italic','underline',                    '|',
-                                        'justifyLeft', 'justifyCenter', 'justifyRight', '|',
-                                        'insertOrderedList','insertUnorderedList'
+                                        'cut', 'copy', 'paste',                                             '|',
+                                        'undo','redo',                                                      '|',
+                                        'bold','italic','underline',                                        '|',
+                                        'justifyLeft', 'justifyCenter', 'justifyRight',                     '|',
+                                        'insertOrderedList','insertUnorderedList', 'indent', 'outdent'
                                     ],
                                     extraPlugins:   
                                     [

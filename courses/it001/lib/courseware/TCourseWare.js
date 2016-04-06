@@ -308,7 +308,7 @@ define
                 var data;
                 var ret;
                 
-                data = this.fLocalStorage.Get (id, "Your solution here...");
+                data = this.fLocalStorage.Get (id, "");
                 ret  = 
                 {
                     id:     id, 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="favicon.ico">
+        <title>
+            Text window test
+        </title>
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/claro.css"      type="text/css">
+        <link rel="stylesheet"  href="../../lib/dojo/dijit/themes/claro/document.css"   type="text/css">
+        <script type="text/javascript">
+            /* Resources pertaining to the Dojo toolkit (https://dojotoolkit.org) */
+            var dojoConfig =
+            {
+                has:
+                {
+                    "dojo-firebug":         true,
+                    "dojo-debug-messages":  true
+                },
+                locale:             'en',
+                baseUrl:            '../../lib/',
+                tlmSiblingsOfDojo:  false,
+                packages:
+                [
+                    {name: 'ace',                           location: 'ace'},
+                    {name: 'dojo',                          location: 'dojo/dojo'},
+                    {name: 'dijit',                         location: 'dojo/dijit'},
+                    {name: 'dojox',                         location: 'dojo/dojox'},
+                    {name: 'gridx',                         location: 'dojo/gridx'},
+                    {name: 'jsdemo',                        location: 'jsdemo'},
+                    {name: 'courseware',                    location: 'courseware'},
+                    {name: 'google-code-prettify',          location: 'google-code-prettify'},
+                    {name: 'pieroxy_lz-string',             location: 'pieroxy_lz-string'},
+                    {name: 'dojo-local-storage',            location: 'dojo-local-storage'},
+                    {name: 'course',                        location: '../course'}
+                ]
+            };
+        </script>
+        <script type             = "text/javascript"
+                src              = "../../lib/dojo/dojo/dojo.js"
+                data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true">
+            /* Integrate dojo toolkit */
+        </script>
+
+        <script type             = "text/javascript"
+                src              = "../../lib/google-code-prettify/src/prettify.js">
+            /* Integrate dojo toolkit */
+        </script>
+
+        <script type="text/javascript">
+var gTxtWnd = null;
+        
+function showText ()
+{
+    gTxtWnd.Show ("Important message", "Read this below", "This is my text");
+}
+        
+require
+([
+    "dojo/parser",
+    "dojo/dom",
+    "dijit/form/Button",
+    "courseware/gui/TTextWindow/TTextWindow",
+    "dojo/domReady!"
+], function 
+(
+    parser,
+    dom,
+    TButton,
+    TTextWindow
+)
+{
+    parser.parse().then
+    (
+        function ()
+        {
+            gTxtWnd = new TTextWindow ();
+            gTxtWnd.startup ();
+        }
+    );
+});
+        </script>
+    </head>
+    <body class="claro">
+        <h1>Demo: TTextWindow</h1>
+        <button type="button" data-dojo-type="dijit/form/Button" data-dojo-id="btnStoreCompressed">See my text
+            <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+                showText ();
+            </script>
+        </button>
+    </body>
+</html>
