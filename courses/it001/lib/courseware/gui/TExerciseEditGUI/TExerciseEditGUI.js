@@ -6,6 +6,7 @@ define
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dojo/has",
         "dojo/dom",
         "dojo/dom-construct",
         "dojo/on",
@@ -17,12 +18,14 @@ define
         "dijit/DropDownMenu",
         "ace/TAce",
         "dijit/Editor",
-        "dijit/_editor/plugins/FontChoice"
+        "dijit/_editor/plugins/FontChoice",
+        "dojo/_base/sniff"
     ],
     function 
     (
         declare,
         _WidgetBase,
+        has,
         dom,
         domConstruct,
         on,
@@ -428,12 +431,50 @@ define
                 this.fPnlWrapperEdit    = pnlWrapperEdit;
             },
             
+            _GetFeatureProfile: function ()
+            {
+                var ret;
+                
+                ret = 
+                {
+                    fNeedSimpleRichtextEditor:      true
+                };
+                
+                if (has ("ff"))
+                {
+                    ret.fNeedSimpleRichtextEditor = false;
+                }
+                else if (has ("chrome"))
+                {
+                    ret.fNeedSimpleRichtextEditor = false;
+                }
+                
+                return ret;
+            },
+            
+            _HandleOnLoad: function ()
+            {
+                if (gDebug) console.log ("TExerciseEditGUI::_HandleOnLoad ()");
+                
+                if (this.fAPIEditor.fEarlyContent !== null)
+                {
+                    this.fAPIEditor.SetContent (this.fAPIEditor.fEarlyContent);
+                }
+                this.fHandlers.onFinishedLoad.call (this.fHost);
+            },
+            
+            _Log: function (msg)
+            {
+                console.log ("TExerciseEditGUI::" + msg);
+            },
+
             _SetType: function (type, srcLang)
             {
                 if (gDebug) console.log ("TExerciseEditGUI::_SetType ('" + type + "', '" + srcLang + "')");
                 
                 var _host = this;
                 
+                var featureProfile;
                 var eType;
                 var eLang;
                 var wrStyle;
@@ -479,6 +520,7 @@ define
                 switch (eType)
                 {
                     case this.EType.kRichText:
+                        featureProfile          = this._GetFeatureProfile ();
                         wrStyle                 = "left:0px;right:2px;";
                         this.fPnlWrapperEdit    = domConstruct.create 
                         (
@@ -527,30 +569,50 @@ define
                                 _host.fAPIEditor.fEarlyContent = content;
                             }
                         };
-                        this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
-                        (
-                            {
-                                width:          this.fConfig.fWidth,
-                                height:         this.fConfig.fHeight,
-                                plugins:
-                                [
-                                    'cut', 'copy', 'paste',                         '|',
-                                    'undo','redo',                                  '|',
-                                    'bold','italic','underline',                    '|',
-                                    'justifyLeft', 'justifyCenter', 'justifyRight', '|',
-                                    'insertOrderedList','insertUnorderedList'
-                                ],
-                                extraPlugins:   
-                                [
-                                    '|',
-                                    {
-                                        name:       "formatBlock",
-                                        plainText:  true
-                                    }
-                                ]
-                            },
-                            this.fPnlWrapperEdit
-                        );
+                        
+                        if (featureProfile.fNeedSimpleRichtextEditor)
+                        {
+                            this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
+                            (
+                                {
+                                    width:          this.fConfig.fWidth,
+                                    height:         this.fConfig.fHeight,
+                                    plugins:
+                                    [
+                                        'cut', 'copy', 'paste',                         '|',
+                                        'undo','redo'
+                                    ]
+                                },
+                                this.fPnlWrapperEdit
+                            );
+                        }
+                        else
+                        {
+                            this.fAPIEditor.fEditor = new TRichTextEdit             /* <----- Property: fAPIEditor.fEditor */
+                            (
+                                {
+                                    width:          this.fConfig.fWidth,
+                                    height:         this.fConfig.fHeight,
+                                    plugins:
+                                    [
+                                        'cut', 'copy', 'paste',                         '|',
+                                        'undo','redo',                                  '|',
+                                        'bold','italic','underline',                    '|',
+                                        'justifyLeft', 'justifyCenter', 'justifyRight', '|',
+                                        'insertOrderedList','insertUnorderedList'
+                                    ],
+                                    extraPlugins:   
+                                    [
+                                        '|',
+                                        {
+                                            name:       "formatBlock",
+                                            plainText:  true
+                                        }
+                                    ]
+                                },
+                                this.fPnlWrapperEdit
+                            );
+                        }
                         this.fAPIEditor.fEditor.onLoadDeferred.then
                         (
                             function ()
@@ -655,23 +717,7 @@ define
                 }
                 
                 domConstruct.place (this.fPnlWrapperEdit, this.fPnlWrapper, "last");
-            },
-            
-            _HandleOnLoad: function ()
-            {
-                if (gDebug) console.log ("TExerciseEditGUI::_HandleOnLoad ()");
-                
-                if (this.fAPIEditor.fEarlyContent !== null)
-                {
-                    this.fAPIEditor.SetContent (this.fAPIEditor.fEarlyContent);
-                }
-                this.fHandlers.onFinishedLoad.call (this.fHost);
-            },
-            
-            _Log: function (msg)
-            {
-                console.log ("TExerciseEditGUI::" + msg);
-            },
+            }
         };
     
         ret = declare ("TExerciseEditGUI", [_WidgetBase], TExerciseEditGUI);
