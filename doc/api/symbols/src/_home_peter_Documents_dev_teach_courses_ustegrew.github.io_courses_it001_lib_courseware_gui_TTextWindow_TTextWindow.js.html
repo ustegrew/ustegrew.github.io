@@ -14,171 +14,318 @@
 <span class='line'>  7</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/_base/declare"</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>  8</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/_WidgetBase"</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>  9</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/Deferred"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/dom-construct"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/Dialog"</span><span class="WHIT">
-<span class='line'> 12</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 13</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
-<span class='line'> 14</span>     </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">_WidgetBase</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">TDeferred</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="NAME">domConstruct</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="NAME">TDialog</span><span class="WHIT">
-<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 21</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 22</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TTextWindow</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 23</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 24</span> 
-<span class='line'> 25</span> </span><span class="WHIT">        </span><span class="COMM">/**
-<span class='line'> 26</span>          * A text box with heading and copyable text area below. Used for the 
-<span class='line'> 27</span>          * "Export to clipboard" feature.
-<span class='line'> 28</span>          * 
-<span class='line'> 29</span>          * @class       TTextWindow
-<span class='line'> 30</span>          */</span><span class="WHIT">
-<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="NAME">TTextWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
-<span class='line'> 32</span>         </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 33</span> </span><span class="WHIT">            </span><span class="COMM">/**
-<span class='line'> 34</span>              * 
-<span class='line'> 35</span>              * 
-<span class='line'> 36</span>              * @type
-<span class='line'> 37</span>              * @private
-<span class='line'> 38</span>              */</span><span class="WHIT">
-<span class='line'> 39</span> </span><span class="WHIT">            </span><span class="NAME">fDialog</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 40</span> </span><span class="WHIT">            
-<span class='line'> 41</span>             </span><span class="COMM">/**
-<span class='line'> 42</span>              * 
-<span class='line'> 43</span>              * 
-<span class='line'> 44</span>              * @type
-<span class='line'> 45</span>              * @private
-<span class='line'> 46</span>              */</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="WHIT">            </span><span class="NAME">fNodeHeading</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 48</span> </span><span class="WHIT">            
-<span class='line'> 49</span>             </span><span class="COMM">/**
-<span class='line'> 50</span>              * 
-<span class='line'> 51</span>              * 
-<span class='line'> 52</span>              * @type
-<span class='line'> 53</span>              * @private
-<span class='line'> 54</span>              */</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">            </span><span class="NAME">fNodeText</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 56</span> </span><span class="WHIT">            
-<span class='line'> 57</span>             </span><span class="COMM">/**
-<span class='line'> 58</span>              * 
-<span class='line'> 59</span>              * 
-<span class='line'> 60</span>              * @type
-<span class='line'> 61</span>              * @private
-<span class='line'> 62</span>              */</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">            </span><span class="NAME">fSemaphore</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 64</span> </span><span class="WHIT">            
-<span class='line'> 65</span>             </span><span class="COMM">/**
-<span class='line'> 66</span>              * 
-<span class='line'> 67</span>              * 
-<span class='line'> 68</span>              * @type
-<span class='line'> 69</span>              * @private
-<span class='line'> 70</span>              */</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">            </span><span class="NAME">Show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">heading</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 73</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 74</span> </span><span class="WHIT">                
-<span class='line'> 75</span>                 </span><span class="NAME">this.fSemaphore</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TDeferred</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">                
-<span class='line'> 77</span>                 </span><span class="NAME">this.fDialog.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"title"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="NAME">title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 78</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading.innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">heading</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 79</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText.value</span><span class="WHIT">        </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">                
-<span class='line'> 81</span>                 </span><span class="NAME">this.fDialog.show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="WHIT">
-<span class='line'> 82</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'> 83</span> </span><span class="WHIT">                    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 84</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 85</span> </span><span class="WHIT">                        </span><span class="NAME">_this.fNodeText.scrollTop</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 86</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 87</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">            
-<span class='line'> 89</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.fSemaphore</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 91</span> </span><span class="WHIT">            
-<span class='line'> 92</span>             </span><span class="COMM">/**
-<span class='line'> 93</span>              * Dojo specific cTor.
-<span class='line'> 94</span>              */</span><span class="WHIT">
-<span class='line'> 95</span> </span><span class="WHIT">            </span><span class="NAME">constructor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 96</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 97</span> </span><span class="WHIT">                </span><span class="NAME">this.fDialog</span><span class="WHIT">        </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 98</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>100</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>101</span> </span><span class="WHIT">            
-<span class='line'>102</span>             </span><span class="NAME">destroy</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fDialog</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>105</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>106</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.destroyRecursive</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>107</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>108</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>109</span> 
-<span class='line'>110</span> </span><span class="WHIT">            </span><span class="COMM">/* -------------------------------------------------------------
-<span class='line'>111</span>              * Dijit overrides 
-<span class='line'>112</span>              * ------------------------------------------------------------- */</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">        
-<span class='line'>114</span>             </span><span class="COMM">/**
-<span class='line'>115</span>              * Startup method (for widgets). This overrides the _WidgetBase::startup ().
-<span class='line'>116</span>              * 
-<span class='line'>117</span>              * Excerpt, Dojo documentation:
-<span class='line'>118</span>              *     + postCreate
-<span class='line'>119</span>              *          This is typically the workhorse of a custom widget. The 
-<span class='line'>120</span>              *          widget has been rendered (but note that child widgets in 
-<span class='line'>121</span>              *          the containerNode have not!). The widget though may not 
-<span class='line'>122</span>              *          be attached to the DOM yet so you shouldn’t do any sizing 
-<span class='line'>123</span>              *          calculations in this method.
-<span class='line'>124</span>              *     
-<span class='line'>125</span>              *     + startup
-<span class='line'>126</span>              *          If you need to be sure parsing and creation of any child 
-<span class='line'>127</span>              *          widgets has completed, use startup. This is often used 
-<span class='line'>128</span>              *          for layout widgets like BorderContainer. If the widget 
-<span class='line'>129</span>              *          does JS sizing, then startup() should call resize(), 
-<span class='line'>130</span>              *          which does the sizing.
-<span class='line'>131</span>              */</span><span class="WHIT">
-<span class='line'>132</span> </span><span class="WHIT">            </span><span class="NAME">startup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>133</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>134</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>135</span> </span><span class="WHIT">                
-<span class='line'>136</span>                 </span><span class="NAME">this.fDialog</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TDialog</span><span class="WHIT">
-<span class='line'>137</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'>138</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>139</span> </span><span class="WHIT">                        </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">""</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>140</span> </span><span class="WHIT">                        </span><span class="NAME">content</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">""</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>141</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"width: 95%;"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>142</span> </span><span class="WHIT">                        </span><span class="NAME">closable</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>143</span> </span><span class="WHIT">                        </span><span class="NAME">onHide</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'>144</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>145</span> </span><span class="WHIT">                            </span><span class="NAME">_this.fSemaphore.resolve</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>146</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>147</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>148</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>149</span> </span><span class="WHIT">                </span><span class="NAME">this.fDialog.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>150</span> 
-<span class='line'>151</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> 
-<span class='line'>152</span>                 </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'>153</span> </span><span class="WHIT">                    </span><span class="STRN">"h1"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>154</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>155</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>156</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.containerNode</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>157</span> </span><span class="WHIT">                    </span><span class="STRN">"only"</span><span class="WHIT">
-<span class='line'>158</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>159</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT">
-<span class='line'>160</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'>161</span> </span><span class="WHIT">                    </span><span class="STRN">"textarea"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>162</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>163</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"width:100%;height:460px;font-family:monospace;resize:none"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>164</span> </span><span class="WHIT">                        </span><span class="NAME">readonly</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="WHIT">
-<span class='line'>165</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>166</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.containerNode</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>167</span> </span><span class="WHIT">                    </span><span class="STRN">"last"</span><span class="WHIT">
-<span class='line'>168</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>169</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>170</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>171</span> </span><span class="WHIT">    
-<span class='line'>172</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TTextWindow"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_WidgetBase</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TTextWindow</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>173</span> </span><span class="WHIT">    
-<span class='line'>174</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>175</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>176</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>177</span> </span></pre></body></html>
+<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="STRN">"courseware/util/validator/TValidatorJSON"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/dom-construct"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/Dialog"</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
+<span class='line'> 15</span>     </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">_WidgetBase</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="NAME">TDeferred</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="NAME">JSObjectValidator</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">        </span><span class="NAME">domConstruct</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">        </span><span class="NAME">TDialog</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TTextWindow</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 26</span> 
+<span class='line'> 27</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 28</span>          * A text box with heading and copyable text area below. Used for the 
+<span class='line'> 29</span>          * "Export to clipboard" feature.&lt;br/>
+<span class='line'> 30</span>          * The text window can be used with a callback (when the window is closed
+<span class='line'> 31</span>          * by the user) or via the Promise API (Promise resolves with closing the 
+<span class='line'> 32</span>          * window).
+<span class='line'> 33</span>          * &lt;p>&lt;br/>&lt;/p>
+<span class='line'> 34</span>          * 
+<span class='line'> 35</span>          * &lt;b>Elements on the user interface&lt;/b>
+<span class='line'> 36</span>          * 
+<span class='line'> 37</span>          * &lt;pre>
+<span class='line'> 38</span>          * .--------------------------------------------------------------.
+<span class='line'> 39</span>          * | Title                                                        |
+<span class='line'> 40</span>          * |--------------------------------------------------------------|
+<span class='line'> 41</span>          * | Heading                                                      |
+<span class='line'> 42</span>          * |                                                              |
+<span class='line'> 43</span>          * | ************************************************************ |
+<span class='line'> 44</span>          * | * Text                                                     * |
+<span class='line'> 45</span>          * | *                                                          * |
+<span class='line'> 46</span>          * | ************************************************************ |
+<span class='line'> 47</span>          * '--------------------------------------------------------------'
+<span class='line'> 48</span>          * &lt;/pre>
+<span class='line'> 49</span>          * 
+<span class='line'> 50</span>          * &lt;dl>
+<span class='line'> 51</span>          *     &lt;dt>Title&lt;/dt>
+<span class='line'> 52</span>          *     &lt;dd>The dialog's title&lt;/dd>
+<span class='line'> 53</span>          *     
+<span class='line'> 54</span>          *     &lt;dt>Heading&lt;/dt>
+<span class='line'> 55</span>          *     &lt;dd>The heading above the text.&lt;/dd>
+<span class='line'> 56</span>          *     
+<span class='line'> 57</span>          *     &lt;dt>Text&lt;/dt>
+<span class='line'> 58</span>          *     &lt;dd>The text. Will be inside a TEXTAREA element so it's easy to copy to clipboard.&lt;/dd>
+<span class='line'> 59</span>          * &lt;/dl>
+<span class='line'> 60</span>          * &lt;p>&lt;br/>&lt;/p>
+<span class='line'> 61</span>          * 
+<span class='line'> 62</span>          * &lt;b>Example uses&lt;/b>
+<span class='line'> 63</span>          * 
+<span class='line'> 64</span>          * @example
+<span class='line'> 65</span>          * // Using callbacks
+<span class='line'> 66</span>          * 
+<span class='line'> 67</span>          * require 
+<span class='line'> 68</span>          * (
+<span class='line'> 69</span>          *     [
+<span class='line'> 70</span>          *         "courseware/gui/TTextWindow/TTextWindow"
+<span class='line'> 71</span>          *     ],
+<span class='line'> 72</span>          *     function 
+<span class='line'> 73</span>          *     (
+<span class='line'> 74</span>          *         TTxtWnd
+<span class='line'> 75</span>          *     )
+<span class='line'> 76</span>          *     {
+<span class='line'> 77</span>          *         var t;
+<span class='line'> 78</span>          *         
+<span class='line'> 79</span>          *         t = new TTxtWnd
+<span class='line'> 80</span>          *         (
+<span class='line'> 81</span>          *             host:        window,
+<span class='line'> 82</span>          *             onClose: function ()
+<span class='line'> 83</span>          *             {
+<span class='line'> 84</span>          *                 window.alert ("Bye!");
+<span class='line'> 85</span>          *             }
+<span class='line'> 86</span>          *         );
+<span class='line'> 87</span>          *         t.startup ();
+<span class='line'> 88</span>          *         
+<span class='line'> 89</span>          *         t.Show
+<span class='line'> 90</span>          *         (
+<span class='line'> 91</span>          *             "Message to you",
+<span class='line'> 92</span>          *             "This is a heading", 
+<span class='line'> 93</span>          *             "And this is a text below the heading"
+<span class='line'> 94</span>          *         );
+<span class='line'> 95</span>          *     }
+<span class='line'> 96</span>          * );
+<span class='line'> 97</span>          * 
+<span class='line'> 98</span>          * @example
+<span class='line'> 99</span>          * // Using promise API
+<span class='line'>100</span>          * 
+<span class='line'>101</span>          * require 
+<span class='line'>102</span>          * (
+<span class='line'>103</span>          *     [
+<span class='line'>104</span>          *         "courseware/gui/TTextWindow/TTextWindow"
+<span class='line'>105</span>          *     ],
+<span class='line'>106</span>          *     function 
+<span class='line'>107</span>          *     (
+<span class='line'>108</span>          *         TTxtWnd
+<span class='line'>109</span>          *     )
+<span class='line'>110</span>          *     {
+<span class='line'>111</span>          *         var t;
+<span class='line'>112</span>          *         
+<span class='line'>113</span>          *         t = new TTxtWnd
+<span class='line'>114</span>          *         (
+<span class='line'>115</span>          *             host:        window,
+<span class='line'>116</span>          *             onClose:     function () {}
+<span class='line'>117</span>          *         );
+<span class='line'>118</span>          *         t.startup ();
+<span class='line'>119</span>          *         
+<span class='line'>120</span>          *         t.Show
+<span class='line'>121</span>          *         (
+<span class='line'>122</span>          *             "Message to you",
+<span class='line'>123</span>          *             "This is a heading", 
+<span class='line'>124</span>          *             "And this is a text below the heading"
+<span class='line'>125</span>          *         ).then
+<span class='line'>126</span>          *         {
+<span class='line'>127</span>          *             function ()
+<span class='line'>128</span>          *             {
+<span class='line'>129</span>          *                 window.alert ("Bye!");
+<span class='line'>130</span>          *             }
+<span class='line'>131</span>          *         };
+<span class='line'>132</span>          *     }
+<span class='line'>133</span>          * );
+<span class='line'>134</span>          * 
+<span class='line'>135</span>          * @class       TTextWindow
+<span class='line'>136</span>          */</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">        </span><span class="NAME">TTextWindow</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'>138</span>         </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>140</span>              * JSON schema to validate the text window's descriptor.
+<span class='line'>141</span>              * 
+<span class='line'>142</span>              * @constant
+<span class='line'>143</span>              * @type        JSON schema
+<span class='line'>144</span>              * @private
+<span class='line'>145</span>              */</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">            </span><span class="NAME">kSchemaParams</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">                </span><span class="STRN">"$schema"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"http://json-schema.org/draft-03/schema#"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">                </span><span class="STRN">"title"</span><span class="PUNC">:</span><span class="WHIT">        </span><span class="STRN">"Text window descriptor"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">                </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"Descriptor for a text window"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">                </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="STRN">"object"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">                </span><span class="NAME">properties</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">                    </span><span class="STRN">"host"</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">                        </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"The object hosting this text window"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">                        </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"object"</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">                    </span><span class="STRN">"onClose"</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">                        </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"Callback to invoke when the user closes this text window."</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">                        </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"function"</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>166</span> 
+<span class='line'>167</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>168</span>              * The underlying dijit dialog.
+<span class='line'>169</span>              * 
+<span class='line'>170</span>              * @type        dijit/Dialog
+<span class='line'>171</span>              * @private
+<span class='line'>172</span>              */</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">            </span><span class="NAME">fDialog</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">            
+<span class='line'>175</span>             </span><span class="COMM">/**
+<span class='line'>176</span>              * The callback to be executed when the user closes this text window.
+<span class='line'>177</span>              * 
+<span class='line'>178</span>              * @type    JSFunction
+<span class='line'>179</span>              * @private
+<span class='line'>180</span>              */</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">            </span><span class="NAME">fHandlerOnClose</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">            
+<span class='line'>183</span>             </span><span class="COMM">/**
+<span class='line'>184</span>              * The client using this dialog.
+<span class='line'>185</span>              * 
+<span class='line'>186</span>              * @type        JSObject
+<span class='line'>187</span>              * @private
+<span class='line'>188</span>              */</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">            </span><span class="NAME">fHost</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">            
+<span class='line'>191</span>             </span><span class="COMM">/**
+<span class='line'>192</span>              * The DOM element hosting the heading (above the message text).
+<span class='line'>193</span>              * 
+<span class='line'>194</span>              * @type        DOMNode
+<span class='line'>195</span>              * @private
+<span class='line'>196</span>              */</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">            </span><span class="NAME">fNodeHeading</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">            
+<span class='line'>199</span>             </span><span class="COMM">/**
+<span class='line'>200</span>              * The DOM element hosting the message text.
+<span class='line'>201</span>              * 
+<span class='line'>202</span>              * @type        DOMNode
+<span class='line'>203</span>              * @private
+<span class='line'>204</span>              */</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">            </span><span class="NAME">fNodeText</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">            
+<span class='line'>207</span>             </span><span class="COMM">/**
+<span class='line'>208</span>              * The promise, to use this dialog inside a &lt;code>.then&lt;/code> construct.
+<span class='line'>209</span>              * 
+<span class='line'>210</span>              * @type    dojo/Deferred
+<span class='line'>211</span>              * @private
+<span class='line'>212</span>              */</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">            </span><span class="NAME">fSemaphore</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">            
+<span class='line'>215</span>             </span><span class="COMM">/**
+<span class='line'>216</span>              * Shows the text window and sets title, heading and text. Title appears 
+<span class='line'>217</span>              * in the dialog's title bar, heading appears above the text and text 
+<span class='line'>218</span>              * appears inside a TEXTAREA element.
+<span class='line'>219</span>              * 
+<span class='line'>220</span>              * @param       {String}    title       The text window's title.
+<span class='line'>221</span>              * @param       {String}    heading     The heading above the text.
+<span class='line'>222</span>              * @param       {String}    text        The text.
+<span class='line'>223</span>              * @returns     {dojo/Deferred}         A Deferred object, if the window is
+<span class='line'>224</span>              *                                      to be shown using the promise API.
+<span class='line'>225</span>              */</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">            </span><span class="NAME">Show</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">title</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">heading</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">                
+<span class='line'>230</span>                 </span><span class="NAME">this.fSemaphore</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TDeferred</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">                
+<span class='line'>232</span>                 </span><span class="NAME">this.fDialog.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"title"</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="NAME">title</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading.innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">heading</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText.value</span><span class="WHIT">        </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">text</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="WHIT">                
+<span class='line'>236</span>                 </span><span class="NAME">this.fDialog.show</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">then</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">                    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">                        </span><span class="NAME">_this.fNodeText.scrollTop</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">            
+<span class='line'>244</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.fSemaphore</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">            
+<span class='line'>247</span>             </span><span class="COMM">/**
+<span class='line'>248</span>              * Dojo specific cTor.
+<span class='line'>249</span>              * 
+<span class='line'>250</span>              * @param {JSON}    params      The text window's configuration.  Must 
+<span class='line'>251</span>              *                              conform to {@link TTextWindow.kSchemaParams}.
+<span class='line'>252</span>              */</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">            </span><span class="NAME">constructor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">                </span><span class="NAME">JSObjectValidator.AssertValid</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.kSchemaParams</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"constructor"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="WHIT">                </span><span class="NAME">this.fDialog</span><span class="WHIT">            </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">                </span><span class="NAME">this.fHandlerOnClose</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.onClose</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">                </span><span class="NAME">this.fHost</span><span class="WHIT">              </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.host</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading</span><span class="WHIT">       </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText</span><span class="WHIT">          </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">                </span><span class="NAME">this.fSemaphore</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">            
+<span class='line'>264</span>             </span><span class="COMM">/**
+<span class='line'>265</span>              * dTor.
+<span class='line'>266</span>              */</span><span class="WHIT">
+<span class='line'>267</span> </span><span class="WHIT">            </span><span class="NAME">destroy</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>268</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fDialog</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.destroyRecursive</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>274</span> 
+<span class='line'>275</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>276</span>              * Startup method. Sets up the text window.
+<span class='line'>277</span>              */</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">            </span><span class="NAME">startup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">                
+<span class='line'>282</span>                 </span><span class="NAME">this.fDialog</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TDialog</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">                        </span><span class="NAME">title</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">""</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">                        </span><span class="NAME">content</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="STRN">""</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"width: 95%;"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">                        </span><span class="NAME">closable</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">                        </span><span class="NAME">onHide</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">                            </span><span class="NAME">_this.fHandlerOnClose.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">                            </span><span class="NAME">_this.fSemaphore.resolve</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">                </span><span class="NAME">this.fDialog.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>297</span> 
+<span class='line'>298</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeHeading</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> 
+<span class='line'>299</span>                 </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">                    </span><span class="STRN">"h1"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.containerNode</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">                    </span><span class="STRN">"only"</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">                </span><span class="NAME">this.fNodeText</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">                    </span><span class="STRN">"textarea"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"width:100%;height:460px;font-family:monospace;resize:none"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>311</span> </span><span class="WHIT">                        </span><span class="NAME">readonly</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">                    </span><span class="NAME">this.fDialog.containerNode</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">                    </span><span class="STRN">"last"</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">    
+<span class='line'>319</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TTextWindow"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_WidgetBase</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TTextWindow</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">    
+<span class='line'>321</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>324</span> </span></pre></body></html>

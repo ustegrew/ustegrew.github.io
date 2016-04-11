@@ -31,7 +31,103 @@ define
 
         /**
          * The Courseware module. Provides an in-broswer interactive learning 
-         * environment which runs entirely in the web browser. 
+         * environment which runs entirely in the web browser.<br/>
+         * To use it, note these things:
+         * <ul>
+         *     <li>
+         *         clients have to provide the course content 
+         *         (html, images, custom scripts etc.) and a course descriptor 
+         *         (JSON file).
+         *     </li>
+         *     <li>
+         *         The component is meant to be included on an entire web document 
+         *         (i.e. to fill the viewport).
+         *     </li>
+         * </ul>
+         * 
+         * <p><br/></p>
+         * Then, to use the component:
+         * @example
+         * &lt;!DOCTYPE html&gt;
+         * &lt;html&gt;
+         *     &lt;head&gt;
+         *         &lt;meta charset="utf-8"&gt;
+         *         &lt;link rel="shortcut icon" href="favicon.ico"&gt;
+         *         &lt;title&gt;
+         *             Courses
+         *         &lt;/title&gt;
+         *         &lt;link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/claro.css"        type="text/css"&gt;
+         *         &lt;link rel="stylesheet"  href="lib/dojo/dijit/themes/claro/document.css"     type="text/css"&gt;
+         *         &lt;link rel="stylesheet"  href="lib/dojo/gridx/resources/claro/Gridx.css"     type="text/css"&gt;
+         *         &lt;script type="text/javascript" src="lib/pieroxy_lz-string/lz-string.js"                    &gt;&lt;/script&gt;
+         *         &lt;script type="text/javascript"&gt;
+         *             
+         *             var dojoConfig =
+         *             {
+         *                 has:
+         *                 {
+         *                     "dojo-firebug":         true,
+         *                     "dojo-debug-messages":  true
+         *                 },
+         *                 locale:             'en',
+         *                 baseUrl:            'lib/',
+         *                 tlmSiblingsOfDojo:  false,
+         *                 packages:
+         *                 [
+         *                     {name: 'ace',                           location: 'ace'},
+         *                     {name: 'dojo',                          location: 'dojo/dojo'},
+         *                     {name: 'dijit',                         location: 'dojo/dijit'},
+         *                     {name: 'dojox',                         location: 'dojo/dojox'},
+         *                     {name: 'gridx',                         location: 'dojo/gridx'},
+         *                     {name: 'jsdemo',                        location: 'jsdemo'},
+         *                     {name: 'courseware',                    location: 'courseware'},
+         *                     {name: 'google-code-prettify',          location: 'google-code-prettify'},
+         *                     {name: 'pieroxy_lz-string',             location: 'pieroxy_lz-string'},
+         *                     {name: 'dojo-local-storage',            location: 'dojo-local-storage'},
+         *                     {name: 'course',                        location: '../course'},
+         *                 ]
+         *             };
+         *         &lt;/script&gt;
+         *         &lt;script type             = "text/javascript"
+         *                 src              = "lib/dojo/dojo/dojo.js"
+         *                 data-dojo-config = "'parseOnLoad':false,'async':true, 'isDebug':true"&gt;
+         *                 
+         *         &lt;/script&gt;
+         *         &lt;script type="text/javascript"&gt;
+         *             require
+         *             ([
+         *                 "dojo/parser",
+         *                 "dojo/dom",
+         *                 "dojo/dom-construct",
+         *                 "courseware/TCourseWare",
+         *                 "dojo/domReady!"
+         *             ], function 
+         *             (
+         *                 parser,
+         *                 dom,
+         *                 domConstruct,
+         *                 TCourseWare
+         *             )
+         *             {
+         *                 parser.parse().then
+         *                 (
+         *                     function ()
+         *                     {
+         *                         var c;
+         * 
+         *                         c = new TCourseWare ();
+         *                         domConstruct.place  (c.domNode, "pnlMain", "only");
+         *                         c.startup           ();
+         *                         c.LoadCourse        ("course/it001/res/info.json");
+         *                     }
+         *                 );
+         *             });
+         *         &lt;/script&gt;
+         *     &lt;/head&gt;
+         *     &lt;body class="claro"&gt;
+         *         &lt;div id="pnlMain" style="position:absolute;top:0px;bottom:0px;left:0px;right:0px;"&gt;&lt;/div&gt;
+         *     &lt;/body&gt;
+         * &lt;/html&gt;
          * 
          * @class       TCourseWare
          */
@@ -369,6 +465,10 @@ define
              */
             constructor: function ()
             {
+                /*
+                 * Load local storage bridge. We use the compression driver which 
+                 * uses the storage capacity more efficiently.
+                 */
                 this.fLocalStorage = new TLocalStorage ({driver:"compression"});
             },
 

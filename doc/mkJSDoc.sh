@@ -29,7 +29,7 @@ kTemplDir=/home/peter/bin/apidocgen/jsdoc-toolkit/templates/jsdoc
 
 #=========================================================================
 # 2. Synthesize command which we'll execute in the background
-CMD="java -Djsdoc.template.dir=$kTemplDir -jar $kJSRunExe $kJSAppExe $kSRCDir -v -r -E=(/lib/dojo|/lib/ace/|lib/esprima|/lib/google-code-prettify|lib/pieroxy_lz-string) -a -p -d=$kJSDocDir"
+CMD="java -Djsdoc.template.dir=$kTemplDir -jar $kJSRunExe $kJSAppExe $kSRCDir -v -r -E=(/_playground/|/lib/dojo|/lib/ace/|lib/esprima|/lib/google-code-prettify|lib/pieroxy_lz-string|/course/) -a -p -d=$kJSDocDir"
 
 
 #=========================================================================

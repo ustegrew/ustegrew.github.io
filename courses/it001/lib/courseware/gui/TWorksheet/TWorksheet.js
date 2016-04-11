@@ -607,7 +607,13 @@ define
                 /**
                  * Create dialog which collates all user supplied solutions for this worksheet 
                  */
-                this.fDlgExerciseSolutions = new TTextWindow ();
+                this.fDlgExerciseSolutions = new TTextWindow 
+                (
+                    {
+                        host:           this,
+                        onClose:        function () {}
+                    }
+                );
                 this.fDlgExerciseSolutions.startup ();
                 
                 /* Set up exercises */

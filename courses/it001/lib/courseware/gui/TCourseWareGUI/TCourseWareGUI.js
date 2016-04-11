@@ -38,6 +38,9 @@ define
 
         /**
          * Class for the main course UI.
+         * <p><br/></p>
+         * 
+         * <b>Elements on the user interface</b>
          * 
          * <pre>    
          *     .-------------------------------------.
@@ -60,8 +63,6 @@ define
          *     |'--------------''-------------------'|
          *     '-------------------------------------'
          * </pre>
-         * 
-         * Elements on the user interface:
          * 
          * <dl>
          *     <dt>Heading</dt>
@@ -101,6 +102,12 @@ define
                 }
             ],
             
+            /**
+             * The client using this UI.
+             * 
+             * @type        courseware/TCourseWare
+             * @private
+             */
             fHost: null,
             
             /**

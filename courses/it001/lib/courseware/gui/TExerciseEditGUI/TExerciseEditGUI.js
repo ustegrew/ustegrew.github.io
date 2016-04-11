@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Main interface for a course.
+ *  @fileoverview        A multi type editor component.
  */
 define 
 (
@@ -7,12 +7,9 @@ define
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/has",
-        "dojo/dom",
         "dojo/dom-construct",
-        "dojo/on",
         "dijit/MenuBar",
         "dijit/PopupMenuBarItem",
-        "dijit/Menu",
         "dijit/MenuItem",
         "dijit/MenuSeparator",
         "dijit/DropDownMenu",
@@ -26,45 +23,77 @@ define
         declare,
         _WidgetBase,
         has,
-        dom,
         domConstruct,
-        on,
         TMenuBar,
         TPopupMenuBarItem,
-        TMenu,
         TMenuItem,
         TMenuSeparator,
         TDropDownMenu,
         TAceEdit,
-        TRichTextEdit,
-        TRichTextEditFontChoice
+        TRichTextEdit
     )
     {
         /* Debug flag - for that extra info in hard places! */
         var gDebug = false;
         
-        var kObserverInterval = 1000;                                           /* [110] */
-
         /**
-         * The editor's content change observer. Observes the current editor for
+         * The editor's content change observer. Observes the associated editor for
          * changes of content. 
          * 
-         * For more details: [110]
+         * @class           TObserver_ContentChanged
+         * @private
+         * @see [110]
          */
         var TObserver_ContentChanged = function (host)                          
         {
-            var _this = this;
+            /* Local reference to 'this' - for callbacks, 
+             * so we can run them in the proper context 
+             */
+            var _this               = this;
             
+            /**
+             * Interval [ms] between main loop cycles.
+             */
+            var kObserverInterval   = 1000;                                          /* [110] */
+            
+            /**
+             * Possible states of this observer.
+             * 
+             * @private
+             */
             var EObserverState =
             {
-                kWait:          10,
-                kRunning:       20
+                kWait:          10,     /* Observer inactive, i.e. not observing.   */
+                kRunning:       20      /* Observer active, i.e. observing.         */
             }
             
+            /**
+             * Content from previous observation.
+             * 
+             * @type    String
+             * @private
+             */
             this.fContentOld    = null;
+            
+            /**
+             * The client using this observer
+             * 
+             * @type courseware/gui/TExerciseEditGUI
+             * @private
+             */
             this.fHost          = host;
+            
+            /**
+             * The current state of this observer.
+             * 
+             * @type    EObserverState
+             * @private
+             */
             this.fState         = EObserverState.kWait; 
             
+            /**
+             * Sets this observer's state to inactive.
+             */
             this.SetPaused = function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::TObserver_ContentChanged::SetPaused ()");
@@ -72,6 +101,9 @@ define
                 _this.fState = EObserverState.kWait;
             };
             
+            /**
+             * Sets this observer's state to active.
+             */
             this.SetRunning = function ()
             {
                 if (gDebug)
@@ -94,6 +126,10 @@ define
                 }
             }
             
+            /**
+             * The central loop.  Queries the editor's content and fires an onChange event if
+             * the editor's content has changed.
+             */
             this._Run = function ()
             {
                 var content;
@@ -115,6 +151,7 @@ define
                 }
             };
             
+            /* We begin this observer in inactive state. */
             this.fState = EObserverState.kWait;
         };
         
@@ -124,13 +161,36 @@ define
 
         /**
          * Class for the exercise editor UI. A text editor panel. Can
-         * show either the ACE editor component or a rich text editor.
+         * show either the ACE editor component or a Rich text editor. 
+         * Provides a menu bar for some actions such as "save document".
+         * The editor component can be changed during runtime to cater for
+         * a different file type. The component accepts the following file types:
          * 
+         * <ul>
+         *     <li>
+         *         rtf: Free form text. UI will show a richtext editor.
+         *     </li>
+         *     <li>
+         *         src/js: Javascript source code. UI will show a source code 
+         *         editor with basic syntax checking for Javascript code.
+         *     </li>
+         *     <li>
+         *         src/html: HTML source code. UI will show a source code  
+         *         editor with basic syntax checking for HTML code.
+         *     </li>
+         *     <li>
+         *         src/plain_text: Plain text. UI will show a source code  
+         *         editor without any syntax checking.
+         *     </li>
+         * </ul>
+         * <p><br/></p>
+         * 
+         * <b>Elements on the user interface</b>
          * <pre>    
          *     .------.--------------------------------------.
          *     | File |                                      |
          *     .---------------------------------------------.
-         *     |                                             |
+         *     | Content panel                               |
          *     |                                             |
          *     |                                             |
          *     |                                             |
@@ -142,15 +202,79 @@ define
          *     '---------------------------------------------'
          * </pre>
          * 
-         * Elements on the user interface:
-         * 
          * <dl>
+         *     <dt>Menu bar</dt>
+         *     <dd>For actions such as "Save", "Close", ...</dd>
+         *     
          *     <dt>Content panel</dt>
          *     <dd>The content of the user's solution.</dd>
-         *     
-         *     <dt>Menu bar</dt>
-         *     <dd>As in current user interfaces for applications.</dd>
          * </dl>
+         * <p><br/></p>
+         * 
+         * <b>Example use - Instantiate editor, set type, set content, get content.</b>
+         * @example
+         * require 
+         * (
+         *     [
+         *         "dojo/dom-construct",
+         *         "courseware/gui/TExerciseEditGUI/TExerciseEditGUI"
+         *     ],
+         *     function 
+         *     (
+         *         domConstruct,
+         *         TExerciseEditGUI
+         *     )
+         *     {
+         *         var editor;
+         *         var cnt;
+         * 
+         *         // Create editor instance
+         *         editor = new TExerciseEditGUI
+         *         (
+         *             {
+         *                 fHost:              window,
+         *                 fWidth:             "745px"
+         *                 fHeight:            "480px"
+         *                 onFinishedChange:   function () {console.log ("Content changed.");},
+         *                 onFinishedLoad:     function () {console.log ("Text loaded.");},
+         *                 onRequestCancel:    function () {console.log ("User requested to close the document.");},
+         *                 onRequestSave:      function () {console.log ("User requested to save the document.");}
+         *             }
+         *         );
+         *         editor.startup ();
+         * 
+         *         // Embed editor in DOM element on hosting page. Assume, element has ID "pnlEditor"
+         *         domConstruct.place (editor.domNode, "pnlEditor", "only");
+         * 
+         *         // Set editor to be a javascript source code editor.  Set content.
+         *         editor.SetType      ("src", "js");
+         *         editor.SetContent   ("// This is a javascript comment");
+         * 
+         * 
+         *         // ... lots of stuff; some time later, and user has done lots of editing...
+         * 
+         *         
+         *         // Read editor content.
+         *         cnt = editor.GetContent ();
+         *         console.log (cnt);
+         * 
+         * 
+         *         // ... lots of stuff; some time later...
+         * 
+         *         
+         *         // Set editor to be a rich text editor. Set content.
+         *         editor.SetType      ("rtf", "plain_text");
+         *         editor.SetContent   ("&lt;h1&gt;This is a heading&lt;/h1&gt;&lt;p&gt;And this is a paragraph.&lt;/p&gt;");
+         * 
+         * 
+         *         // ... lots of stuff; some time later, and user has done lots of editing...
+         * 
+         *         
+         *         // Read editor content.
+         *         cnt = editor.GetContent ();
+         *         console.log (cnt);
+         *     }
+         * );
          * 
          * @class       TExerciseEditGUI
          * @augments    _WidgetBase

@@ -90,7 +90,7 @@ define
                         record =
                         {
                             isCompressed:   false,
-                            data:           data
+                            data:           data                                /* [20] */
                         };
                     }
                 }
@@ -116,5 +116,8 @@ define
 /*
 
  [10]: We compress to (decompress from) a base64 string as this uses a safe character set.
+ [20]: If the record is small we are throwing away the compressed data. This makes the driver 
+       time inefficient for small records which is a design weakness. I don't know the 
+       solution to this. For now, it works.
 
  */

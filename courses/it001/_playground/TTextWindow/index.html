@@ -74,7 +74,13 @@ require
     (
         function ()
         {
-            gTxtWnd = new TTextWindow ();
+            gTxtWnd = new TTextWindow 
+            (
+                {
+                    host:           window,
+                    onClose:        function () {}
+                }
+            );
             gTxtWnd.startup ();
         }
     );

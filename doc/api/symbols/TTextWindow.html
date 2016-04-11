@@ -309,7 +309,27 @@ ul.inheritsList
 								<div class="fixedFont">
 								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fDialog">fDialog</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The underlying dijit dialog.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fHandlerOnClose">fHandlerOnClose</a></b>
+								</div>
+								<div class="description">The callback to be executed when the user closes this text window.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fHost">fHost</a></b>
+								</div>
+								<div class="description">The client using this dialog.</div>
 							</td>
 						</tr>
 					
@@ -319,7 +339,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fNodeHeading">fNodeHeading</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The DOM element hosting the heading (above the message text).</div>
 							</td>
 						</tr>
 					
@@ -329,7 +349,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fNodeText">fNodeText</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The DOM element hosting the message text.</div>
 							</td>
 						</tr>
 					
@@ -339,7 +359,17 @@ ul.inheritsList
 								<div class="fixedFont">
 								TTextWindow.<b><a href="../symbols/TTextWindow.html#.fSemaphore">fSemaphore</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">The promise, to use this dialog inside a <code>.then</code> construct.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &lt;constant&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TTextWindow.<b><a href="../symbols/TTextWindow.html#.kSchemaParams">kSchemaParams</a></b>
+								</div>
+								<div class="description">JSON schema to validate the text window's descriptor.</div>
 							</td>
 						</tr>
 					
@@ -367,7 +397,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">TTextWindow.<b><a href="../symbols/TTextWindow.html#.constructor">constructor</a></b>()
+								<div class="fixedFont">TTextWindow.<b><a href="../symbols/TTextWindow.html#.constructor">constructor</a></b>(params)
 								</div>
 								<div class="description">Dojo specific cTor.</div>
 							</td>
@@ -378,16 +408,16 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TTextWindow.<b><a href="../symbols/TTextWindow.html#.destroy">destroy</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">dTor.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">TTextWindow.<b><a href="../symbols/TTextWindow.html#.Show">Show</a></b>(title, heading, text)
 								</div>
-								<div class="description"></div>
+								<div class="description">Shows the text window and sets title, heading and text.</div>
 							</td>
 						</tr>
 					
@@ -396,7 +426,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TTextWindow.<b><a href="../symbols/TTextWindow.html#.startup">startup</a></b>()
 								</div>
-								<div class="description">Startup method (for widgets).</div>
+								<div class="description">Startup method.</div>
 							</td>
 						</tr>
 					
@@ -422,9 +452,113 @@ ul.inheritsList
 				
 				<div class="description">
 					A text box with heading and copyable text area below. Used for the 
-"Export to clipboard" feature.
+"Export to clipboard" feature.<br/>
+The text window can be used with a callback (when the window is closed
+by the user) or via the Promise API (Promise resolves with closing the 
+window).
+<p><br/></p>
+
+<b>Elements on the user interface</b>
+
+<pre>
+.--------------------------------------------------------------.
+| Title                                                        |
+|--------------------------------------------------------------|
+| Heading                                                      |
+|                                                              |
+| ************************************************************ |
+| * Text                                                     * |
+| *                                                          * |
+| ************************************************************ |
+'--------------------------------------------------------------'
+</pre>
+
+<dl>
+    <dt>Title</dt>
+    <dd>The dialog's title</dd>
+    
+    <dt>Heading</dt>
+    <dd>The heading above the text.</dd>
+    
+    <dt>Text</dt>
+    <dd>The text. Will be inside a TEXTAREA element so it's easy to copy to clipboard.</dd>
+</dl>
+<p><br/></p>
+
+<b>Example uses</b>
 					
 				</div>
+				
+				
+				
+				<pre class="code">// Using callbacks
+
+require 
+(
+    [
+        "courseware/gui/TTextWindow/TTextWindow"
+    ],
+    function 
+    (
+        TTxtWnd
+    )
+    {
+        var t;
+        
+        t = new TTxtWnd
+        (
+            host:        window,
+            onClose: function ()
+            {
+                window.alert ("Bye!");
+            }
+        );
+        t.startup ();
+        
+        t.Show
+        (
+            "Message to you",
+            "This is a heading", 
+            "And this is a text below the heading"
+        );
+    }
+);</pre>
+				
+				<pre class="code">// Using promise API
+
+require 
+(
+    [
+        "courseware/gui/TTextWindow/TTextWindow"
+    ],
+    function 
+    (
+        TTxtWnd
+    )
+    {
+        var t;
+        
+        t = new TTxtWnd
+        (
+            host:        window,
+            onClose:     function () {}
+        );
+        t.startup ();
+        
+        t.Show
+        (
+            "Message to you",
+            "This is a heading", 
+            "And this is a text below the heading"
+        ).then
+        {
+            function ()
+            {
+                window.alert ("Bye!");
+            }
+        };
+    }
+);</pre>
 				
 				
 				
@@ -449,12 +583,56 @@ ul.inheritsList
 					<a name=".fDialog"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{dijit/Dialog}</span>
 					<span class="light">TTextWindow.</span><b>fDialog</b>
 					
 					</div>
 					<div class="description">
+						The underlying dijit dialog.
 						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fHandlerOnClose"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{JSFunction}</span>
+					<span class="light">TTextWindow.</span><b>fHandlerOnClose</b>
+					
+					</div>
+					<div class="description">
+						The callback to be executed when the user closes this text window.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fHost"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{JSObject}</span>
+					<span class="light">TTextWindow.</span><b>fHost</b>
+					
+					</div>
+					<div class="description">
+						The client using this dialog.
 						
 						
 					</div>
@@ -471,12 +649,12 @@ ul.inheritsList
 					<a name=".fNodeHeading"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{DOMNode}</span>
 					<span class="light">TTextWindow.</span><b>fNodeHeading</b>
 					
 					</div>
 					<div class="description">
-						
+						The DOM element hosting the heading (above the message text).
 						
 						
 					</div>
@@ -493,12 +671,12 @@ ul.inheritsList
 					<a name=".fNodeText"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{DOMNode}</span>
 					<span class="light">TTextWindow.</span><b>fNodeText</b>
 					
 					</div>
 					<div class="description">
-						
+						The DOM element hosting the message text.
 						
 						
 					</div>
@@ -515,12 +693,34 @@ ul.inheritsList
 					<a name=".fSemaphore"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TTextWindow.</span><b>fSemaphore</b>
 					
 					</div>
 					<div class="description">
+						The promise, to use this dialog inside a <code>.then</code> construct.
 						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".kSchemaParams"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; &lt;constant&gt; 
+					
+					<span class="light">{JSON schema}</span>
+					<span class="light">TTextWindow.</span><b>kSchemaParams</b>
+					
+					</div>
+					<div class="description">
+						JSON schema to validate the text window's descriptor.
 						
 						
 					</div>
@@ -546,7 +746,7 @@ ul.inheritsList
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">TTextWindow.</span><b>constructor</b>()
+					<span class="light">TTextWindow.</span><b>constructor</b>(params)
 					
 					</div>
 					<div class="description">
@@ -557,6 +757,18 @@ ul.inheritsList
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{JSON}</span> <b>params</b>
+									
+								</dt>
+								<dd>The text window's configuration.  Must 
+                             conform to <a href="../symbols/TTextWindow.html#.kSchemaParams">TTextWindow.kSchemaParams</a>.</dd>
+							
+							</dl>
 						
 						
 						
@@ -575,7 +787,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						dTor.
 						
 						
 					</div>
@@ -593,14 +805,16 @@ ul.inheritsList
 					<hr />
 				
 					<a name=".Show"> </a>
-					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TTextWindow.</span><b>Show</b>(title, heading, text)
 					
 					</div>
 					<div class="description">
-						
+						Shows the text window and sets title, heading and text. Title appears 
+in the dialog's title bar, heading appears above the text and text 
+appears inside a TEXTAREA element.
 						
 						
 					</div>
@@ -612,28 +826,36 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>title</b>
+									<span class="light fixedFont">{String}</span> <b>title</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The text window's title.</dd>
 							
 								<dt>
-									<b>heading</b>
+									<span class="light fixedFont">{String}</span> <b>heading</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The heading above the text.</dd>
 							
 								<dt>
-									<b>text</b>
+									<span class="light fixedFont">{String}</span> <b>text</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The text.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A Deferred object, if the window is
+                                     to be shown using the promise API.</dd>
+							
+							</dl>
 						
 						
 						
@@ -648,22 +870,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Startup method (for widgets). This overrides the _WidgetBase::startup ().
-
-Excerpt, Dojo documentation:
-    + postCreate
-         This is typically the workhorse of a custom widget. The 
-         widget has been rendered (but note that child widgets in 
-         the containerNode have not!). The widget though may not 
-         be attached to the DOM yet so you shouldn’t do any sizing 
-         calculations in this method.
-    
-    + startup
-         If you need to be sure parsing and creation of any child 
-         widgets has completed, use startup. This is often used 
-         for layout widgets like BorderContainer. If the widget 
-         does JS sizing, then startup() should call resize(), 
-         which does the sizing.
+						Startup method. Sets up the text window.
 						
 						
 					</div>
@@ -692,7 +899,7 @@ Excerpt, Dojo documentation:
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Apr 11 2016 05:15:05 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Apr 11 2016 22:42:02 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

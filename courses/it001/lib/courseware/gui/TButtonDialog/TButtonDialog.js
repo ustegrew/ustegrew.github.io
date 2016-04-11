@@ -28,14 +28,41 @@ define
 
         /**
          * A dialog showing a text and a set of buttons. Useful for multiple 
-         * choice questions other than "About to reconfigure X... (OK? Cancel?)".
+         * choice questions other than "About to reconfigure X... (OK? Cancel?)".<br/>
+         * The dialog can be used with callbacks (one for each button's click 
+         * event) or via the Promise API (Promise resolves with the index of the
+         * button clicked).
+         * <p><br/></p>
          * 
-         * Example uses:
+         * <b>Elements on the user interface</b>
+         * 
+         * <pre>
+         * .----------------------------------------------------------------.
+         * | Title                                                          |
+         * |----------------------------------------------------------------|
+         * | Question                                                       |
+         * |                .-----------. .-----------.     .-------------. |
+         * |                | Button[0] | | Button[1] | ... | Button[n-1] | |
+         * |                '-----------' '-----------'     '-------------' |
+         * '----------------------------------------------------------------'
+         * </pre>
          * 
          * <dl>
-         *     <dh>Using callbacks</dh>
-         *     <dd>
-         * <pre>
+         *     <dt>Title</dt>
+         *     <dd>The dialog's title</dd>
+         *     
+         *     <dt>Question</dt>
+         *     <dd>The question on which the user has to decide.</dd>
+         *     
+         *     <dt>Button [0] ... Button [n-1]</dt>
+         *     <dd>The buttons representing the user's answer.</dd>
+         * </dl>
+         * <p><br/></p>
+         * 
+         * <b>Example uses</b>
+         * @example 
+         * // Using callbacks
+         * 
          * require 
          * (
          *     [
@@ -43,12 +70,12 @@ define
          *     ],
          *     function 
          *     (
-         *         BtnDlg
+         *         TBtnDlg
          *     )
          *     {
          *         var dlg;
          *         
-         *         dlg = new BtnDlg
+         *         dlg = new TBtnDlg
          *         (
          *             host:        window,
          *             buttons:
@@ -78,12 +105,10 @@ define
          *         );
          *     }
          * );
-         * </pre>
-         *     </dd>
-         *     
-         *     <dh>Using promise/deferred</dh>
-         *     <dd>
-         * <pre>
+         * 
+         * @example
+         * // Using promise API
+         * 
          * require 
          * (
          *     [
@@ -91,12 +116,12 @@ define
          *     ],
          *     function 
          *     (
-         *         BtnDlg
+         *         TBtnDlg
          *     )
          *     {
          *         var dlg;
          *         
-         *         dlg = new BtnDlg
+         *         dlg = new TBtnDlg
          *         (
          *             host:        window,
          *             buttons:
@@ -134,12 +159,9 @@ define
          *                         window.alert ("Unknown button alert!);
          *                 }
          *             }
-         *         }
+         *         };
          *     }
          * );
-         * </pre>
-         *     </dd>
-         * </dl>
          * 
          * @class       TButtonDialog
          */
@@ -193,28 +215,12 @@ define
             },
 
             /**
-             * The promise, to use this dialog inside a <code>.then</code> construct.
-             * 
-             * @type    dojo/Deferred
-             * @private
-             */
-            fSemaphore:     null,
-        
-            /**
              * The descriptors for the set of buttons.
              * 
              * @type        JSON
              * @private
              */
             fDescriptors:   null,
-            
-            /**
-             * The client using this dialog.
-             * 
-             * @type        JSON
-             * @private
-             */
-            fHost:          null,
             
             /**
              * The underlying dijit dialog.
@@ -225,15 +231,15 @@ define
             fDialog:        null,
             
             /**
-             * The DIV element hosting the question text.
+             * The client using this dialog.
              * 
-             * @type        DOMNode
+             * @type        JSObject
              * @private
              */
-            fNodeContent:   null,
+            fHost:          null,
             
             /**
-             * The DIV element hosting the button set.
+             * The DOM element hosting the button set.
              * 
              * @type        DOMNode
              * @private
@@ -241,11 +247,29 @@ define
             fNodeButtons:   null,
 
             /**
+             * The DOM element hosting the question text.
+             * 
+             * @type        DOMNode
+             * @private
+             */
+            fNodeContent:   null,
+            
+            /**
+             * The promise, to use this dialog inside a <code>.then</code> construct.
+             * 
+             * @type    dojo/Deferred
+             * @private
+             */
+            fSemaphore:     null,
+        
+            /**
              * Shows the dialog and sets title and question text. Title appears 
              * in the dialog's title bar, question appears above the buttons.
              * 
-             * @param   {String}    title       The dialog's title
-             * @param   {String}    question    The question for the user to decide upon.
+             * @param       {String}    title       The dialog's title
+             * @param       {String}    question    The question for the user to decide upon.
+             * @returns     {dojo/Deferred}         A Deferred object, if the dialog is
+             *                                      to be shown using the promise API.
              */
             Show: function (title, question)
             {
@@ -262,9 +286,8 @@ define
              * Dojo specific cTor.
              * 
              * @param {JSON}    params      The dialog's configuration. Must contain the 
-             *                              configuration for the set of buttons.
-             *                              
-             * @see {@link TButtonDialog.kSchemaParams} for specification.
+             *                              configuration for the set of buttons. Must 
+             *                              conform to {@link TButtonDialog.kSchemaParams}.
              */
             constructor: function (params)
             {
@@ -369,7 +392,9 @@ define
                                 onClick:
                                     function ()
                                     {
-                                        _host._HandleClick.call (_host, this.fIndex);
+                                        _host.fDialog.hide ();
+                                        _host.fDescriptors[this.fIndex].onClick.call (_host.fHost); /* [10] */
+                                        _host.fSemaphore.resolve (this.fIndex);
                                     }
                             }
                         );
@@ -377,19 +402,6 @@ define
                         domConstruct.place (btn.domNode, wr, "only");
                     }
                 }
-            },
-            
-            /**
-             * Call onClick handler for button #i in the context of the client. 
-             * 
-             * @param   {int}       i       Index of the button that received 
-             *                              the click event.
-             */
-            _HandleClick: function (i)
-            {
-                this.fDialog.hide ();
-                this.fDescriptors[i].onClick.call (this.fHost);
-                this.fSemaphore.resolve (i);
             }
         };
     

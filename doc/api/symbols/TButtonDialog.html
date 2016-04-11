@@ -339,7 +339,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								TButtonDialog.<b><a href="../symbols/TButtonDialog.html#.fNodeButtons">fNodeButtons</a></b>
 								</div>
-								<div class="description">The DIV element hosting the button set.</div>
+								<div class="description">The DOM element hosting the button set.</div>
 							</td>
 						</tr>
 					
@@ -349,7 +349,7 @@ ul.inheritsList
 								<div class="fixedFont">
 								TButtonDialog.<b><a href="../symbols/TButtonDialog.html#.fNodeContent">fNodeContent</a></b>
 								</div>
-								<div class="description">The DIV element hosting the question text.</div>
+								<div class="description">The DOM element hosting the question text.</div>
 							</td>
 						</tr>
 					
@@ -393,15 +393,6 @@ ul.inheritsList
 						</tr>
 					</thead>
 					<tbody>
-					
-						<tr>
-							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">TButtonDialog.<b><a href="../symbols/TButtonDialog.html#._HandleClick">_HandleClick</a></b>(i)
-								</div>
-								<div class="description">Call onClick handler for button #i in the context of the client.</div>
-							</td>
-						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
@@ -461,14 +452,46 @@ ul.inheritsList
 				
 				<div class="description">
 					A dialog showing a text and a set of buttons. Useful for multiple 
-choice questions other than "About to reconfigure X... (OK? Cancel?)".
+choice questions other than "About to reconfigure X... (OK? Cancel?)".<br/>
+The dialog can be used with callbacks (one for each button's click 
+event) or via the Promise API (Promise resolves with the index of the
+button clicked).
+<p><br/></p>
 
-Example uses:
+<b>Elements on the user interface</b>
+
+<pre>
+.----------------------------------------------------------------.
+| Title                                                          |
+|----------------------------------------------------------------|
+| Question                                                       |
+|                .-----------. .-----------.     .-------------. |
+|                | Button[0] | | Button[1] | ... | Button[n-1] | |
+|                '-----------' '-----------'     '-------------' |
+'----------------------------------------------------------------'
+</pre>
 
 <dl>
-    <dh>Using callbacks</dh>
-    <dd>
-<pre>
+    <dt>Title</dt>
+    <dd>The dialog's title</dd>
+    
+    <dt>Question</dt>
+    <dd>The question on which the user has to decide.</dd>
+    
+    <dt>Button [0] ... Button [n-1]</dt>
+    <dd>The buttons representing the user's answer.</dd>
+</dl>
+<p><br/></p>
+
+<b>Example uses</b>
+					
+				</div>
+				
+				
+				
+				<pre class="code">
+// Using callbacks
+
 require 
 (
     [
@@ -476,12 +499,12 @@ require
     ],
     function 
     (
-        BtnDlg
+        TBtnDlg
     )
     {
         var dlg;
         
-        dlg = new BtnDlg
+        dlg = new TBtnDlg
         (
             host:        window,
             buttons:
@@ -510,13 +533,10 @@ require
             "Choose today's important thing to contemplate on"
         );
     }
-);
-</pre>
-    </dd>
-    
-    <dh>Using promise/deferred</dh>
-    <dd>
-<pre>
+);</pre>
+				
+				<pre class="code">// Using promise API
+
 require 
 (
     [
@@ -524,12 +544,12 @@ require
     ],
     function 
     (
-        BtnDlg
+        TBtnDlg
     )
     {
         var dlg;
         
-        dlg = new BtnDlg
+        dlg = new TBtnDlg
         (
             host:        window,
             buttons:
@@ -567,14 +587,9 @@ require
                         window.alert ("Unknown button alert!);
                 }
             }
-        }
+        };
     }
-);
-</pre>
-    </dd>
-</dl>
-					
-				</div>
+);</pre>
 				
 				
 				
@@ -643,7 +658,7 @@ require
 					<a name=".fHost"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{JSON}</span>
+					<span class="light">{JSObject}</span>
 					<span class="light">TButtonDialog.</span><b>fHost</b>
 					
 					</div>
@@ -670,7 +685,7 @@ require
 					
 					</div>
 					<div class="description">
-						The DIV element hosting the button set.
+						The DOM element hosting the button set.
 						
 						
 					</div>
@@ -692,7 +707,7 @@ require
 					
 					</div>
 					<div class="description">
-						The DIV element hosting the question text.
+						The DOM element hosting the question text.
 						
 						
 					</div>
@@ -758,43 +773,6 @@ require
 					Method Detail
 				</div>
 				
-					<a name="._HandleClick"> </a>
-					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
-					
-					
-					<span class="light">TButtonDialog.</span><b>_HandleClick</b>(i)
-					
-					</div>
-					<div class="description">
-						Call onClick handler for button #i in the context of the client.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{int}</span> <b>i</b>
-									
-								</dt>
-								<dd>Index of the button that received 
-                             the click event.</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
 					<a name=".constructor"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -819,7 +797,8 @@ require
 									
 								</dt>
 								<dd>The dialog's configuration. Must contain the 
-                             configuration for the set of buttons.</dd>
+                             configuration for the set of buttons. Must 
+                             conform to <a href="../symbols/TButtonDialog.html#.kSchemaParams">TButtonDialog.kSchemaParams</a>.</dd>
 							
 							</dl>
 						
@@ -828,13 +807,6 @@ require
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>for specification.</dd>
-							
-							</dl>
 						
 
 					<hr />
@@ -867,7 +839,7 @@ require
 					<a name=".Show"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TButtonDialog.</span><b>Show</b>(title, question)
 					
 					</div>
@@ -901,6 +873,14 @@ in the dialog's title bar, question appears above the buttons.
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A Deferred object, if the dialog is
+                                     to be shown using the promise API.</dd>
+							
+							</dl>
 						
 						
 						
@@ -946,7 +926,7 @@ constructor.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Apr 11 2016 05:15:04 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Apr 11 2016 22:42:01 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

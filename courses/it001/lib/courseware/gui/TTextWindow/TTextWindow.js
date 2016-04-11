@@ -7,6 +7,7 @@ define
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/Deferred",
+        "courseware/util/validator/TValidatorJSON",
         "dojo/dom-construct",
         "dijit/Dialog"
     ],
@@ -15,6 +16,7 @@ define
         declare,
         _WidgetBase,
         TDeferred,
+        JSObjectValidator,
         domConstruct,
         TDialog
     )
@@ -24,49 +26,202 @@ define
 
         /**
          * A text box with heading and copyable text area below. Used for the 
-         * "Export to clipboard" feature.
+         * "Export to clipboard" feature.<br/>
+         * The text window can be used with a callback (when the window is closed
+         * by the user) or via the Promise API (Promise resolves with closing the 
+         * window).
+         * <p><br/></p>
+         * 
+         * <b>Elements on the user interface</b>
+         * 
+         * <pre>
+         * .--------------------------------------------------------------.
+         * | Title                                                        |
+         * |--------------------------------------------------------------|
+         * | Heading                                                      |
+         * |                                                              |
+         * | ************************************************************ |
+         * | * Text                                                     * |
+         * | *                                                          * |
+         * | ************************************************************ |
+         * '--------------------------------------------------------------'
+         * </pre>
+         * 
+         * <dl>
+         *     <dt>Title</dt>
+         *     <dd>The dialog's title</dd>
+         *     
+         *     <dt>Heading</dt>
+         *     <dd>The heading above the text.</dd>
+         *     
+         *     <dt>Text</dt>
+         *     <dd>The text. Will be inside a TEXTAREA element so it's easy to copy to clipboard.</dd>
+         * </dl>
+         * <p><br/></p>
+         * 
+         * <b>Example uses</b>
+         * 
+         * @example
+         * // Using callbacks
+         * 
+         * require 
+         * (
+         *     [
+         *         "courseware/gui/TTextWindow/TTextWindow"
+         *     ],
+         *     function 
+         *     (
+         *         TTxtWnd
+         *     )
+         *     {
+         *         var t;
+         *         
+         *         t = new TTxtWnd
+         *         (
+         *             host:        window,
+         *             onClose: function ()
+         *             {
+         *                 window.alert ("Bye!");
+         *             }
+         *         );
+         *         t.startup ();
+         *         
+         *         t.Show
+         *         (
+         *             "Message to you",
+         *             "This is a heading", 
+         *             "And this is a text below the heading"
+         *         );
+         *     }
+         * );
+         * 
+         * @example
+         * // Using promise API
+         * 
+         * require 
+         * (
+         *     [
+         *         "courseware/gui/TTextWindow/TTextWindow"
+         *     ],
+         *     function 
+         *     (
+         *         TTxtWnd
+         *     )
+         *     {
+         *         var t;
+         *         
+         *         t = new TTxtWnd
+         *         (
+         *             host:        window,
+         *             onClose:     function () {}
+         *         );
+         *         t.startup ();
+         *         
+         *         t.Show
+         *         (
+         *             "Message to you",
+         *             "This is a heading", 
+         *             "And this is a text below the heading"
+         *         ).then
+         *         {
+         *             function ()
+         *             {
+         *                 window.alert ("Bye!");
+         *             }
+         *         };
+         *     }
+         * );
          * 
          * @class       TTextWindow
          */
         TTextWindow = 
         {
             /**
+             * JSON schema to validate the text window's descriptor.
              * 
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaParams:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Text window descriptor",
+                "description":  "Descriptor for a text window",
+                "type":         "object",
+                properties:
+                {
+                    "host":
+                    {
+                        "description":      "The object hosting this text window",
+                        "type":             "object"
+                    },
+                    "onClose":
+                    {
+                        "description":      "Callback to invoke when the user closes this text window.",
+                        "type":             "function"
+                    }
+                }
+            },
+
+            /**
+             * The underlying dijit dialog.
              * 
-             * @type
+             * @type        dijit/Dialog
              * @private
              */
             fDialog: null,
             
             /**
+             * The callback to be executed when the user closes this text window.
              * 
+             * @type    JSFunction
+             * @private
+             */
+            fHandlerOnClose: null,
+            
+            /**
+             * The client using this dialog.
              * 
-             * @type
+             * @type        JSObject
+             * @private
+             */
+            fHost: null,
+            
+            /**
+             * The DOM element hosting the heading (above the message text).
+             * 
+             * @type        DOMNode
              * @private
              */
             fNodeHeading: null,
             
             /**
+             * The DOM element hosting the message text.
              * 
-             * 
-             * @type
+             * @type        DOMNode
              * @private
              */
             fNodeText: null,
             
             /**
+             * The promise, to use this dialog inside a <code>.then</code> construct.
              * 
-             * 
-             * @type
+             * @type    dojo/Deferred
              * @private
              */
             fSemaphore: null,
             
             /**
+             * Shows the text window and sets title, heading and text. Title appears 
+             * in the dialog's title bar, heading appears above the text and text 
+             * appears inside a TEXTAREA element.
              * 
-             * 
-             * @type
-             * @private
+             * @param       {String}    title       The text window's title.
+             * @param       {String}    heading     The heading above the text.
+             * @param       {String}    text        The text.
+             * @returns     {dojo/Deferred}         A Deferred object, if the window is
+             *                                      to be shown using the promise API.
              */
             Show: function (title, heading, text)
             {
@@ -91,14 +246,24 @@ define
             
             /**
              * Dojo specific cTor.
+             * 
+             * @param {JSON}    params      The text window's configuration.  Must 
+             *                              conform to {@link TTextWindow.kSchemaParams}.
              */
-            constructor: function ()
+            constructor: function (params)
             {
-                this.fDialog        = null;
-                this.fNodeHeading   = null;
-                this.fNodeText      = null;
+                JSObjectValidator.AssertValid (params, this.kSchemaParams, "constructor");
+                this.fDialog            = null;
+                this.fHandlerOnClose    = params.onClose;
+                this.fHost              = params.host;
+                this.fNodeHeading       = null;
+                this.fNodeText          = null;
+                this.fSemaphore         = null;
             },
             
+            /**
+             * dTor.
+             */
             destroy: function ()
             {
                 if (this.fDialog != null)
@@ -107,27 +272,8 @@ define
                 }
             },
 
-            /* -------------------------------------------------------------
-             * Dijit overrides 
-             * ------------------------------------------------------------- */
-        
             /**
-             * Startup method (for widgets). This overrides the _WidgetBase::startup ().
-             * 
-             * Excerpt, Dojo documentation:
-             *     + postCreate
-             *          This is typically the workhorse of a custom widget. The 
-             *          widget has been rendered (but note that child widgets in 
-             *          the containerNode have not!). The widget though may not 
-             *          be attached to the DOM yet so you shouldn’t do any sizing 
-             *          calculations in this method.
-             *     
-             *     + startup
-             *          If you need to be sure parsing and creation of any child 
-             *          widgets has completed, use startup. This is often used 
-             *          for layout widgets like BorderContainer. If the widget 
-             *          does JS sizing, then startup() should call resize(), 
-             *          which does the sizing.
+             * Startup method. Sets up the text window.
              */
             startup: function ()
             {
@@ -142,6 +288,7 @@ define
                         closable:   true,
                         onHide:    function ()
                         {
+                            _this.fHandlerOnClose.call (this.fHost);
                             _this.fSemaphore.resolve ();
                         }
                     }
