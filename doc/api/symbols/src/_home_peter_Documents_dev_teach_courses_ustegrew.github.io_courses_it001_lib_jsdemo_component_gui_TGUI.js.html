@@ -1,0 +1,683 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  *  @fileoverview        Widget to present demo program to user. 
+<span class='line'>  3</span>  */</span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="NAME">define</span><span class="WHIT"> 
+<span class='line'>  5</span> </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="WHIT">    </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/_base/declare"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/store/Memory"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="WHIT">        </span><span class="STRN">"gridx/core/model/cache/Sync"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/_WidgetBase"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/_TemplatedMixin"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">        </span><span class="STRN">"ace/TAce"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/form/Button"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="STRN">"gridx/Grid"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="STRN">"gridx/modules/VirtualVScroller"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="STRN">"gridx/modules/ColumnResizer"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="STRN">"gridx/modules/SingleSort"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/text!jsdemo/templates/TDebugView.templ.html"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="STRN">"require"</span><span class="WHIT">                                                               </span><span class="COMM">/* [7] */</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
+<span class='line'> 22</span>     </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'> 24</span>         </span><span class="NAME">dstore</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">        </span><span class="NAME">dcache</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">        </span><span class="NAME">_WidgetBase</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'> 27</span>         </span><span class="NAME">_TemplatedMixin</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">        </span><span class="NAME">TAceEdit</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="NAME">Button</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">        </span><span class="NAME">Grid</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="NAME">VirtualVScroller</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'> 32</span>         </span><span class="NAME">ColumnResizer</span><span class="PUNC">,</span><span class="WHIT"> 
+<span class='line'> 33</span>         </span><span class="NAME">SingleSort</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="NAME">template</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">_require</span><span class="WHIT">                                                                </span><span class="COMM">/* [7] */</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TGUI</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> 
+<span class='line'> 41</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 42</span>          * The user interface. Layout:
+<span class='line'> 43</span>          *
+<span class='line'> 44</span>          * &lt;pre>
+<span class='line'> 45</span>          *     .-------------------------------------------------------.
+<span class='line'> 46</span>          *     |.-------.                          .--------..--------.|
+<span class='line'> 47</span>          *     || Reset |     Navigation bar       | &lt; Prev || Next > ||
+<span class='line'> 48</span>          *     |'-------'                          '--------''--------'|
+<span class='line'> 49</span>          *     |.---------------------------..------------------------.|
+<span class='line'> 50</span>          *     ||                           ||                        ||
+<span class='line'> 51</span>          *     ||                           ||                        ||
+<span class='line'> 52</span>          *     ||                           ||       Variables        ||
+<span class='line'> 53</span>          *     ||          Source           ||          view          ||
+<span class='line'> 54</span>          *     ||           code            ||                        ||
+<span class='line'> 55</span>          *     ||          viewer           |'------------------------'|
+<span class='line'> 56</span>          *     ||                           |.------------------------.|
+<span class='line'> 57</span>          *     ||                           ||                        ||
+<span class='line'> 58</span>          *     ||                           ||        Comments        ||
+<span class='line'> 59</span>          *     ||                           ||                        ||
+<span class='line'> 60</span>          *     |'---------------------------''------------------------'|
+<span class='line'> 61</span>          *     '-------------------------------------------------------'
+<span class='line'> 62</span>          * &lt;/pre>
+<span class='line'> 63</span>          * 
+<span class='line'> 64</span>          * Elements on the user interface:
+<span class='line'> 65</span>          * 
+<span class='line'> 66</span>          * &lt;dl>
+<span class='line'> 67</span>          *     &lt;dt>Navigation bar&lt;/dt>
+<span class='line'> 68</span>          *     &lt;dd>Provides navigation via three buttons: Next/Previous step, reset.&lt;/dd>
+<span class='line'> 69</span>          *     
+<span class='line'> 70</span>          *     &lt;dt>Source code viewer&lt;/dt>
+<span class='line'> 71</span>          *     &lt;dd>Shows the source code of the program demonstrated. Current step's
+<span class='line'> 72</span>          *         line will be highlited.&lt;/dd>
+<span class='line'> 73</span>          *     
+<span class='line'> 74</span>          *     &lt;dt>Variables view&lt;/dt>
+<span class='line'> 75</span>          *     &lt;dd>Shows a table with variables the user might want to see.&lt;/dd>
+<span class='line'> 76</span>          *     
+<span class='line'> 77</span>          *     &lt;dt>Comments&lt;/dt>
+<span class='line'> 78</span>          *     &lt;dd>A panel showing some more detailed information about the current step.&lt;/dd>
+<span class='line'> 79</span>          * &lt;/dl>
+<span class='line'> 80</span>          * @class       TGUI
+<span class='line'> 81</span>          * @augments    _WidgetBase
+<span class='line'> 82</span>          * @augments    _TemplateMixin
+<span class='line'> 83</span>          */</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">        </span><span class="NAME">TGUI</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'> 85</span>         </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 87</span>              * Sets the status of the UI. Includes source code shown, which line
+<span class='line'> 88</span>              * highlited, interesting variables shown, some explanatory comment.
+<span class='line'> 89</span>              * 
+<span class='line'> 90</span>              * @param   {TSnapshot}     snapshot    The snapshot to show in the interface.
+<span class='line'> 91</span>              * @public
+<span class='line'> 92</span>              */</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">            </span><span class="NAME">Notify_SetStatus</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">snapshot</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">k</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">v</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">recS</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">rec</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">items</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">                
+<span class='line'>104</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fBtnPrev</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">                    </span><span class="NAME">this.fBtnPrev.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"disabled"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">snapshot.fCanNavStepBackwards</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">                
+<span class='line'>109</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fBtnNext</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">                    </span><span class="NAME">this.fBtnNext.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"disabled"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">snapshot.fCanNavStepForwards</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">                
+<span class='line'>114</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fBtnReset</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">                    </span><span class="NAME">this.fBtnReset.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"disabled"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">snapshot.fCanNavReset</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="WHIT">                
+<span class='line'>119</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fPnlEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlEditor.fEditor.setValue</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">snapshot.fProgramAllSource</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlEditor.fEditor.gotoLine</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">snapshot.fProgramCurrentState</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlEditor.fEditor.resize</span><span class="WHIT">   </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">                
+<span class='line'>126</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fPnlDbg</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">                    </span><span class="NAME">items</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">                    </span><span class="NAME">n</span><span class="WHIT">       </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">snapshot.fProgramCurrentSymbols.GetNumEntries</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">n</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">                        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">n</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">                            </span><span class="NAME">k</span><span class="WHIT">       </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">snapshot.fProgramCurrentSymbols.GetKey</span><span class="WHIT">          </span><span class="PUNC">(</span><span class="NAME">i</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">                            </span><span class="NAME">v</span><span class="WHIT">       </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">snapshot.fProgramCurrentSymbols.GetValue_ByKey</span><span class="WHIT">  </span><span class="PUNC">(</span><span class="NAME">k</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">                            </span><span class="NAME">recS</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetRecordSanitized</span><span class="WHIT">                        </span><span class="PUNC">(</span><span class="NAME">v</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">                            
+<span class='line'>138</span>                             </span><span class="NAME">rec</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'>139</span>                             </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">                                </span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="NAME">i</span><span class="PUNC">+</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">                                </span><span class="NAME">varName</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NAME">k</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">                                </span><span class="NAME">varType</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NAME">recS.type</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">                                </span><span class="NAME">varValue</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="NAME">recS.value</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">                            </span><span class="NAME">items.push</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">rec</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlDbg.model.clearCache</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlDbg.model.store.setData</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">items</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlDbg.body.refresh</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">                
+<span class='line'>153</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fPnlComment</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">                    </span><span class="NAME">this.fPnlComment.innerHTML</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">snapshot.fProgramCurrentComment</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">            
+<span class='line'>159</span>             </span><span class="COMM">/**
+<span class='line'>160</span>              * Sets the hosting controller. Has to be done in a separate 
+<span class='line'>161</span>              * setter method, rather than the constructor (otherwise the
+<span class='line'>162</span>              * Dojo framework will flag up 'undefined' reference errors.
+<span class='line'>163</span>              * 
+<span class='line'>164</span>              * @param   {TController}   host    The hosting controller.
+<span class='line'>165</span>              * @public
+<span class='line'>166</span>              */</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">            </span><span class="NAME">SetHost</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">host</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">                </span><span class="NAME">this.fController</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">host</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">            
+<span class='line'>172</span>             </span><span class="COMM">/**
+<span class='line'>173</span>              * Dojo demands this property. Template is defined in a separate 
+<span class='line'>174</span>              * file &lt;code>jsdemo/templates/TDebugView.templ.html&lt;/code>.
+<span class='line'>175</span>              *
+<span class='line'>176</span>              * @type    String
+<span class='line'>177</span>              * @private
+<span class='line'>178</span>              */</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">            </span><span class="NAME">templateString</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="NAME">template</span><span class="PUNC">,</span><span class="WHIT">                       </span><span class="COMM">/* [1], [2] */</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">            
+<span class='line'>181</span>             </span><span class="COMM">/**
+<span class='line'>182</span>              * Dojo specific cTor.
+<span class='line'>183</span>              * 
+<span class='line'>184</span>              * We have to declare instance specific properties inside the cTor
+<span class='line'>185</span>              * function, otherwise the properties will be class owned (static),
+<span class='line'>186</span>              * i.e. every instance will share the same values!
+<span class='line'>187</span>              */</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">            </span><span class="NAME">constructor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">                </span><span class="COMM">/* -------------------------------------------------------------
+<span class='line'>191</span>                  * Property definitions. It's recommended not to access these from 
+<span class='line'>192</span>                  * outside, but to use the public Notify_... methods for that.
+<span class='line'>193</span>                  * ------------------------------------------------------------- */</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">            
+<span class='line'>195</span>                 </span><span class="NAME">this.fBtnNext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">           </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">                </span><span class="NAME">this.fBtnPrev</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">           </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">                </span><span class="NAME">this.fBtnReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">          </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> 
+<span class='line'>199</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>200</span>                  * The hosting controller. Does all the application specific logic.
+<span class='line'>201</span>                  *
+<span class='line'>202</span>                  * @type        
+<span class='line'>203</span>                  * @private
+<span class='line'>204</span>                  */</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">                </span><span class="NAME">this.fController</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">        </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>206</span> 
+<span class='line'>207</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>208</span>                  * Handle for the comment panel (div DOM node).
+<span class='line'>209</span>                  *
+<span class='line'>210</span>                  * @type        [DOM:DIV]
+<span class='line'>211</span>                  * @private
+<span class='line'>212</span>                  */</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlComment</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">        </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> 
+<span class='line'>215</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>216</span>                  * Handle for the debug details panel. 
+<span class='line'>217</span>                  *
+<span class='line'>218</span>                  * @type        [gridx/Grid]
+<span class='line'>219</span>                  * @private
+<span class='line'>220</span>                  */</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlDbg</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">            </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>222</span> 
+<span class='line'>223</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>224</span>                  * Handle for the source view panel (ace editor component).     [20]
+<span class='line'>225</span>                  *
+<span class='line'>226</span>                  * @type        [ace/ace]
+<span class='line'>227</span>                  * @private
+<span class='line'>228</span>                  */</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">         </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>230</span> 
+<span class='line'>231</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>232</span>                  * Target size: Width.
+<span class='line'>233</span>                  *
+<span class='line'>234</span>                  * @type        String
+<span class='line'>235</span>                  * @private
+<span class='line'>236</span>                  */</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">                </span><span class="NAME">this.fGeoWidth</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">          </span><span class="STRN">"450px"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>238</span> 
+<span class='line'>239</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>240</span>                  * Target size: Height.
+<span class='line'>241</span>                  *
+<span class='line'>242</span>                  * @type        String
+<span class='line'>243</span>                  * @private
+<span class='line'>244</span>                  */</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="WHIT">                </span><span class="NAME">this.fGeoHeight</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">         </span><span class="STRN">"600px;"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>246</span> 
+<span class='line'>247</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">            
+<span class='line'>249</span>             </span><span class="COMM">/* -------------------------------------------------------------
+<span class='line'>250</span>              * Dijit overrides 
+<span class='line'>251</span>              * ------------------------------------------------------------- */</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">        
+<span class='line'>253</span>             </span><span class="COMM">/**
+<span class='line'>254</span>              * Sets up the UI. This overrides the _WidgetBase::startup (). 
+<span class='line'>255</span>              * We don't use the typical way of overriding 
+<span class='line'>256</span>              * _WidgetBase::postCreate (), because this widget includes 
+<span class='line'>257</span>              * child widgets (such as BorderContainer), and it's not 
+<span class='line'>258</span>              * recommended to do JS resizing in the postCreate() method. 
+<span class='line'>259</span>              * We could get fancy and do part of the instantiation in a 
+<span class='line'>260</span>              * postCreate() method, but having everything together in 
+<span class='line'>261</span>              * startup () makes things simpler.
+<span class='line'>262</span>              * 
+<span class='line'>263</span>              * Excerpt, Dojo documentation:
+<span class='line'>264</span>              *     + postCreate
+<span class='line'>265</span>              *          This is typically the workhorse of a custom widget. The 
+<span class='line'>266</span>              *          widget has been rendered (but note that child widgets in 
+<span class='line'>267</span>              *          the containerNode have not!). The widget though may not 
+<span class='line'>268</span>              *          be attached to the DOM yet so you shouldn’t do any sizing 
+<span class='line'>269</span>              *          calculations in this method.
+<span class='line'>270</span>              *     
+<span class='line'>271</span>              *     + startup
+<span class='line'>272</span>              *          If you need to be sure parsing and creation of any child 
+<span class='line'>273</span>              *          widgets has completed, use startup. This is often used 
+<span class='line'>274</span>              *          for layout widgets like BorderContainer. If the widget 
+<span class='line'>275</span>              *          does JS sizing, then startup() should call resize(), 
+<span class='line'>276</span>              *          which does the sizing.
+<span class='line'>277</span>              */</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">            </span><span class="NAME">startup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT"> 
+<span class='line'>280</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT">           </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">kImgBaseUrl</span><span class="WHIT">     </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_require.toUrl</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"jsdemo/img"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">            </span><span class="COMM">/* [7] */</span><span class="WHIT">
+<span class='line'>282</span> 
+<span class='line'>283</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">functor</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">                
+<span class='line'>285</span>                 </span><span class="COMM">/* Run any parent postCreate methods */</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">                </span><span class="NAME">this.inherited</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">                
+<span class='line'>288</span>                 </span><span class="COMM">/* Create Nav bar.                                                 [4] */</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">                </span><span class="NAME">functor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">btnReset</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">btnPrev</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">btnNext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">icoReset</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">icoPrev</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">icoNext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>297</span> 
+<span class='line'>298</span> </span><span class="WHIT">                    </span><span class="COMM">/* ---------------------------------------------------
+<span class='line'>299</span>                      * Get icon URLs 
+<span class='line'>300</span>                      * ---------------------------------------------------*/</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">                    </span><span class="NAME">icoReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">kImgBaseUrl</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"/go-first.png"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">                    </span><span class="NAME">icoPrev</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">kImgBaseUrl</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"/go-previous.png"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">                    </span><span class="NAME">icoNext</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">kImgBaseUrl</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"/go-next.png"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">                    
+<span class='line'>305</span>                     </span><span class="COMM">/* ---------------------------------------------------
+<span class='line'>306</span>                      * Create RESET button
+<span class='line'>307</span>                      * ---------------------------------------------------*/</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">                    </span><span class="NAME">btnReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Button</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>311</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"&lt;img src='"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">icoReset</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"'/>"</span><span class="PUNC">,</span><span class="WHIT">        </span><span class="COMM">/* [5] */</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">                            </span><span class="NAME">disabled</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">                            </span><span class="NAME">fJSDemo</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">                                </span><span class="NAME">fHost</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">                            </span><span class="NAME">onClick</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">                                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">obj</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">                                
+<span class='line'>321</span>                                 </span><span class="NAME">obj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fJSDemo.fHost</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">                                </span><span class="NAME">obj._Handle_BtnReset_Click.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.btnReset</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>326</span> </span><span class="WHIT">                    </span><span class="NAME">btnReset.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>327</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fBtnReset</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">btnReset</span><span class="PUNC">;</span><span class="WHIT">                                 </span><span class="COMM">/* &lt;----- Property: fBtnReset */</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">                    
+<span class='line'>329</span>                     </span><span class="COMM">/* ---------------------------------------------------
+<span class='line'>330</span>                      * Create GO PREVIOUS STEP button
+<span class='line'>331</span>                      * ---------------------------------------------------*/</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">                    </span><span class="NAME">btnPrev</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Button</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"&lt;img src='"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">icoPrev</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"'/>"</span><span class="PUNC">,</span><span class="WHIT">         </span><span class="COMM">/* [5] */</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">                            </span><span class="NAME">disabled</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">                            </span><span class="NAME">fJSDemo</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">                                </span><span class="NAME">fHost</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">                            </span><span class="NAME">onClick</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">                                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">obj</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">                                
+<span class='line'>345</span>                                 </span><span class="NAME">obj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fJSDemo.fHost</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">                                </span><span class="NAME">obj._Handle_BtnPrev_Click.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.btnPrev</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">                    </span><span class="NAME">btnPrev.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fBtnPrev</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">btnPrev</span><span class="PUNC">;</span><span class="WHIT">                                   </span><span class="COMM">/* &lt;----- Property: fBtnPrev */</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">                    
+<span class='line'>353</span>                     </span><span class="COMM">/* ---------------------------------------------------
+<span class='line'>354</span>                      * Create GO NEXT STEP button
+<span class='line'>355</span>                      * ---------------------------------------------------*/</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">                    </span><span class="NAME">btnNext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Button</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>359</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"&lt;img src='"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">icoNext</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"'/>"</span><span class="PUNC">,</span><span class="WHIT">         </span><span class="COMM">/* [5] */</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">                            </span><span class="NAME">disabled</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>361</span> </span><span class="WHIT">                            </span><span class="NAME">fJSDemo</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">                                </span><span class="NAME">fHost</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">                            </span><span class="NAME">onClick</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="WHIT">                                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">obj</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>368</span> </span><span class="WHIT">                                
+<span class='line'>369</span>                                 </span><span class="NAME">obj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fJSDemo.fHost</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>370</span> </span><span class="WHIT">                                </span><span class="NAME">obj._Handle_BtnNext_Click.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>371</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.btnNext</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">                    </span><span class="NAME">btnNext.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fBtnNext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">btnNext</span><span class="PUNC">;</span><span class="WHIT">                                   </span><span class="COMM">/* &lt;----- Property: btnNext */</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>377</span> </span><span class="WHIT">                </span><span class="NAME">functor</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>378</span> 
+<span class='line'>379</span> </span><span class="WHIT">                </span><span class="COMM">/* Create the main view [4].
+<span class='line'>380</span>                  * This is the improved design - more screen estate for the 
+<span class='line'>381</span>                  * source view. It takes up more screen estate (~40% wider),
+<span class='line'>382</span>                  * but with about (800 x 450) px it should fit on most laptop 
+<span class='line'>383</span>                  * and desktop displays. Layout:
+<span class='line'>384</span>                  * 
+<span class='line'>385</span>                  * &lt;pre>
+<span class='line'>386</span>                  *     .-------------------------------------------------------.
+<span class='line'>387</span>                  *     |.-------.                          .--------..--------.|
+<span class='line'>388</span>                  *     || Reset |     Navigation bar       | &lt; Prev || Next > ||
+<span class='line'>389</span>                  *     |'-------'                          '--------''--------'|
+<span class='line'>390</span>                  *     |.---------------------------..------------------------.|
+<span class='line'>391</span>                  *     ||                           ||                        ||
+<span class='line'>392</span>                  *     ||                           ||                        ||
+<span class='line'>393</span>                  *     ||                           ||       Variables        ||
+<span class='line'>394</span>                  *     ||          Source           ||          view          ||
+<span class='line'>395</span>                  *     ||           code            ||                        ||
+<span class='line'>396</span>                  *     ||          viewer           |'------------------------'|
+<span class='line'>397</span>                  *     ||                           |.------------------------.|
+<span class='line'>398</span>                  *     ||                           ||                        ||
+<span class='line'>399</span>                  *     ||                           ||        Comments        ||
+<span class='line'>400</span>                  *     ||                           ||                        ||
+<span class='line'>401</span>                  *     |'---------------------------''------------------------'|
+<span class='line'>402</span>                  *     '-------------------------------------------------------'
+<span class='line'>403</span>                  * &lt;/pre>
+<span class='line'>404</span>                  */</span><span class="WHIT">
+<span class='line'>405</span> </span><span class="WHIT">                </span><span class="NAME">functor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">store</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">struct</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">cache</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="WHIT">                    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">pnlDbgGrid</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">                    
+<span class='line'>412</span>                     </span><span class="COMM">/* ---------------------------------------------------------
+<span class='line'>413</span>                      * Create detail view container. This will contain a 
+<span class='line'>414</span>                      * GridX component which gives us a table with 
+<span class='line'>415</span>                      * resizable columns and sorting capabilities
+<span class='line'>416</span>                      * (user clicks on the resp. header).
+<span class='line'>417</span>                      * ---------------------------------------------------------
+<span class='line'>418</span>                      */</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">                    </span><span class="COMM">/* 1. Create data store. We use this store to manipulate the 
+<span class='line'>420</span>                      *    data shown in the table. */</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">                    </span><span class="NAME">store</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">dstore</span><span class="WHIT">
+<span class='line'>422</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>423</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>424</span> </span><span class="WHIT">                            </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="WHIT">                            </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="WHIT">                            </span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>428</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>429</span> </span><span class="WHIT">                    </span><span class="COMM">/* 2. Create data structure info block. */</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">                    </span><span class="NAME">struct</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>431</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varName'</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="NAME">field</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varName'</span><span class="PUNC">,</span><span class="WHIT">       </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'Variable'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'100px'</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>432</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varValue'</span><span class="PUNC">,</span><span class="WHIT">    </span><span class="NAME">field</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varValue'</span><span class="PUNC">,</span><span class="WHIT">      </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'Value'</span><span class="WHIT">   </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'200px'</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varType'</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="NAME">field</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'varType'</span><span class="PUNC">,</span><span class="WHIT">       </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'Type'</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'100px'</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>434</span> </span><span class="WHIT">                    </span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>435</span> </span><span class="WHIT">                    </span><span class="COMM">/* 3. Create a cache. */</span><span class="WHIT">
+<span class='line'>436</span> </span><span class="WHIT">                    </span><span class="NAME">cache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">dcache</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">                    </span><span class="COMM">/* 4. Instantiate the grid component */</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">                    </span><span class="NAME">pnlDbgGrid</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Grid</span><span class="WHIT"> 
+<span class='line'>439</span>                     </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">                            </span><span class="NAME">id</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="STRN">"dbgDetails"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>442</span> </span><span class="WHIT">                            </span><span class="NAME">cacheClass</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">cache</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>443</span> </span><span class="WHIT">                            </span><span class="NAME">store</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="NAME">store</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="WHIT">                            </span><span class="NAME">structure</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="NAME">struct</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">                            </span><span class="NAME">modules</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">                            </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="WHIT">                                </span><span class="NAME">VirtualVScroller</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>448</span> </span><span class="WHIT">                                </span><span class="NAME">ColumnResizer</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="WHIT">                                </span><span class="NAME">SingleSort</span><span class="WHIT">
+<span class='line'>450</span> </span><span class="WHIT">                            </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>451</span> </span><span class="WHIT">                            </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"width:475px;height:250px;"</span><span class="WHIT">
+<span class='line'>452</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.pnlDbg</span><span class="WHIT">
+<span class='line'>453</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>454</span> </span><span class="WHIT">                    </span><span class="NAME">pnlDbgGrid.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>455</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fPnlDbg</span><span class="WHIT">       </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">pnlDbgGrid</span><span class="PUNC">;</span><span class="WHIT">                           </span><span class="COMM">/* &lt;----- Property: fPnlDbg */</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fPnlComment</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_this.pnlComment</span><span class="PUNC">;</span><span class="WHIT">                     </span><span class="COMM">/* &lt;----- Property: fPnlComment */</span><span class="WHIT">
+<span class='line'>457</span> 
+<span class='line'>458</span> </span><span class="WHIT">                    </span><span class="COMM">/* ---------------------------------------------------
+<span class='line'>459</span>                      * Integrate ace editor. We must do that after calling
+<span class='line'>460</span>                      * startup () on the main panel.
+<span class='line'>461</span>                      * ---------------------------------------------------*/</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fPnlEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TAceEdit</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">                         </span><span class="COMM">/* &lt;----- Property: fPnlEditor */</span><span class="WHIT">
+<span class='line'>463</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fPnlEditor.Setup</span><span class="WHIT">                                      </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>464</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">                        </span><span class="NAME">_this.pnlSrc</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>466</span> </span><span class="WHIT">                        </span><span class="STRN">"javascript"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>467</span> </span><span class="WHIT">                        </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">                        </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="WHIT">                        </span><span class="NAME">_this</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>470</span> </span><span class="WHIT">                        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>471</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>472</span> </span><span class="WHIT">                            </span><span class="NAME">this.fController.NotifyInitFinished</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>473</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>474</span> </span><span class="WHIT">                        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">                            </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TGUI::startup(): Error loading ace editor. Details:\n"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>477</span>                                   </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>479</span> </span><span class="WHIT">                        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>480</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>481</span> </span><span class="WHIT">                            </span><span class="COMM">/* Do nothing as we set the editor to readonly. */</span><span class="WHIT">
+<span class='line'>482</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>484</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="WHIT">                </span><span class="NAME">functor</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>486</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>487</span> </span><span class="WHIT">            
+<span class='line'>488</span>             </span><span class="NAME">_GetRecordSanitized</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>489</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>490</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">isArray</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>491</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>492</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">xValue</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>493</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>494</span> 
+<span class='line'>495</span> </span><span class="WHIT">                </span><span class="NAME">t</span><span class="WHIT">           </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>496</span> </span><span class="WHIT">                </span><span class="NAME">isArray</span><span class="WHIT">     </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Array.isArray</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">                </span><span class="NAME">ret</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>502</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>503</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>504</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>505</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"null"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>506</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"null"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>508</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"object"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>509</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>510</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">isArray</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>511</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>512</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"array"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>513</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>516</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"object"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>517</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>518</span> </span><span class="WHIT">                    </span><span class="NAME">xValue</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>519</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetValueStr</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">xValue</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>520</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>521</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"string"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>522</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>523</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"string"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>524</span> </span><span class="WHIT">                    </span><span class="NAME">xValue</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetValueStr</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>525</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"\""</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">xValue</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"\""</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>526</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>527</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"boolean"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>528</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>529</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"boolean"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>530</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">"true"</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"false"</span><span class="PUNC">;</span><span class="WHIT"> 
+<span class='line'>531</span>                 </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>532</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"number"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>533</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>534</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">Number.POSITIVE_INFINITY</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>535</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>536</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"number"</span><span class="WHIT">
+<span class='line'>537</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"+infinity"</span><span class="WHIT">
+<span class='line'>538</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>539</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">Number.NEGATIVE_INFINITY</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>540</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>541</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"number"</span><span class="WHIT">
+<span class='line'>542</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"-infinity"</span><span class="WHIT">
+<span class='line'>543</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>544</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">isNaN</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>545</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>546</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"NaN"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>547</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"Not a number"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>548</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>549</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">%</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>550</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>551</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"integer"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>552</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>553</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>554</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">%</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>555</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>556</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"float"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>557</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>558</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>559</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>560</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>561</span> </span><span class="WHIT">                        </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"?number?"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>562</span> </span><span class="WHIT">                        </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">""</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>563</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>564</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>565</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"function"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>566</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>567</span> </span><span class="WHIT">                    </span><span class="NAME">xValue</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">x.toString</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>568</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"function"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>569</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetValueStr</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">xValue</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>570</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>571</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>572</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>573</span> </span><span class="WHIT">                    </span><span class="NAME">xValue</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">x</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>574</span> </span><span class="WHIT">                    </span><span class="NAME">ret.type</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"?"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"?"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>575</span> </span><span class="WHIT">                    </span><span class="NAME">ret.value</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetValueStr</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">xValue</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>576</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>577</span> </span><span class="WHIT">                
+<span class='line'>578</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>579</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>580</span> </span><span class="WHIT">            
+<span class='line'>581</span>             </span><span class="NAME">_GetValueStr</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">vStr</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>582</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>583</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>584</span> </span><span class="WHIT">                
+<span class='line'>585</span>                 </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">vStr.length</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NUMB">50</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">vStr</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">vStr.slice</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">46</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"..."</span><span class="WHIT">
+<span class='line'>586</span> </span><span class="WHIT">                
+<span class='line'>587</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>588</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>589</span> </span><span class="WHIT">            
+<span class='line'>590</span>             </span><span class="COMM">/* -------------------------------------------------------------
+<span class='line'>591</span>              * Event handlers. Not that none of them implemnts any 
+<span class='line'>592</span>              * application logic; each one just notifies the resp. 
+<span class='line'>593</span>              * event to the hosting controller.
+<span class='line'>594</span>              * ------------------------------------------------------------- */</span><span class="WHIT">
+<span class='line'>595</span> </span><span class="WHIT">            
+<span class='line'>596</span>             </span><span class="COMM">/**
+<span class='line'>597</span>              * Event handler: User clicked NEXT STEP button.
+<span class='line'>598</span>              *
+<span class='line'>599</span>              * @private
+<span class='line'>600</span>              */</span><span class="WHIT">
+<span class='line'>601</span> </span><span class="WHIT">            </span><span class="NAME">_Handle_BtnNext_Click</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>602</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>603</span> </span><span class="WHIT">                </span><span class="NAME">this.fController.Notify_Navigate_Forwards</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>604</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>605</span> </span><span class="WHIT">            
+<span class='line'>606</span>             </span><span class="COMM">/**
+<span class='line'>607</span>              * Event handler: User clicked PREVIOUS STEP button.
+<span class='line'>608</span>              *
+<span class='line'>609</span>              * @private
+<span class='line'>610</span>              */</span><span class="WHIT">
+<span class='line'>611</span> </span><span class="WHIT">            </span><span class="NAME">_Handle_BtnPrev_Click</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>612</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>613</span> </span><span class="WHIT">                </span><span class="NAME">this.fController.Notify_Navigate_Backwards</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>614</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>615</span> </span><span class="WHIT">            
+<span class='line'>616</span>             </span><span class="COMM">/**
+<span class='line'>617</span>              * Event handler: User clicked RESET button.
+<span class='line'>618</span>              *
+<span class='line'>619</span>              * @private
+<span class='line'>620</span>              */</span><span class="WHIT">
+<span class='line'>621</span> </span><span class="WHIT">            </span><span class="NAME">_Handle_BtnReset_Click</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>622</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>623</span> </span><span class="WHIT">                </span><span class="NAME">this.fController.Notify_Navigate_Reset</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>624</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>625</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>626</span> </span><span class="WHIT">        
+<span class='line'>627</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TGUI"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_WidgetBase</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_TemplatedMixin</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TGUI</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>628</span> </span><span class="WHIT">        
+<span class='line'>629</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>630</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>631</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>632</span> 
+<span class='line'>633</span> </span><span class="COMM">/*
+<span class='line'>634</span>  * [1]: We MUST define the templateString property!
+<span class='line'>635</span>  *      Otherwise we get a mysterious error that a 'null' resource didn't load. 
+<span class='line'>636</span>  *      During development, when we didn't specify that property, the Network 
+<span class='line'>637</span>  *      monitor showed the following erroneous request:
+<span class='line'>638</span>  *          Request URL: http://localhost:8383/JSDemo/null
+<span class='line'>639</span>  *          Method: GET
+<span class='line'>640</span>  *          Status: Request was cancelled.
+<span class='line'>641</span>  *          
+<span class='line'>642</span>  * [2]: Don't use XML comments in the template - the dojo parser will terminate
+<span class='line'>643</span>  *      with an error.
+<span class='line'>644</span>  *      
+<span class='line'>645</span>  * [3]: Not really the place to say it here, but the more reminders the better:
+<span class='line'>646</span>  *      On the web page including this widget, set class attribute of the body tag
+<span class='line'>647</span>  *      to "claro": &lt;body class="claro"> or whatever the theme demands! 
+<span class='line'>648</span>  *      If the 'class' attribute is missing the UI elements won't be styled 
+<span class='line'>649</span>  *      correctly, irrespective of whether the calling web page includes the 
+<span class='line'>650</span>  *      correct stylesheets or not.
+<span class='line'>651</span>  *      
+<span class='line'>652</span>  * [4]: We use a closure so we don't end up with tons of variable names. UI setup is
+<span class='line'>653</span>  *      complex, so it's good to split it up into lots of small self contained units.
+<span class='line'>654</span>  *      
+<span class='line'>655</span>  * [5]: A naughty hack to put a custom icon into the button. Officially, the label 
+<span class='line'>656</span>  *      property is intended for textual labels. Thankfully the Button class accepts 
+<span class='line'>657</span>  *      a HTML fragment as label. This saves us some css trickery with some iconClass 
+<span class='line'>658</span>  *      and having to think about including yet another style sheet (... sigh ... dojo 
+<span class='line'>659</span>  *      is already hard enough to learn). 
+<span class='line'>660</span>  *      
+<span class='line'>661</span>  * [6]: Resizeable panels don't work very well with the ace editor - We may have to make
+<span class='line'>662</span>  *      the editor panel fixed in size and set the containing panel to overflow:auto
+<span class='line'>663</span>  *      
+<span class='line'>664</span>  * [7]: We have to include dojo.require, otherwise require.toUrl fails with an error
+<span class='line'>665</span>  *      "require.toUrl: Not a function". Reason is that by the time we call this function,
+<span class='line'>666</span>  *      dojo has 'packaged' the toUrl function inside the global require.original 
+<span class='line'>667</span>  *      property. Requiring 'require' gives us an unpackaged require module which 
+<span class='line'>668</span>  *      offers the toUrl function.
+<span class='line'>669</span>  *      
+<span class='line'>670</span>  * [10]:JSObject spec for the program used: TODO
+<span class='line'>671</span>  * 
+<span class='line'>672</span>  * [20]:Note that we have to turn syntax checking off - code examples
+<span class='line'>673</span>  *      come in different languages, some of which aren't recognized by the 
+<span class='line'>674</span>  *      editor's syntax checker (e.g. old style BASIC).
+<span class='line'>675</span>  */</span><span class="WHIT">
+<span class='line'>676</span> </span></pre></body></html>

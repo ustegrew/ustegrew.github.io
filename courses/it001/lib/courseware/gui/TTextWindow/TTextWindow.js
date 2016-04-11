@@ -1,11 +1,12 @@
 /**
- *  @fileoverview        Insert_here
+ *  @fileoverview        A text box
  */
 define 
 (
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
+        "dojo/Deferred",
         "dojo/dom-construct",
         "dijit/Dialog"
     ],
@@ -13,6 +14,7 @@ define
     (
         declare,
         _WidgetBase,
+        TDeferred,
         domConstruct,
         TDialog
     )
@@ -21,30 +23,72 @@ define
         var ret;
 
         /**
-         * Insert_explanation_here
+         * A text box with heading and copyable text area below. Used for the 
+         * "Export to clipboard" feature.
          * 
-         * @class       TChangeToClassName
+         * @class       TTextWindow
          */
         TTextWindow = 
         {
+            /**
+             * 
+             * 
+             * @type
+             * @private
+             */
             fDialog: null,
             
+            /**
+             * 
+             * 
+             * @type
+             * @private
+             */
             fNodeHeading: null,
             
+            /**
+             * 
+             * 
+             * @type
+             * @private
+             */
             fNodeText: null,
             
+            /**
+             * 
+             * 
+             * @type
+             * @private
+             */
             fSemaphore: null,
             
-            
-            
+            /**
+             * 
+             * 
+             * @type
+             * @private
+             */
             Show: function (title, heading, text)
             {
+                var _this = this;
+                
+                this.fSemaphore = new TDeferred ();
+                
                 this.fDialog.set ("title",  title);
                 this.fNodeHeading.innerHTML = heading;
                 this.fNodeText.value        = text;
-                this.fDialog.show ();
+                
+                this.fDialog.show().then
+                (
+                    function ()
+                    {
+                        _this.fNodeText.scrollTop = 0;
+                    }
+                );
+            
+                return this.fSemaphore;
             },
-
+            
             /**
              * Dojo specific cTor.
              */
@@ -87,30 +131,27 @@ define
              */
             startup: function ()
             {
-                var _host = this;
-                
-                var i;
-                var n;
-                var d;
-                var wr;
-                var btn;
+                var _this = this;
                 
                 this.fDialog = new TDialog
                 (
                     {
                         title:      "",
                         content:    "",
-                        style:      "width: 520px;",
-                        closable:   true
+                        style:      "width: 95%;",
+                        closable:   true,
+                        onHide:    function ()
+                        {
+                            _this.fSemaphore.resolve ();
+                        }
                     }
                 );
                 this.fDialog.startup ();
 
                 this.fNodeHeading = domConstruct.create 
                 (
-                    "div",
+                    "h1",
                     {
-                        style: "margin-bottom:20px;font-family:sans-serif;font-size:20px;"
                     },
                     this.fDialog.containerNode,
                     "only"
@@ -119,7 +160,8 @@ define
                 (
                     "textarea",
                     {
-                        style: "width:100%;height:460px;font-family:monospace;"
+                        style:      "width:100%;height:460px;font-family:monospace;resize:none",
+                        readonly:   true
                     },
                     this.fDialog.containerNode,
                     "last"

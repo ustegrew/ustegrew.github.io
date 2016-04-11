@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Main interface for a course.
+ *  @fileoverview        Main GUI for the courseware module.
  */
 define 
 (
@@ -7,7 +7,6 @@ define
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/Deferred",
-        "dojo/dom",
         "dojo/dom-construct",
         "dojo/on",
         "dojo/store/Memory",
@@ -23,7 +22,6 @@ define
         declare,
         _WidgetBase,
         TDeferred,
-        dom,
         domConstruct,
         on,
         MemoryStore,
@@ -86,9 +84,9 @@ define
         TCourseWareGUI = 
         {
             /**
-             * The default (dummy) data.
+             * The default (dummy) data for the content nodes.
              * 
-             * @type        String
+             * @type        JSON
              * @private
              */
             fData: 
@@ -102,12 +100,6 @@ define
                     hasChildren:            false
                 }
             ],
-            
-            fLoadState:
-            {
-                hasArticle:         false,
-                hasExercise:        false
-            },
             
             fHost: null,
             
@@ -430,33 +422,6 @@ define
                 );
                 this.fPnlExercises = pnlMainRCntExercises;                              /* <--- Property: fPnlExercises                 */
 
-                on
-                (
-                    this.fPnlArticle,
-                    "load", 
-                    function ()
-                    {
-                        _host.fLoadState.hasArticle = true;
-                        if (_host.fLoadState.hasArticle  &&  _host.fLoadState.hasExercise)
-                        {
-                            _host._NotifyFinishedLoadArticle ();
-                        }
-                    }
-                );
-                on 
-                (
-                    this.fPnlExercises,
-                    "load", 
-                    function ()
-                    {
-                        _host.fLoadState.hasExercise = true;
-                        if (_host.fLoadState.hasArticle  &&  _host.fLoadState.hasExercise)
-                        {
-                            _host._NotifyFinishedLoadArticle ();
-                        }
-                    }
-                );
-
                 pnlMain.addChild                (pnlMainL);
                 pnlMain.addChild                (pnlMainR);
                 pnlMainLCntTree.placeAt         (pnlMainLCnt);
@@ -592,22 +557,33 @@ define
                 this.fPnlArticle.set ("open", true);
                 this.fPnlExercises.set ("open", true);
                 
-                /* Reset load states. NotifyArticleLoaded will be called when both 
-                 * panels indicate that they have loaded their resp. content 
-                 * (via onLoad callback                                             */
-                this.fLoadState.hasArticle      = false;
-                this.fLoadState.hasExercise     = false;
-                
                 /* Set content */
                 this.fPnlHeading.innerHTML      = item.heading;
-                this.fPnlArticle.set    ("title", item.heading);
-                this.fPnlArticle.set    ("href",  item.urlArticle);
-                this.fPnlExercises.set  ("href",  item.urlExercises).then
+                this.fPnlArticle.set ("title", item.heading);
+                this.fPnlArticle.set ("href",  item.urlArticle).then
                 (
-                    function () {return _this._Worksheet_Initialize ();}
+                    function ()
+                    {
+                        return _this.fPnlExercises.set  ("href",  item.urlExercises);
+                    }
                 ).then
                 (
-                    function () {return _this.fPnlExercises.set ("open", false);}
+                    function () 
+                    {
+                        return _this._Worksheet_Initialize ();
+                    }
+                ).then
+                (
+                    function () 
+                    {
+                        return _this.fPnlExercises.set ("open", false);
+                    }
+                ).then
+                (
+                    function () 
+                    {
+                        _this._NotifyFinishedLoadArticle ();
+                    }
                 );
             },
 
@@ -649,18 +625,18 @@ define
             
             _Worksheet_LoadSolution: function (id)
             {
-                var record;
+                var s;
                 
-                record = this.fHost.ExerciseSolutionLoad (id);
-                this.fWorksheet.SetCurrentSolution (record.data);
+                s = this.fHost.ExerciseSolution_Get     (id);
+                this.fWorksheet.SetCurrentSolution      (s);
             },
             
             _Worksheet_SaveSolution: function ()
             {
                 var e;
                 
-                e = this.fWorksheet.GetCurrentSolution ();
-                this.fHost.ExerciseSolutionSave        (e.id, e.content);
+                e = this.fWorksheet.GetCurrentSolution  ();
+                this.fHost.ExerciseSolution_Save        (e.id, e.content);
             },
             
             /**

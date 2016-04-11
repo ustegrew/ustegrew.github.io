@@ -1,0 +1,839 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  *  @fileoverview        Main interface for a course.
+<span class='line'>  3</span>  */</span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="NAME">define</span><span class="WHIT"> 
+<span class='line'>  5</span> </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="WHIT">    </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/_base/declare"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  8</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/_WidgetBase"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/has"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/dom"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/dom-construct"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/on"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/MenuBar"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/PopupMenuBarItem"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/Menu"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/MenuItem"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/MenuSeparator"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/DropDownMenu"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="STRN">"ace/TAce"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/Editor"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">        </span><span class="STRN">"dijit/_editor/plugins/FontChoice"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/_base/sniff"</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
+<span class='line'> 25</span>     </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">        </span><span class="NAME">_WidgetBase</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">        </span><span class="NAME">has</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">        </span><span class="NAME">dom</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">        </span><span class="NAME">domConstruct</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="NAME">on</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="NAME">TMenuBar</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">        </span><span class="NAME">TPopupMenuBarItem</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="NAME">TMenu</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">TMenuItem</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">        </span><span class="NAME">TMenuSeparator</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="NAME">TDropDownMenu</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="NAME">TAceEdit</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">        </span><span class="NAME">TRichTextEdit</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">        </span><span class="NAME">TRichTextEditFontChoice</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="COMM">/* Debug flag - for that extra info in hard places! */</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">gDebug</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">        
+<span class='line'> 46</span>         </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">kObserverInterval</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1000</span><span class="PUNC">;</span><span class="WHIT">                                           </span><span class="COMM">/* [110] */</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 49</span>          * The editor's content change observer. Observes the current editor for
+<span class='line'> 50</span>          * changes of content. 
+<span class='line'> 51</span>          * 
+<span class='line'> 52</span>          * For more details: [110]
+<span class='line'> 53</span>          */</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TObserver_ContentChanged</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">host</span><span class="PUNC">)</span><span class="WHIT">                          
+<span class='line'> 55</span>         </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">            
+<span class='line'> 58</span>             </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">EObserverState</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">                </span><span class="NAME">kWait</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NUMB">10</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">                </span><span class="NAME">kRunning</span><span class="PUNC">:</span><span class="WHIT">       </span><span class="NUMB">20</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">            
+<span class='line'> 64</span>             </span><span class="NAME">this.fContentOld</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">            </span><span class="NAME">this.fHost</span><span class="WHIT">          </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">host</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">            </span><span class="NAME">this.fState</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kWait</span><span class="PUNC">;</span><span class="WHIT"> 
+<span class='line'> 67</span>             
+<span class='line'> 68</span>             </span><span class="NAME">this.SetPaused</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::TObserver_ContentChanged::SetPaused ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> 
+<span class='line'> 72</span> </span><span class="WHIT">                </span><span class="NAME">_this.fState</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kWait</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">            
+<span class='line'> 75</span>             </span><span class="NAME">this.SetRunning</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_this.fState</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kRunning</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">                        </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::TObserver_ContentChanged::SetRunning ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="WHIT">                        </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::TObserver_ContentChanged::SetRunning (): Cancelled as we are already in run state."</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 88</span> 
+<span class='line'> 89</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_this.fState</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kRunning</span><span class="PUNC">)</span><span class="WHIT">                    </span><span class="COMM">/* [112] */</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fContentOld</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fHost.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">                    </span><span class="NAME">_this.fState</span><span class="WHIT">        </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kRunning</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">                    </span><span class="NAME">_this._Run</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">            
+<span class='line'> 97</span>             </span><span class="NAME">this._Run</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">content</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">doQuery</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">                
+<span class='line'>102</span>                 </span><span class="NAME">doQuery</span><span class="WHIT">     </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fState</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">EObserverState.kRunning</span><span class="WHIT">    </span><span class="PUNC">&&</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">                              </span><span class="NAME">this.fHost.fAPIEditor.fHasEditor</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">//      && what else ?</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">                
+<span class='line'>105</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">doQuery</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">                    </span><span class="NAME">content</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fHost.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="NAME">this.fContentOld</span><span class="PUNC">)</span><span class="WHIT">                           </span><span class="COMM">/* [111] */</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">                        </span><span class="NAME">this.fContentOld</span><span class="WHIT">                   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">content</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">                        </span><span class="NAME">this.fHost.fAPIEditor.fHasChanged</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">                        </span><span class="NAME">this.fHost.fHandlers.onFinishedChange.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fHost.fHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">                    </span><span class="NAME">window.setTimeout</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">_this._Run.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_this</span><span class="PUNC">)</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">kObserverInterval</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">            
+<span class='line'>118</span>             </span><span class="NAME">this.fState</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">EObserverState.kWait</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">        
+<span class='line'>121</span>         
+<span class='line'>122</span>         </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TExerciseEditGUI</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> 
+<span class='line'>125</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'>126</span>          * Class for the exercise editor UI. A text editor panel. Can
+<span class='line'>127</span>          * show either the ACE editor component or a rich text editor.
+<span class='line'>128</span>          * 
+<span class='line'>129</span>          * &lt;pre>    
+<span class='line'>130</span>          *     .------.--------------------------------------.
+<span class='line'>131</span>          *     | File |                                      |
+<span class='line'>132</span>          *     .---------------------------------------------.
+<span class='line'>133</span>          *     |                                             |
+<span class='line'>134</span>          *     |                                             |
+<span class='line'>135</span>          *     |                                             |
+<span class='line'>136</span>          *     |                                             |
+<span class='line'>137</span>          *     |                                             |
+<span class='line'>138</span>          *     |                                             |
+<span class='line'>139</span>          *     |                                             |
+<span class='line'>140</span>          *     |                                             |
+<span class='line'>141</span>          *     |                                             |
+<span class='line'>142</span>          *     '---------------------------------------------'
+<span class='line'>143</span>          * &lt;/pre>
+<span class='line'>144</span>          * 
+<span class='line'>145</span>          * Elements on the user interface:
+<span class='line'>146</span>          * 
+<span class='line'>147</span>          * &lt;dl>
+<span class='line'>148</span>          *     &lt;dt>Content panel&lt;/dt>
+<span class='line'>149</span>          *     &lt;dd>The content of the user's solution.&lt;/dd>
+<span class='line'>150</span>          *     
+<span class='line'>151</span>          *     &lt;dt>Menu bar&lt;/dt>
+<span class='line'>152</span>          *     &lt;dd>As in current user interfaces for applications.&lt;/dd>
+<span class='line'>153</span>          * &lt;/dl>
+<span class='line'>154</span>          * 
+<span class='line'>155</span>          * @class       TExerciseEditGUI
+<span class='line'>156</span>          * @augments    _WidgetBase
+<span class='line'>157</span>          * @augments    _TemplateMixin
+<span class='line'>158</span>          */</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">        </span><span class="NAME">TExerciseEditGUI</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'>160</span>         </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">            </span><span class="NAME">EType</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">                </span><span class="NAME">kRichText</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="NUMB">10</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">                </span><span class="NAME">kSourceCode</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NUMB">20</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">            
+<span class='line'>167</span>             </span><span class="NAME">ESrcLang</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">                </span><span class="NAME">kJavascript</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NUMB">10</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">                </span><span class="NAME">kHTML</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NUMB">20</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">                </span><span class="NAME">kPlaintext</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="NUMB">30</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">            
+<span class='line'>174</span>             </span><span class="NAME">ClearFlagChanged</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::ClearFlagChanged ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">                
+<span class='line'>178</span>                 </span><span class="NAME">this.fAPIEditor.fHasChanged</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">            
+<span class='line'>181</span>             </span><span class="NAME">Destroy</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::Destroy ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> 
+<span class='line'>185</span> </span><span class="WHIT">                </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>187</span> 
+<span class='line'>188</span> </span><span class="WHIT">            </span><span class="NAME">GetContent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> 
+<span class='line'>189</span>             </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::GetContent ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">                
+<span class='line'>192</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">                
+<span class='line'>194</span>                 </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">                
+<span class='line'>196</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">            
+<span class='line'>199</span>             </span><span class="NAME">HasChanged</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::HasChanged ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">                
+<span class='line'>203</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">                
+<span class='line'>205</span>                 </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fAPIEditor.fHasChanged</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">                
+<span class='line'>207</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">            
+<span class='line'>210</span>             </span><span class="NAME">SetContent</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::SetContent ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">                
+<span class='line'>214</span>                 </span><span class="NAME">this.fAPIEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">            
+<span class='line'>217</span>             </span><span class="NAME">SetOberverContentChanged_Paused</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::SetOberverContentChanged_Paused ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">                
+<span class='line'>221</span>                 </span><span class="NAME">this.fAPIEditor.SetObserverPaused</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">            
+<span class='line'>224</span>             </span><span class="NAME">SetOberverContentChanged_Running</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::SetOberverContentChanged_Running ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">                
+<span class='line'>228</span>                 </span><span class="NAME">this.fAPIEditor.SetObserverRunning</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">            
+<span class='line'>231</span>             </span><span class="NAME">SetType</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">lang</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::SetType ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">                
+<span class='line'>235</span>                 </span><span class="NAME">this._SetType</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">lang</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">            
+<span class='line'>238</span>             </span><span class="NAME">fAPIEditor</span><span class="PUNC">:</span><span class="WHIT">                     </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">            </span><span class="NAME">fConfig</span><span class="PUNC">:</span><span class="WHIT">                        </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">            </span><span class="NAME">fHandlers</span><span class="PUNC">:</span><span class="WHIT">                      </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">            </span><span class="NAME">fHost</span><span class="PUNC">:</span><span class="WHIT">                          </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">            </span><span class="NAME">fObserver_ContentChanged</span><span class="PUNC">:</span><span class="WHIT">       </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">            </span><span class="NAME">fPnlWrapper</span><span class="PUNC">:</span><span class="WHIT">                    </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="WHIT">            </span><span class="NAME">fPnlWrapperEdit</span><span class="PUNC">:</span><span class="WHIT">                </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>245</span> 
+<span class='line'>246</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'>247</span>              * Dojo specific cTor.
+<span class='line'>248</span>              * 
+<span class='line'>249</span>              * @param   {type} params
+<span class='line'>250</span>              * @returns {undefined}
+<span class='line'>251</span>              */</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">            </span><span class="NAME">constructor</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">params</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::constructor ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">                
+<span class='line'>256</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">params.fHost</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="STRN">'object'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT">  </span><span class="PUNC">(</span><span class="NAME">params.fHost</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">                    </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TExerciseEditGUI::constructor (): params.fHost is "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">                          </span><span class="STRN">"not an object. Clients must set params.fHost to a "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">                          </span><span class="STRN">"valid object (e.g. 'this' reference or window object)."</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">                
+<span class='line'>263</span>                 </span><span class="NAME">this.fObserver_ContentChanged</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TObserver_ContentChanged</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT">            </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlWrapper</span><span class="WHIT">                </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">                </span><span class="NAME">this.fHost</span><span class="WHIT">                      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.fHost</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>267</span> </span><span class="WHIT">                </span><span class="NAME">this.fAPIEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'>268</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="WHIT">                    </span><span class="NAME">fEarlyContent</span><span class="PUNC">:</span><span class="WHIT">              </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">                                   </span><span class="COMM">/* [21] */</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">                    </span><span class="NAME">fEditor</span><span class="PUNC">:</span><span class="WHIT">                    </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">                    </span><span class="NAME">fHasEditor</span><span class="PUNC">:</span><span class="WHIT">                 </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">                                  </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">                    </span><span class="NAME">fHasChanged</span><span class="PUNC">:</span><span class="WHIT">                </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">                    </span><span class="NAME">fObserverContentChanged</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NAME">this.fObserver_ContentChanged</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">                    </span><span class="NAME">Destroy</span><span class="PUNC">:</span><span class="WHIT">                    </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>275</span> </span><span class="WHIT">                    </span><span class="NAME">GetContent</span><span class="PUNC">:</span><span class="WHIT">                 </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">                    </span><span class="NAME">SetContent</span><span class="PUNC">:</span><span class="WHIT">                 </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">                    </span><span class="NAME">SetObserverPaused</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">                        </span><span class="NAME">this.fObserverContentChanged.SetPaused</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">                    </span><span class="NAME">SetObserverRunning</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>283</span> </span><span class="WHIT">                        </span><span class="NAME">this.fObserverContentChanged.SetRunning</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>284</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">                </span><span class="NAME">this.fConfig</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">                    </span><span class="NAME">fHeight</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NAME">params.fHeight</span><span class="PUNC">,</span><span class="WHIT">                                 </span><span class="COMM">/* [22] */</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">                    </span><span class="NAME">fWidth</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="NAME">params.fWidth</span><span class="WHIT">                                   </span><span class="COMM">/* [22] */</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">                </span><span class="NAME">this.fHandlers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">                                                </span><span class="COMM">/* [10] */</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">                    </span><span class="NAME">onFinishedChange</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="NAME">params.onFinishedChange</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">                    </span><span class="NAME">onFinishedLoad</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="NAME">params.onFinishedLoad</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">                    </span><span class="NAME">onRequestCancel</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="NAME">params.onRequestCancel</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">                    </span><span class="NAME">onRequestSave</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="NAME">params.onRequestSave</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">            
+<span class='line'>300</span>             </span><span class="NAME">destroy</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::destroy ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>303</span> 
+<span class='line'>304</span> </span><span class="WHIT">                </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">            
+<span class='line'>307</span>             </span><span class="COMM">/* -------------------------------------------------------------
+<span class='line'>308</span>              * Dijit overrides 
+<span class='line'>309</span>              * ------------------------------------------------------------- */</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">        
+<span class='line'>311</span>             </span><span class="COMM">/**
+<span class='line'>312</span>              * Sets up the UI. This overrides the _WidgetBase::startup (). 
+<span class='line'>313</span>              * We don't use the typical way of overriding 
+<span class='line'>314</span>              * _WidgetBase::postCreate (), because this widget includes 
+<span class='line'>315</span>              * child widgets (such as BorderContainer), and it's not 
+<span class='line'>316</span>              * recommended to do JS resizing in the postCreate() method. 
+<span class='line'>317</span>              * We could get fancy and do part of the instantiation in a 
+<span class='line'>318</span>              * postCreate() method, but having everything together in 
+<span class='line'>319</span>              * startup () makes things simpler.
+<span class='line'>320</span>              * 
+<span class='line'>321</span>              * Excerpt, Dojo documentation:
+<span class='line'>322</span>              *     + postCreate
+<span class='line'>323</span>              *          This is typically the workhorse of a custom widget. The 
+<span class='line'>324</span>              *          widget has been rendered (but note that child widgets in 
+<span class='line'>325</span>              *          the containerNode have not!). The widget though may not 
+<span class='line'>326</span>              *          be attached to the DOM yet so you shouldn’t do any sizing 
+<span class='line'>327</span>              *          calculations in this method.
+<span class='line'>328</span>              *     
+<span class='line'>329</span>              *     + startup
+<span class='line'>330</span>              *          If you need to be sure parsing and creation of any child 
+<span class='line'>331</span>              *          widgets has completed, use startup. This is often used 
+<span class='line'>332</span>              *          for layout widgets like BorderContainer. If the widget 
+<span class='line'>333</span>              *          does JS sizing, then startup() should call resize(), 
+<span class='line'>334</span>              *          which does the sizing.
+<span class='line'>335</span>              */</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">            </span><span class="NAME">startup</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>337</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::startup ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">                
+<span class='line'>340</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_host</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">                
+<span class='line'>342</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">pnlWrapper</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">pnlWrapperMenuBar</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">pnlWrapperEdit</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">wrStyle</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">menuBar</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">subMenu</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> 
+<span class='line'>349</span> </span><span class="WHIT">                </span><span class="NAME">this.fAPIEditor.fHasEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">                             </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>350</span> </span><span class="WHIT">                
+<span class='line'>351</span>                 </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>353</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::fAPIEditor::Destroy () [initial version]"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">                    </span><span class="COMM">/* Do nothing else. [23] */</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">                
+<span class='line'>357</span>                 </span><span class="NAME">this.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>359</span> </span><span class="WHIT">                    </span><span class="NAME">_host._Log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"fAPIEditor.GetContent (): Has not been set. Did you call SetType (...)?"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>361</span> </span><span class="WHIT">                
+<span class='line'>362</span>                 </span><span class="NAME">this.fAPIEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>364</span> </span><span class="WHIT">                    </span><span class="NAME">_host._Log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"fAPIEditor.SetContent (): Has not been set. Did you call SetType (...)?"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>366</span> 
+<span class='line'>367</span> </span><span class="WHIT">                </span><span class="COMM">/**
+<span class='line'>368</span>                  * Set up menu bar.
+<span class='line'>369</span>                  */</span><span class="WHIT">
+<span class='line'>370</span> </span><span class="WHIT">                </span><span class="NAME">wrStyle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"top:0px;bottom:0px;left:0px;right:0px;"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>371</span> </span><span class="WHIT">                </span><span class="NAME">pnlWrapperMenuBar</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="WHIT">                    </span><span class="STRN">"div"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="NAME">wrStyle</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>377</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>378</span> </span><span class="WHIT">                </span><span class="NAME">menuBar</span><span class="WHIT">     </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TMenuBar</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">                </span><span class="NAME">subMenu</span><span class="WHIT">     </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TDropDownMenu</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="WHIT">                </span><span class="NAME">subMenu.addChild</span><span class="WHIT"> 
+<span class='line'>381</span>                 </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">                    </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TMenuItem</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>384</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>385</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"Save"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="WHIT">                            </span><span class="NAME">onClick</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">_host.fHandlers.onRequestSave.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>388</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>389</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>390</span> </span><span class="WHIT">                </span><span class="NAME">subMenu.addChild</span><span class="WHIT"> 
+<span class='line'>391</span>                 </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>392</span> </span><span class="WHIT">                    </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TMenuSeparator</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>393</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>394</span> </span><span class="WHIT">                </span><span class="NAME">subMenu.addChild</span><span class="WHIT"> 
+<span class='line'>395</span>                 </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">                    </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TMenuItem</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"Close"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="WHIT">                            </span><span class="NAME">onClick</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="NAME">_host.fHandlers.onRequestCancel.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>404</span> </span><span class="WHIT">                </span><span class="NAME">menuBar.addChild</span><span class="WHIT">
+<span class='line'>405</span> </span><span class="WHIT">                </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="WHIT">                    </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TPopupMenuBarItem</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">                    </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">                            </span><span class="NAME">label</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"File"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="WHIT">                            </span><span class="NAME">popup</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="NAME">subMenu</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>412</span> </span><span class="WHIT">                    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">                </span><span class="NAME">menuBar.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>415</span> </span><span class="WHIT">                </span><span class="NAME">menuBar.placeAt</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pnlWrapperMenuBar</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>416</span> </span><span class="WHIT">                
+<span class='line'>417</span>                 </span><span class="NAME">pnlWrapperEdit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"div"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">                
+<span class='line'>419</span>                 </span><span class="NAME">pnlWrapper</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> 
+<span class='line'>420</span>                 </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">                    </span><span class="STRN">"div"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>422</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>423</span> </span><span class="WHIT">                        </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"width:"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.fConfig.fWidth</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">";height"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.fConfig.fHeight</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">";"</span><span class="WHIT">
+<span class='line'>424</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>425</span> </span><span class="WHIT">                </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="WHIT">                </span><span class="NAME">domConstruct.place</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pnlWrapperMenuBar</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="NAME">pnlWrapper</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="STRN">"only"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="WHIT">                </span><span class="NAME">domConstruct.place</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pnlWrapperEdit</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="NAME">pnlWrapper</span><span class="PUNC">,</span><span class="WHIT">     </span><span class="STRN">"last"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>428</span> </span><span class="WHIT">                </span><span class="NAME">domConstruct.place</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pnlWrapper</span><span class="PUNC">,</span><span class="WHIT">         </span><span class="NAME">this.domNode</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="STRN">"only"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>429</span> </span><span class="WHIT">                
+<span class='line'>430</span>                 </span><span class="NAME">this.fPnlWrapper</span><span class="WHIT">        </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">pnlWrapper</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>431</span> </span><span class="WHIT">                </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">pnlWrapperEdit</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>432</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">            
+<span class='line'>434</span>             </span><span class="NAME">_GetFeatureProfile</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>435</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>436</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">                
+<span class='line'>438</span>                 </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'>439</span>                 </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">                    </span><span class="NAME">fNeedSimpleRichtextEditor</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="KEYW">true</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>442</span> </span><span class="WHIT">                
+<span class='line'>443</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">has</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"ff"</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">                    </span><span class="NAME">ret.fNeedSimpleRichtextEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">has</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"chrome"</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>448</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="WHIT">                    </span><span class="NAME">ret.fNeedSimpleRichtextEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>450</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>451</span> </span><span class="WHIT">                
+<span class='line'>452</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>453</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>454</span> </span><span class="WHIT">            
+<span class='line'>455</span>             </span><span class="NAME">_HandleOnLoad</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::_HandleOnLoad ()"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>458</span> </span><span class="WHIT">                
+<span class='line'>459</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fAPIEditor.fEarlyContent</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="WHIT">                    </span><span class="NAME">this.fAPIEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fAPIEditor.fEarlyContent</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>463</span> </span><span class="WHIT">                </span><span class="NAME">this.fHandlers.onFinishedLoad.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fHost</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>464</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">            
+<span class='line'>466</span>             </span><span class="NAME">_Log</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">msg</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>467</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">                </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">msg</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>470</span> 
+<span class='line'>471</span> </span><span class="WHIT">            </span><span class="NAME">_SetType</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">type</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">srcLang</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>472</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>473</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::_SetType ('"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">type</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"', '"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">srcLang</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"')"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>474</span> </span><span class="WHIT">                
+<span class='line'>475</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_host</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">                
+<span class='line'>477</span>                 </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">featureProfile</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">eType</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>479</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">eLang</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>480</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">wrStyle</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>481</span> </span><span class="WHIT">                
+<span class='line'>482</span>                 </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">                
+<span class='line'>484</span>                 </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">type</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"rtf"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>486</span> </span><span class="WHIT">                    </span><span class="NAME">eType</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.EType.kRichText</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>487</span> </span><span class="WHIT">                    </span><span class="NAME">eLang</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kPlaintext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>488</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>489</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">type</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"src"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>490</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>491</span> </span><span class="WHIT">                    </span><span class="NAME">eType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.EType.kSourceCode</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>492</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">srcLang</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"js"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>493</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>494</span> </span><span class="WHIT">                        </span><span class="NAME">eLang</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kJavascript</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>495</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>496</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">srcLang</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"html"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">                        </span><span class="NAME">eLang</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kHTML</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">srcLang</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"plain_text"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>502</span> </span><span class="WHIT">                        </span><span class="NAME">eLang</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kPlaintext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>503</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>504</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>505</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>506</span> </span><span class="WHIT">                        </span><span class="NAME">eLang</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kPlaintext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">                        </span><span class="NAME">this._Log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"Unknown source language: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">srcLang</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">". Set to kSourceCode/kPlaintext."</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>508</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>509</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>510</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>511</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>512</span> </span><span class="WHIT">                    </span><span class="NAME">eType</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.EType.kRichText</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>513</span> </span><span class="WHIT">                    </span><span class="NAME">eLang</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kPlaintext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">                    </span><span class="NAME">this._Log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"Unknown text type: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">type</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">". Set to kRichText"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>516</span> </span><span class="WHIT">                
+<span class='line'>517</span>                 </span><span class="COMM">/**
+<span class='line'>518</span>                  * Set up editor component
+<span class='line'>519</span>                  */</span><span class="WHIT">
+<span class='line'>520</span> </span><span class="WHIT">                </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">eType</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>521</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>522</span> </span><span class="WHIT">                    </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">this.EType.kRichText</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>523</span> </span><span class="WHIT">                        </span><span class="NAME">featureProfile</span><span class="WHIT">          </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this._GetFeatureProfile</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>524</span> </span><span class="WHIT">                        </span><span class="NAME">wrStyle</span><span class="WHIT">                 </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"left:0px;right:2px;"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>525</span> </span><span class="WHIT">                        </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> 
+<span class='line'>526</span>                         </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>527</span> </span><span class="WHIT">                            </span><span class="STRN">"div"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>528</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>529</span> </span><span class="WHIT">                                </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">wrStyle</span><span class="WHIT">
+<span class='line'>530</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>531</span> </span><span class="WHIT">                        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>532</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>533</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>534</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::fAPIEditor::Destroy ()  [kRichText version]"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>535</span> 
+<span class='line'>536</span> </span><span class="WHIT">                            </span><span class="NAME">_host.fAPIEditor.SetObserverPaused</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>537</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>538</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>539</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor.destroy</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>540</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>541</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>542</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>543</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>544</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>545</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">                </span><span class="COMM">/* [100] */</span><span class="WHIT">
+<span class='line'>546</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>547</span> </span><span class="WHIT">                            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>548</span> </span><span class="WHIT">                            
+<span class='line'>549</span>                             </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">                    </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>550</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>551</span> </span><span class="WHIT">                                </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_host.fAPIEditor.fEditor.get</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"value"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>552</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>553</span> </span><span class="WHIT">                            </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>554</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>555</span> </span><span class="WHIT">                                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TExerciseEditGUI::fAPIEditor.GetContent&lt;TRichTextEdit>: Editor hasn't finished loading yet. Can't retrieve content."</span><span class="WHIT">
+<span class='line'>556</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>557</span> </span><span class="WHIT">                            
+<span class='line'>558</span>                             </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>559</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>560</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT">         </span><span class="COMM">/* [100] */</span><span class="WHIT">
+<span class='line'>561</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>562</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>563</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>564</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>565</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor.set</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"value"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>566</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>567</span> </span><span class="WHIT">                            </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>568</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>569</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">content</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>570</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>571</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>572</span> </span><span class="WHIT">                        
+<span class='line'>573</span>                         </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">featureProfile.fNeedSimpleRichtextEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>574</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>575</span> </span><span class="WHIT">                            </span><span class="NAME">this.fAPIEditor.fEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TRichTextEdit</span><span class="WHIT">             </span><span class="COMM">/* &lt;----- Property: fAPIEditor.fEditor */</span><span class="WHIT">
+<span class='line'>576</span> </span><span class="WHIT">                            </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>577</span> </span><span class="WHIT">                                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>578</span> </span><span class="WHIT">                                    </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NAME">this.fConfig.fWidth</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>579</span> </span><span class="WHIT">                                    </span><span class="NAME">height</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="NAME">this.fConfig.fHeight</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>580</span> </span><span class="WHIT">                                    </span><span class="NAME">plugins</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>581</span> </span><span class="WHIT">                                    </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>582</span> </span><span class="WHIT">                                        </span><span class="STRN">'cut'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'copy'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'paste'</span><span class="PUNC">,</span><span class="WHIT">                         </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>583</span> </span><span class="WHIT">                                        </span><span class="STRN">'undo'</span><span class="PUNC">,</span><span class="STRN">'redo'</span><span class="WHIT">
+<span class='line'>584</span> </span><span class="WHIT">                                    </span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'>585</span> </span><span class="WHIT">                                </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>586</span> </span><span class="WHIT">                                </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT">
+<span class='line'>587</span> </span><span class="WHIT">                            </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>588</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>589</span> </span><span class="WHIT">                        </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>590</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>591</span> </span><span class="WHIT">                            </span><span class="NAME">this.fAPIEditor.fEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TRichTextEdit</span><span class="WHIT">             </span><span class="COMM">/* &lt;----- Property: fAPIEditor.fEditor */</span><span class="WHIT">
+<span class='line'>592</span> </span><span class="WHIT">                            </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>593</span> </span><span class="WHIT">                                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>594</span> </span><span class="WHIT">                                    </span><span class="NAME">width</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NAME">this.fConfig.fWidth</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>595</span> </span><span class="WHIT">                                    </span><span class="NAME">height</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="NAME">this.fConfig.fHeight</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>596</span> </span><span class="WHIT">                                    </span><span class="NAME">plugins</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>597</span> </span><span class="WHIT">                                    </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>598</span> </span><span class="WHIT">                                        </span><span class="STRN">'cut'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'copy'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'paste'</span><span class="PUNC">,</span><span class="WHIT">                                             </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>599</span> </span><span class="WHIT">                                        </span><span class="STRN">'undo'</span><span class="PUNC">,</span><span class="STRN">'redo'</span><span class="PUNC">,</span><span class="WHIT">                                                      </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>600</span> </span><span class="WHIT">                                        </span><span class="STRN">'bold'</span><span class="PUNC">,</span><span class="STRN">'italic'</span><span class="PUNC">,</span><span class="STRN">'underline'</span><span class="PUNC">,</span><span class="WHIT">                                        </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>601</span> </span><span class="WHIT">                                        </span><span class="STRN">'justifyLeft'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'justifyCenter'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'justifyRight'</span><span class="PUNC">,</span><span class="WHIT">                     </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>602</span> </span><span class="WHIT">                                        </span><span class="STRN">'insertOrderedList'</span><span class="PUNC">,</span><span class="STRN">'insertUnorderedList'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'indent'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'outdent'</span><span class="WHIT">
+<span class='line'>603</span> </span><span class="WHIT">                                    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>604</span> </span><span class="WHIT">                                    </span><span class="NAME">extraPlugins</span><span class="PUNC">:</span><span class="WHIT">   
+<span class='line'>605</span>                                     </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>606</span> </span><span class="WHIT">                                        </span><span class="STRN">'|'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>607</span> </span><span class="WHIT">                                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>608</span> </span><span class="WHIT">                                            </span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT">       </span><span class="STRN">"formatBlock"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>609</span> </span><span class="WHIT">                                            </span><span class="NAME">plainText</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="KEYW">true</span><span class="WHIT">
+<span class='line'>610</span> </span><span class="WHIT">                                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>611</span> </span><span class="WHIT">                                    </span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'>612</span> </span><span class="WHIT">                                </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>613</span> </span><span class="WHIT">                                </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT">
+<span class='line'>614</span> </span><span class="WHIT">                            </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>615</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>616</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.fEditor.onLoadDeferred.then</span><span class="WHIT">
+<span class='line'>617</span> </span><span class="WHIT">                        </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>618</span> </span><span class="WHIT">                            </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>619</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>620</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">             </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>621</span> </span><span class="WHIT">                                </span><span class="NAME">_host._HandleOnLoad.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>622</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>623</span> </span><span class="WHIT">                        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>624</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.fEditor.startup</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>625</span> </span><span class="WHIT">                        </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>626</span> </span><span class="WHIT">                        
+<span class='line'>627</span>                     </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">this.EType.kSourceCode</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>628</span> </span><span class="WHIT">                        </span><span class="NAME">wrStyle</span><span class="WHIT">    </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"width:100%;height:"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.fConfig.fHeight</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">";"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>629</span> </span><span class="WHIT">                        </span><span class="NAME">this.fPnlWrapperEdit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">domConstruct.create</span><span class="WHIT"> 
+<span class='line'>630</span>                         </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>631</span> </span><span class="WHIT">                            </span><span class="STRN">"div"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>632</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>633</span> </span><span class="WHIT">                                </span><span class="NAME">style</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">wrStyle</span><span class="WHIT">
+<span class='line'>634</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>635</span> </span><span class="WHIT">                        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>636</span> 
+<span class='line'>637</span> </span><span class="WHIT">                        </span><span class="KEYW">switch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">eLang</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>638</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>639</span> </span><span class="WHIT">                            </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kJavascript</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>640</span> </span><span class="WHIT">                                </span><span class="NAME">srcType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"javascript"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>641</span> </span><span class="WHIT">                                </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>642</span> </span><span class="WHIT">                            </span><span class="KEYW">case</span><span class="WHIT"> </span><span class="NAME">this.ESrcLang.kHTML</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>643</span> </span><span class="WHIT">                                </span><span class="NAME">srcType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"html"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>644</span> </span><span class="WHIT">                                </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>645</span> </span><span class="WHIT">                            </span><span class="KEYW">default</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>646</span> </span><span class="WHIT">                                </span><span class="NAME">srcType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"plain_text"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>647</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>648</span> </span><span class="WHIT">                        
+<span class='line'>649</span>                         </span><span class="NAME">this.fAPIEditor.Destroy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>650</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>651</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">gDebug</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">console.log</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI::fAPIEditor::Destroy () [kAceEdit version]"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>652</span> 
+<span class='line'>653</span> </span><span class="WHIT">                            </span><span class="NAME">_host.fAPIEditor.SetObserverPaused</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>654</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>655</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>656</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor.destroy</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>657</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="WHIT">      </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>658</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor</span><span class="WHIT">         </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>659</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>660</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>661</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>662</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">                </span><span class="COMM">/* [100] */</span><span class="WHIT">
+<span class='line'>663</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>664</span> </span><span class="WHIT">                            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>665</span> 
+<span class='line'>666</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">                    </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>667</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>668</span> </span><span class="WHIT">                                </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_host.fAPIEditor.fEditor.GetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>669</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>670</span> </span><span class="WHIT">                            </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>671</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>672</span> </span><span class="WHIT">                                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TExerciseEditGUI::fAPIEditor.GetContent&lt;TAceEdit>: Editor hasn't finished loading yet. Can't retrieve content."</span><span class="WHIT">
+<span class='line'>673</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>674</span> </span><span class="WHIT">                            
+<span class='line'>675</span>                             </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>676</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>677</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT">         </span><span class="COMM">/* [100] */</span><span class="WHIT">
+<span class='line'>678</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>679</span> </span><span class="WHIT">                            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>680</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>681</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>682</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEditor.SetContent</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>683</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>684</span> </span><span class="WHIT">                            </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>685</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>686</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fEarlyContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">content</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>687</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>688</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>689</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.fEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">TAceEdit</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">              </span><span class="COMM">/* &lt;----- Property: fAPIEditor.fEditor */</span><span class="WHIT">
+<span class='line'>690</span> </span><span class="WHIT">                        </span><span class="NAME">this.fAPIEditor.fEditor.Setup</span><span class="WHIT">
+<span class='line'>691</span> </span><span class="WHIT">                        </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>692</span> </span><span class="WHIT">                            </span><span class="NAME">this.fPnlWrapperEdit</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>693</span> </span><span class="WHIT">                            </span><span class="NAME">srcType</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>694</span> </span><span class="WHIT">                            </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>695</span> </span><span class="WHIT">                            </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>696</span> </span><span class="WHIT">                            </span><span class="NAME">_host</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>697</span> </span><span class="WHIT">                            </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>698</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>699</span> </span><span class="WHIT">                                </span><span class="NAME">_host.fAPIEditor.fHasEditor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">             </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>700</span> </span><span class="WHIT">                                </span><span class="NAME">_host._HandleOnLoad.call</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">_host</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>701</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>702</span> </span><span class="WHIT">                            </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>703</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>704</span> </span><span class="WHIT">                                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TExerciseEditGUI::startup(): Error loading ace editor. Details:\n"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>705</span>                                       </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">4</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>706</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>707</span> </span><span class="WHIT">                            </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>708</span> </span><span class="WHIT">                            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>709</span> </span><span class="WHIT">                                </span><span class="COMM">// onChange handler - now done using an observer</span><span class="WHIT">
+<span class='line'>710</span> </span><span class="WHIT">                            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>711</span> </span><span class="WHIT">                        </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>712</span> </span><span class="WHIT">                    
+<span class='line'>713</span>                         </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>714</span> </span><span class="WHIT">                        
+<span class='line'>715</span>                     </span><span class="KEYW">default</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'>716</span> </span><span class="WHIT">                        </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="STRN">"TExerciseEditGUI::Unknown text type: "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">type</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>717</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>718</span> </span><span class="WHIT">                
+<span class='line'>719</span>                 </span><span class="NAME">domConstruct.place</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.fPnlWrapperEdit</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.fPnlWrapper</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"last"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>720</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>721</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>722</span> </span><span class="WHIT">    
+<span class='line'>723</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TExerciseEditGUI"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_WidgetBase</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TExerciseEditGUI</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>724</span> </span><span class="WHIT">    
+<span class='line'>725</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>726</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>727</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>728</span> 
+<span class='line'>729</span> </span><span class="COMM">/*
+<span class='line'>730</span> 
+<span class='line'>731</span> [10]:   All event handlers run in the context of the 'host' object provided by the 
+<span class='line'>732</span>         client that created this object when doing cTor call such as: 
+<span class='line'>733</span>             myExercise = new TExerciseGUI ({fHost:someObject}
+<span class='line'>734</span>                         
+<span class='line'>735</span> [20]:   For editor detection we use a flag that is set to false at the earliest 
+<span class='line'>736</span>         possible moment (i.e. after constructor call or immediately after destroying
+<span class='line'>737</span>         any existing editor) and set to true as late as possible (i.e. after the
+<span class='line'>738</span>         asynchronous loading of an editor component is complete. This way we ensure
+<span class='line'>739</span>         reliable editor detection. Testing on this.fAPIEditor.fEditor == null is not
+<span class='line'>740</span>         enough, because in
+<span class='line'>741</span>         
+<span class='line'>742</span>             this.fAPIEditor.fEditor = new TEditor ()
+<span class='line'>743</span>         
+<span class='line'>744</span>         this.fAPIEditor.fEditor may be set to something even if the
+<span class='line'>745</span>         concrete editor hasn't completed loading yet.
+<span class='line'>746</span>         Due to the asynchronous loading we may get problems when trying to access
+<span class='line'>747</span>         the actual editor component too early (e.g. Null exception when trying to 
+<span class='line'>748</span>         get or set the content of the editor even though that one hasn't finished
+<span class='line'>749</span>         loading yet).
+<span class='line'>750</span>                         
+<span class='line'>751</span> [21]:   Clients might try to set the content whilst the actual editor component 
+<span class='line'>752</span>         hasn't finished loading. In that case we cache the content-to-be in a
+<span class='line'>753</span>         property and set the editor content inside the resp. editor's onLoad 
+<span class='line'>754</span>         handler.
+<span class='line'>755</span>                         
+<span class='line'>756</span> [22]:   Bad solution. Forces all clients to specify these values (either hard code 
+<span class='line'>757</span>         or implement some discovery mechanism). Better to let this component discover
+<span class='line'>758</span>         the value automatically.
+<span class='line'>759</span>         Logged as issue#12 on github [https://github.com/ustegrew/ustegrew.github.io/issues/12]
+<span class='line'>760</span>         
+<span class='line'>761</span> [23]:   We won't log the call to the Destroy function, even if _SetType() hasn't been 
+<span class='line'>762</span>         called yet. Otherwise, calling _SetType () for the first time would create a
+<span class='line'>763</span>         log entry (which is annoying). This could be mitigated by introducing some flag 
+<span class='line'>764</span>         (e.g. boolean fHasBeenSetBefore). However, the benefits of this feature are 
+<span class='line'>765</span>         negligible and the cost is yet another obscure feature (makes the code harder to 
+<span class='line'>766</span>         maintain). Not worth doing.        
+<span class='line'>767</span> 
+<span class='line'>768</span> [100]:  It's important to set the editor's event handlers BEFORE creating the 
+<span class='line'>769</span>         actual editor. This is critical, especially with the Ace editor, as that 
+<span class='line'>770</span>         one loads asynchronously and will invoke the onLoad handler at the wrong
+<span class='line'>771</span>         time. Consider these scenarios where we define the event handlers AFTER
+<span class='line'>772</span>         creating/initializing the ace editor:
+<span class='line'>773</span>         1.      Ace editor is not loaded:
+<span class='line'>774</span>         1.1.        Execute:    this.fAPIEditor.fEditor = new TAceEdit ();
+<span class='line'>775</span>                         This creates a new TAceEdit object
+<span class='line'>776</span>         1.2.        Execute:    this.fAPIEditor.fEditor.Setup
+<span class='line'>777</span>         1.2.1           Execute:    hasAceEditor = (typeof window.ace === "object");
+<span class='line'>778</span>                             This will fail -> hasAceEditor == false
+<span class='line'>779</span>         1.2.2.          Execute FALSE branch of     if (! hasAceEditor)
+<span class='line'>780</span>         1.2.2.1.            Execute     aceLib.get (url).then (...)
+<span class='line'>781</span>                                 returns a promise, i.e. waits until ace editor is 
+<span class='line'>782</span>                                 actually loaded. Whilst waiting...
+<span class='line'>783</span>         1.3.        Execute:    this.fAPIEditor.GetContent = function ()...
+<span class='line'>784</span>                         Define accessor function
+<span class='line'>785</span>         1.4.        Execute:    this.fAPIEditor.SetContent = function (content)
+<span class='line'>786</span>                         Define accessor function
+<span class='line'>787</span>         1.5.        Execute promise:    _host._Initialize.call (_host);
+<span class='line'>788</span>                         Now (i.e. AFTER loading ace library and AFTER defining 
+<span class='line'>789</span>                         accessor functions! Result: Works perfect!
+<span class='line'>790</span>                         
+<span class='line'>791</span>         2.      Now, with ACE editor loaded:
+<span class='line'>792</span>         2.1.        Execute:    this.fAPIEditor.fEditor = new TAceEdit ();
+<span class='line'>793</span>                         This creates a new TAceEdit object
+<span class='line'>794</span>         2.2.        Execute:    this.fAPIEditor.fEditor.Setup
+<span class='line'>795</span>         2.2.1           Execute:    hasAceEditor = (typeof window.ace === "object");
+<span class='line'>796</span>                             This will PASS -> hasAceEditor == true -> Problem!
+<span class='line'>797</span>         2.2.2.          Execute TRUE branch of     if (! hasAceEditor) {...} else {...}
+<span class='line'>798</span>         2.2.2.1.            Execute     this._Initialize ();
+<span class='line'>799</span>                                 Executed immediately
+<span class='line'>800</span>         2.2.2.1.1.              Execute:    this._Exec (this.fCallbackOnLoad, null);
+<span class='line'>801</span>                                     In _Initialize (). Now we have a problem if 
+<span class='line'>802</span>                                     fCallbackOnLoad is not defined correctly! 
+<span class='line'>803</span>                                     It will try to call the wrong event handler.
+<span class='line'>804</span>                         
+<span class='line'>805</span>         Solution: Define the event handlers before creating/initializing the ace editor.
+<span class='line'>806</span>                      
+<span class='line'>807</span> [110]:  We cannot use the onChange event as provided by the dijit/Editor component - that
+<span class='line'>808</span>         one only fires if the content has changed AND the component looses focus. In our
+<span class='line'>809</span>         case we need to fire the onChange event as soon as something changed, even if the 
+<span class='line'>810</span>         component has NOT lost focus. To solve this problem we create an observer function
+<span class='line'>811</span>         which detects content changes and gets called once a second. When content change
+<span class='line'>812</span>         has been detected, the observer fires the onChange event. This covers border 
+<span class='line'>813</span>         cases such as the user copying and pasting content (would not be detected by the 
+<span class='line'>814</span>         dijit/Editor provided onKeyUp event). 
+<span class='line'>815</span>         
+<span class='line'>816</span>         The editor content change detection must use the observer pattern across all 
+<span class='line'>817</span>         editor types - even though we only need it for the dijit/editor component. 
+<span class='line'>818</span>         Otherwise when we switch editor type we'll have to provide some complex framework
+<span class='line'>819</span>         to manage observers when editors change.
+<span class='line'>820</span>         
+<span class='line'>821</span> [111]:  Horribly inefficient, especially when we have longer text (Typical 
+<span class='line'>822</span>         Shlemiel-the-painter-solution). Works for now - maybe we can implement a better 
+<span class='line'>823</span>         solution. Possible: Upon creation, augment the Editor component's inner structure 
+<span class='line'>824</span>         with some sort of DOM event handlers which detect content changes and pass these
+<span class='line'>825</span>         on. Such handlers would need to cover border cases such as the user pasting content, 
+<span class='line'>826</span>         i.e. key press detection is insufficient!
+<span class='line'>827</span>         
+<span class='line'>828</span> [112]:  We set a guard to avoid multiple scheduling of window.setTimeout (...), just in case
+<span class='line'>829</span>         .SetRunning() is called multiple times one after another.
+<span class='line'>830</span>         
+<span class='line'>831</span>  */</span><span class="WHIT">      
+<span class='line'>832</span> </span></pre></body></html>

@@ -68,30 +68,6 @@ define
         /* Debug flag - for that extra info in hard places! */
         var gDebug = false;
         
-        var kSchemaPropertiesExercise =
-        {
-            "$schema":      "http://json-schema.org/draft-03/schema#",
-            "title":        "Exercise properties block",
-            "description":  "Properties block describing an exercise",
-            "type":         "object",
-            properties:
-            {
-                "id":
-                {
-                    "description":      "The exercise's unique ID. Must be unique for the entire course.",
-                    "type":             "string",
-                    "pattern":          "^[a-zA-Z0-9.]+$"
-                },
-                "type":
-                {
-                    "description":      "The exercise's solution text type. One of: " +
-                                        "'rtf/plain_text','src/js','src/html','src/plain_text'",
-                    "type":             "string",
-                    "enum":             ["rtf/plain_text", "src/js", "src/html", "src/plain_text"]
-                }
-            }
-        };
-        
         var TWorksheet;
         var ret;
 
@@ -103,6 +79,36 @@ define
          */
         TWorksheet = 
         {
+            ESaveDecision:
+            {
+                kDoNotSave: 0,
+                kDoSave:    1
+            },
+            
+            kSchemaPropertiesExercise:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Exercise properties block",
+                "description":  "Properties block describing an exercise",
+                "type":         "object",
+                properties:
+                {
+                    "id":
+                    {
+                        "description":      "The exercise's unique ID. Must be unique for the entire course.",
+                        "type":             "string",
+                        "pattern":          "^[a-zA-Z0-9.]+$"
+                    },
+                    "type":
+                    {
+                        "description":      "The exercise's solution text type. One of: " +
+                                            "'rtf/plain_text','src/js','src/html','src/plain_text'",
+                        "type":             "string",
+                        "enum":             ["rtf/plain_text", "src/js", "src/html", "src/plain_text"]
+                    }
+                }
+            },
+        
             /**
              *  The controller. Controls the behaviour of this worksheet.
              * 
@@ -415,7 +421,7 @@ define
              */
             NotifyPreTransitionActions: function (actions)
             {
-                var _host = this; 
+                var _this = this; 
                 
                 var doC;
                 var doE;
@@ -430,7 +436,7 @@ define
                 (
                     function (decision)
                     {
-                        return _host._NotifySystemFileSave (decision);           /* [80] */
+                        return _this._NotifySystemFileSave (decision);           /* [80] */
                     }
                 ).then
                 (
@@ -441,51 +447,51 @@ define
                         
                         if ((! doC)  &&  (! doE))
                         {
-                            _host._NotifySystemControllerEvent ("kSuccess");     /* [90] */
+                            _this._NotifySystemControllerEvent ("kSuccess");     /* [90] */
                         }
                         else if ((! doC)  &&  (  doE))
                         {
-                            _host._NotifySystemEditorChangeObserverSetPaused ().then
+                            _this._NotifySystemEditorChangeObserverSetPaused ().then
                             (
-                                function () {return _host._NotifyUIMigrateEditor ();}
+                                function () {return _this._NotifyUIMigrateEditor ();}
                             ).then
                             (
-                                function () {return _host._NotifyUIExpandNext ();}
+                                function () {return _this._NotifyUIExpandNext ();}
                             ).then
                             (
-                                function () {return _host._NotifyUIScrollWindow ();}
+                                function () {return _this._NotifyUIScrollWindow ();}
                             ).then
                             (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
+                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                         else if ((  doC)  &&  (! doE))
                         {
-                            _host._NotifySystemEditorChangeObserverSetPaused ().then
+                            _this._NotifySystemEditorChangeObserverSetPaused ().then
                             (
-                                function () {return _host._NotifyUICollapseCurrent ();}
+                                function () {return _this._NotifyUICollapseCurrent ();}
                             ).then
                             (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
+                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                         else if ((  doC)  &&  (  doE))
                         {
-                            _host._NotifySystemEditorChangeObserverSetPaused ().then
+                            _this._NotifySystemEditorChangeObserverSetPaused ().then
                             (
-                                function () {return _host._NotifyUICollapseCurrent ();}
+                                function () {return _this._NotifyUICollapseCurrent ();}
                             ).then
                             (
-                                function () {return _host._NotifyUIMigrateEditor ();}
+                                function () {return _this._NotifyUIMigrateEditor ();}
                             ).then
                             (
-                                function () {return _host._NotifyUIExpandNext ();}
+                                function () {return _this._NotifyUIExpandNext ();}
                             ).then
                             (
-                                function () {return _host._NotifyUIScrollWindow ();}
+                                function () {return _this._NotifyUIScrollWindow ();}
                             ).then
                             (
-                                function () {_host._NotifySystemControllerEvent ("kSuccess");}
+                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                     }
@@ -542,7 +548,7 @@ define
 
             startup: function ()
             {
-                var _host           = this;
+                var _this           = this;
                 var kImgBaseURL     = _require.toUrl ("courseware/img");
 
                 if (gDebug) console.log ("TWorksheet::startup ()");
@@ -581,7 +587,7 @@ define
                     (
                         {
                             label:      "Solutions to clipboard",
-                            onClick:    function () {_host._NotifySystemControllerEvent.call (_host, "kCopyAll");}
+                            onClick:    function () {_this._NotifySystemControllerEvent.call (_this, "kCopyAll");}
                         }
                     )
                 );
@@ -615,10 +621,10 @@ define
                             fHost:              window,
                             fWidth:             "745px",                                /* [20] */
                             fHeight:            "480px",                                /* [20] */
-                            onFinishedChange:   function () {_host._NotifySystemControllerEvent.call (_host, "kChange"   );},
+                            onFinishedChange:   function () {_this._NotifySystemControllerEvent.call (_this, "kChange"   );},
                             onFinishedLoad:     function () {},
-                            onRequestCancel:    function () {_host._NotifySystemControllerEvent.call (_host, "kRead"     );},
-                            onRequestSave:      function () {_host._NotifySystemControllerEvent.call (_host, "kSave"     );},
+                            onRequestCancel:    function () {_this._NotifySystemControllerEvent.call (_this, "kRead"     );},
+                            onRequestSave:      function () {_this._NotifySystemControllerEvent.call (_this, "kSave"     );},
                         }
                     );
                     this.fEditor.startup ();
@@ -631,13 +637,13 @@ define
                             "buttons":
                             [
                                 {
-                                    label:      "Yes",
-                                    onClick:    function () {_host.fDlgDoSaveConfirm.fSemaphore.resolve (true);}    /* [70] */
+                                    label:      "No",
+                                    onClick:    function () {}   /* [70] */
                                 },
                                 {
-                                    label:      "No",
-                                    onClick:    function () {_host.fDlgDoSaveConfirm.fSemaphore.resolve (false);}   /* [70] */
-                                }
+                                    label:      "Yes",
+                                    onClick:    function () {}    /* [70] */
+                                },
                             ]
                         }
                     );
@@ -650,7 +656,7 @@ define
                         ndeExercise                         = ndeListExercises [i];
                         
                         ndeProps                            = domAttr.get (ndeExercise, "data-courseware-props");
-                        ndeProps                            = JSONUtils.GetAsObject (ndeProps, kSchemaPropertiesExercise, "TWorksheet::startup()");
+                        ndeProps                            = JSONUtils.GetAsObject (ndeProps, this.kSchemaPropertiesExercise, "TWorksheet::startup()");
                         fragments                           = ndeProps.type.split ("/");
                         
                         /* Create exercise object and register it with the controller. */
@@ -674,7 +680,7 @@ define
                                 label:          "<img src=\"" + iconURLEdit + "\"/>",
                                 onClick: function () 
                                 {
-                                    _host._NotifySystemFileOpenExercise (this.exerciseID);
+                                    _this._NotifySystemFileOpenExercise (this.exerciseID);
                                 }
                             }
                         )
@@ -782,26 +788,25 @@ define
                     console.log ("actions: " + JSON.stringify (actions));
                 }
                   
-                d = new TDeferred ();
-                
                 if (actions.saveAction == this.fController.ESaveAction.kSave)
                 {
-                    d.resolve (true);
+                    d = new TDeferred ();
+                    d.resolve (this.ESaveDecision.kDoSave);
                 }
                 else if (actions.saveAction == this.fController.ESaveAction.kSaveConfirm)
                 {
-                    this.fDlgDoSaveConfirm.fSemaphore = d;                      /* [70] */
-                    this.fDlgDoSaveConfirm.Show ("Unsaved changes...", "Would you like to save?");
+                    d = this.fDlgDoSaveConfirm.Show ("Unsaved changes...", "Would you like to save?");
                 }
                 else
                 {
-                    d.resolve (false);
+                    d = new TDeferred ();
+                    d.resolve (this.ESaveDecision.kDoNotSave);
                 }
                 
                 return d;
             },
 
-            _NotifySystemFileSave: function (decision)
+            _NotifySystemFileSave: function (idDecision)
             {
                 var d;
                 
@@ -809,7 +814,7 @@ define
                 
                 d = new TDeferred ();
                 
-                if (decision == true)
+                if (idDecision == this.ESaveDecision.kDoSave)
                 {
                     this._SystemFileSaveCurrent ();
                 }
@@ -820,7 +825,7 @@ define
             
             _NotifyUICollapseCurrent: function ()
             {
-                var _host = this;
+                var _this = this;
                 var d;
                 
                 if (gDebug)
@@ -837,7 +842,7 @@ define
                         duration:   250,
                         onEnd:      function () 
                         {
-                            _host.fExerciseCurrent.fIsOpen = false;
+                            _this.fExerciseCurrent.fIsOpen = false;
                             d.resolve ();
                         }
                     }
@@ -848,7 +853,7 @@ define
             
             _NotifyUIExpandNext: function ()
             {
-                var _host = this;
+                var _this = this;
                 var d;
                 
                 if (gDebug)
@@ -865,7 +870,7 @@ define
                         duration:   250,
                         onEnd:      function ()
                         {
-                            _host.fExerciseNext.fIsOpen = true;
+                            _this.fExerciseNext.fIsOpen = true;
                             d.resolve ();
                         }
                     }
@@ -894,8 +899,6 @@ define
             
             _NotifyUIScrollWindow: function ()
             {
-                var _host = this;
-                
                 var yNode;
                 var yTarget;
                 var d;
@@ -1082,7 +1085,8 @@ define
  [60]:     The TController calls each event handler with this TWorksheet instance as context - therefore, 
            in all event handlers we can use the 'this' reference to refer to this TWorksheet instance.
        
- [70]:     Type dojo/Deferred. Works with the dojo promises framework. I didn't know what better name to choose than 'Semaphore'.
+ [70]:     We make TButtonDialog.Show () then-able (dojo/Deferred). The promise resolves when the user clicks one of the buttons,
+           with the index of the button clicked.
 
  [80]:     Normally I don't like to put a function call into a return statement, but in this case 
            it made no sense to create a local variable.

@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Insert_here
+ *  @fileOverview        Courseware module
  */
 define 
 (
@@ -9,8 +9,6 @@ define
         "dojo/dom-construct",
         "dojo/request/xhr",
         "dojo/query",
-        "require",
-        "dojo/request/script",
         "courseware/util/validator/TValidatorJSON",
         "courseware/gui/TCourseWareGUI/TCourseWareGUI",
         "courseware/storage/TLocalStorage",
@@ -23,8 +21,6 @@ define
         domConstruct,
         xhr,
         query,
-        _require,
-        libLoader,
         jsonValidator,
         TGUI,
         TLocalStorage
@@ -34,18 +30,18 @@ define
         var ret;
 
         /**
-         * Insert_explanation_here
+         * The Courseware module. Provides an in-broswer interactive learning 
+         * environment which runs entirely in the web browser. 
          * 
-         * @class       TChangeToClassName
+         * @class       TCourseWare
          */
         TCourseWare = 
         {
             /**
-             * JS schema for a course descriptor. We use the dojox/json/schema validator to 
-             * perform the actual validation.
+             * JSON schema to validate the course descriptor.
              * 
              * @constant
-             * @type        JSObject
+             * @type        JSON schema
              * @private
              */
             kSchemaDescriptorGlobal:
@@ -93,14 +89,14 @@ define
                             },
                             "onUnloadArticle":
                             {
-                                "description":  "Function to be executed before an article is being unloaded.",
+                                "description":  "Function to be executed before an article is being unloaded. Function call should have no parameters.",
                                 "type":         "string"
                             }
                         }
                     },
                     "rootNodeID":
                     {
-                        "description":  "Unique ID of the root node",
+                        "description":  "Unique ID of the root node.",
                         "type":         "string"
                     },
                     "descriptor":
@@ -155,12 +151,13 @@ define
             },
 
             /**
-             * JS followup schema from a course descriptor: Folder node. 
-             * We use the dojox/json/schema validator to perform the actual 
-             * validation.
+             * JSON schema to validate a folder node descriptor. A folder appears 
+             * in the content panel with a folder symbol and is used to group 
+             * resources (e.g. all lessons) together into a category . In the 
+             * content panel, folder nodes can be collapsed / expanded.
              * 
              * @constant
-             * @type        JSObject
+             * @type        JSON schema
              * @private
              */
             kSchemaDescriptorNodeFolder:
@@ -181,12 +178,11 @@ define
             },
 
             /**
-             * JS followup schema from a course descriptor: Lesson node. 
-             * We use the dojox/json/schema validator to perform the actual 
-             * validation.
+             * JSON schema to validate a lesson node. A lesson is the basic unit of a  
+             * course.
              * 
              * @constant
-             * @type        JSObject
+             * @type        JSON schema
              * @private
              */
             kSchemaDescriptorNodeLesson:
@@ -220,12 +216,11 @@ define
             },
 
             /**
-             * JS followup schema from a course descriptor: Ext. resource node. 
-             * We use the dojox/json/schema validator to perform the actual 
-             * validation.
+             * JSON schema to validate an external resource node. External resources are 
+             * always loaded into a new window.
              * 
              * @constant
-             * @type        JSObject
+             * @type        JSON schema
              * @private
              */
             kSchemaDescriptorNodeExtRes:
@@ -244,25 +239,79 @@ define
                 }
             },
             
+            /**
+             * Name of the callback that is invoked when the entire course has been loaded.
+             * 
+             * @type        String
+             * @private
+             */
             fHandlerOnLoadCourse:       null,
+            
+            /**
+             * Name of the callback that is invoked when the entire course has been loaded.
+             * 
+             * @type        String
+             * @private
+             */
             fHandlerOnLoadArticle:      null,
+
+            /**
+             * Name of the callback that is invoked when the entire course has been loaded.
+             * 
+             * @type        String
+             * @private
+             */
             fHandlerOnUnloadArticle:    null,
 
             /**
-             * Insert_explanation_here
+             * The web gui component.
              * 
-             * @type        Insert_typename_here
+             * @type        courseware/gui/TCourseWareGUI/TCourseWareGUI
              * @private
              */
             fGUI: null,
             
+            /**
+             * The bridge to the web browser's HTML5 localStorage.
+             * 
+             * @type        window/localStorage
+             * @private
+             */
             fLocalStorage: null,
             
             /**
-             * Insert_explanation_here
+             * Retrieve the solution to exercise #id from the local storage.
              * 
-             * @param   {String}    urlDescriptor       Insert_explanation_here
-             * @throws  {type}      Insert_explanation_here
+             * @param   {String}    id          The unique ID of the exercise.
+             * @returns {String}                The solution's content, or an 
+             *                                  empty string if the solution doesn't
+             *                                  exist.
+             */
+            ExerciseSolution_Get: function (id)
+            {
+                var ret;
+                
+                ret = this.fLocalStorage.Get (id, "");
+                
+                return ret;
+            },
+            
+            /**
+             * Saves the solution to exercise #id to the local storage.
+             * 
+             * @param   {String}    id          The unique ID of the exercise.
+             * @param   {String}    content     The solution's content.
+             */
+            ExerciseSolution_Save: function (id, content)
+            {
+                this.fLocalStorage.Set (id, content);
+            },
+
+            /**
+             * Load the course into the environment.
+             * 
+             * @param   {String}    urlDescriptor       URL of the descriptor's JSON file.
+             * @throws  {type}      Error if the course failed to load.
              * @public
              */
             LoadCourse: function (urlDescriptor)
@@ -288,139 +337,44 @@ define
                 );
             },
 
+            /**
+             * Loads the article with the given ID into the article view.
+             * 
+             * @param   {string}        id
+             * @public
+             */
             LoadArticle: function (id)
             {
                 this.fGUI.LoadArticle (id);
             },
             
+            /**
+             * Receive notification that an article has finished loading.
+             */
             NotifyHasLoadedArticle: function ()
             {
                 this._EventExec (this.fHandlerOnLoadArticle);
             },
             
+            /**
+             * Receive notification that an article has finished unloading.
+             */
             NotifyUnloadingArticle: function ()
             {
                 this._EventExec (this.fHandlerOnUnloadArticle);
             },
             
-            ExerciseSolutionLoad: function (id)
-            {
-                var data;
-                var ret;
-                
-                data = this.fLocalStorage.Get (id, "");
-                ret  = 
-                {
-                    id:     id, 
-                    data:   data
-                };
-                
-                return ret;
-            },
-            
-            ExerciseSolutionSave: function (id, content)
-            {
-                this.fLocalStorage.Set (id, content);
-            },
-
-            _LoadCourse: function (descriptor)
-            {
-                var _this = this;
-                
-                var urls;
-                var i;
-                var n;
-                var url;
-                var lnk;
-                var headNode;
-                
-                /* 1. Validate descriptor */
-                this._AssertDescriptorValid (descriptor);
-
-                /* 2. Retrieve event handler names for the functions covering events: 
-                 *     'course loaded', 
-                 *     'article loaded',
-                 *     'article unloaded'.                                      [30]
-                 */
-                this.fHandlerOnLoadCourse       = descriptor.scripts.onLoadCourse;
-                this.fHandlerOnLoadArticle      = descriptor.scripts.onLoadArticle;
-                this.fHandlerOnUnloadArticle    = descriptor.scripts.onUnloadArticle;
-                
-                /* 3. Load custom style sheets and scripts */
-                /* 3.1. Load custom stylesheets into the page header.                [20] */
-                headNode    = query ("head");
-                urls        = descriptor.stylesheets;
-                n           = urls.length;
-                if (n >= 1)
-                {
-                    for (i = 0; i < n; i++)
-                    {
-                        url = urls [i];
-                        lnk = '<link rel="stylesheet" type="text/css" href="' + url + '">';
-                        headNode.append (lnk);
-                    }
-                }
-
-                var url;
-                
-                /* 3.2. Load custom scripts and execute onLoadCourse event handler
-                 *      after all scripts have loaded
-                 */
-                urls = descriptor.scripts.resources;
-                n    = urls.length;
-                if (n >= 1)
-                {
-                    require 
-                    (
-                        urls,
-                        function ()
-                        {
-                                    _this.fGUI.LoadCourse (descriptor);
-                                    _this._EventExec (_this.fHandlerOnLoadCourse);
-                                    _this.fGUI.LoadInitialArticle ();
-                        }
-                    );
-                }
-            },
-            
             /**
-             * Dojo specific cTor.
-             * 
-             * @param   {type} params
-             * @param   {type} srcNodeRef
+             * cTor. 
              */
-            constructor: function (params, srcNodeRef)
+            constructor: function ()
             {
                 this.fLocalStorage = new TLocalStorage ({driver:"compression"});
             },
 
-            /* -------------------------------------------------------------
-             * Dijit overrides 
-             * ------------------------------------------------------------- */
-        
             /**
-             * Startup method (for widgets). This overrides the _WidgetBase::startup ().
-             * 
-             * Excerpt, Dojo documentation:
-             *     + postCreate
-             *          This is typically the workhorse of a custom widget. The 
-             *          widget has been rendered (but note that child widgets in 
-             *          the containerNode have not!). The widget though may not 
-             *          be attached to the DOM yet so you shouldn’t do any sizing 
-             *          calculations in this method.
-             *     
-             *     + startup
-             *          If you need to be sure parsing and creation of any child 
-             *          widgets has completed, use startup. This is often used 
-             *          for layout widgets like BorderContainer. If the widget 
-             *          does JS sizing, then startup() should call resize(), 
-             *          which does the sizing.
+             * Startup method. Overrides _WidgetBase::startup ().
              */
-            postCreate: function ()
-            {
-                
-            },
-            
             startup: function ()
             {
                 var _this = this;
@@ -440,6 +394,13 @@ define
                 this.fGUI.startup           ();
             },
             
+            /**
+             * Validates the given course descriptor. If the descriptor fails validation
+             * we will throw an exception with a detailed error message.
+             * 
+             * @param       {JSON string}   descriptor      The descriptor to be validated.
+             * @throws      {string}        An exception (message containing details) if the given descriptor wasn't valid. 
+             */
             _AssertDescriptorValid: function (descriptor)
             {
                 var i;
@@ -480,6 +441,24 @@ define
                 }
             },
             
+            /**
+             * An event handler executor. Executes one of the TCourseWare module wide 
+             * events (defined in the descriptor which was loaded during execution of
+             * the {@link #LoadCourse} method. 
+             * 
+             * Executes the given function in context 'window'. The provided 
+             * function name is assumed to be a string containing a dot separated 
+             * path:
+             * 
+             *     <code>courseName dot handlerName</code>
+             *     
+             * (e.g. 'it001.onLoadCourse'). This maps to an object hierarchy within the 
+             * global <code>window</code>: <code>window.courseName.handlerName</code>
+             * which means that this object hierarchy has to be set up before any of the
+             * event handlers is called.
+             * 
+             * @param   {string}    fn      The handler to be called.
+             */
             _EventExec: function (fn)
             {
                 var path;
@@ -512,7 +491,74 @@ define
                         o.call (window);
                     }
                 }
-            }
+            },
+
+            /**
+             * Worker method to load a course into the environment. Clients must 
+             * provide a JSON record describing the course.
+             * 
+             * @param       {type} descriptor   The JSON record describing the course.
+             *                                  Must comply with the JSON schema 
+             *                                  defined in {@link #kSchemaDescriptorGlobal}.
+             */
+            _LoadCourse: function (descriptor)
+            {
+                var _this = this;
+                
+                var urls;
+                var i;
+                var n;
+                var url;
+                var lnk;
+                var headNode;
+                
+                /* 1. Validate descriptor */
+                this._AssertDescriptorValid (descriptor);
+
+                /* 2. Retrieve event handler names for the functions covering events: 
+                 *     'course loaded', 
+                 *     'article loaded',
+                 *     'article unloaded'.                                      [30]
+                 */
+                this.fHandlerOnLoadCourse       = descriptor.scripts.onLoadCourse;
+                this.fHandlerOnLoadArticle      = descriptor.scripts.onLoadArticle;
+                this.fHandlerOnUnloadArticle    = descriptor.scripts.onUnloadArticle;
+                
+                /* 3. Load custom style sheets and scripts */
+                /* 3.1. Load custom stylesheets into the page header.                [20] */
+                headNode    = query ("head");
+                urls        = descriptor.stylesheets;
+                n           = urls.length;
+                if (n >= 1)
+                {
+                    for (i = 0; i < n; i++)
+                    {
+                        url = urls [i];
+                        lnk = '<link rel="stylesheet" type="text/css" href="' + url + '">';
+                        headNode.append (lnk);
+                    }
+                }
+
+                /* 3.2. Load custom scripts and execute onLoadCourse event handler
+                 *      after all scripts have loaded
+                 */
+                urls = descriptor.scripts.resources;
+                n    = urls.length;
+                if (n >= 1)
+                {
+                    require 
+                    (
+                        urls,
+                        function ()
+                        {
+                            _this.fGUI.LoadCourse (descriptor);
+                            _this._EventExec (_this.fHandlerOnLoadCourse);
+                            _this.fGUI.LoadInitialArticle ();
+                        }
+                    );
+                }
+            },
+            
         };
     
         ret = declare ("TCourseWare", [_WidgetBase], TCourseWare);
