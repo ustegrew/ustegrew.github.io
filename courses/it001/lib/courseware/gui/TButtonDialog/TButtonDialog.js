@@ -168,7 +168,7 @@ define
         TButtonDialog = 
         {
             /**
-             * JSON schema to validate the dialog's descriptor.
+             * JSON schema to validate the button dialog's configuration descriptor.
              * 
              * @constant
              * @type        JSON schema

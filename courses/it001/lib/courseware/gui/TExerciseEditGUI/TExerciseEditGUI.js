@@ -8,6 +8,7 @@ define
         "dijit/_WidgetBase",
         "dojo/has",
         "dojo/dom-construct",
+        "courseware/util/validator/TValidatorJSON",
         "dijit/MenuBar",
         "dijit/PopupMenuBarItem",
         "dijit/MenuItem",
@@ -24,6 +25,7 @@ define
         _WidgetBase,
         has,
         domConstruct,
+        JSObjectValidator,
         TMenuBar,
         TPopupMenuBarItem,
         TMenuItem,
@@ -59,6 +61,7 @@ define
             /**
              * Possible states of this observer.
              * 
+             * @enum        {int}
              * @private
              */
             var EObserverState =
@@ -211,6 +214,27 @@ define
          * </dl>
          * <p><br/></p>
          * 
+         * <b>Please note</b> that the component will look different depending on 
+         * the environment. For example, if we run on anything but Chrome and Firefox
+         * the rich text editor will show a reduced feature set. Tests showed that 
+         * on Safari, the underlying dijit/Editor didn't do formatting properly. In summary:
+         * 
+         * <table border="1">
+         *     <tr>
+         *         <th>Browser used</th>
+         *         <th>Specifics</th>
+         *     </tr>
+         *     <tr>
+         *         <td>Chrome or Firefox</td>
+         *         <td>All features offered.</td>
+         *     </tr>
+         *     <tr>
+         *         <td>Anything but Chrome or Firefox</td>
+         *         <td>Rich text editor has no formatting capabilities.</td>
+         *     </tr>
+         * </table>
+         * <p><br/></p>
+         * 
          * <b>Example use - Instantiate editor, set type, set content, get content.</b>
          * @example
          * require 
@@ -282,19 +306,142 @@ define
          */
         TExerciseEditGUI = 
         {
+            /**
+             * JSON schema to validate the editor's configuration descriptor.
+             * 
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaParams:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Content editor descriptor",
+                "description":  "Descriptor for a content editor.",
+                "type":         "object",
+                properties:
+                {
+                    "fHeight":
+                    {
+                        "description":      "The total height of the GUI, incl. menu bar",
+                        "type":             "string"
+                    },
+                    "fHost":
+                    {
+                        "description":      "The object hosting this editor",
+                        "type":             "object"
+                    },
+                    "fWidth":
+                    {
+                        "description":      "The total width of the GUI",
+                        "type":             "string"
+                    },
+                    "onFinishedChange":
+                    {
+                        "description":      "Callback to invoke when the observer noticed a content change",
+                        "type":             "function"
+                    },
+                    "onFinishedLoad":
+                    {
+                        "description":      "Callback to invoke when the content has finished loading",
+                        "type":             "function"
+                    },
+                    "onRequestCancel":
+                    {
+                        "description":      "Callback to invoke when the user requested to close the editor",
+                        "type":             "function"
+                    },
+                    "onRequestSave":
+                    {
+                        "description":      "Callback to invoke when the user requested to save the current content",
+                        "type":             "function"
+                    },
+                }
+            },
+
+            /**
+             * Possible document types.
+             * 
+             * @private
+             */
             EType:
             {
                 kRichText:      10,
                 kSourceCode:    20
             },
             
+            /**
+             * Possible source language types.
+             * 
+             * @private
+             */
             ESrcLang:
             {
                 kJavascript:    10,
                 kHTML:          20,
                 kPlaintext:     30
             },
+  
+            /**
+             * The API adapter to the underlying editor.
+             * 
+             * @type        {JSObject}
+             * @private
+             */
+            fAPIEditor:                     null,
             
+            /**
+             * The configuration. Holds quantities such as height/width etc.
+             * 
+             * @type        {JSON}
+             * @private
+             */
+            fConfig:                        null,
+            
+            /**
+             * The event handlers.
+             * 
+             * @type        {JSObject}
+             * @private
+             */
+            fHandlers:                      null,
+            
+            /**
+             * The hosting client.
+             * 
+             * @type        {JSObject}
+             * @private
+             */
+            fHost:                          null,
+            
+            /**
+             * The associated content observer - to observe the contents for changes.
+             * 
+             * @type        {TObserver_ContentChanged}
+             * @private
+             */
+            fObserver_ContentChanged:       null,
+            
+            /**
+             * The outer DOM element wrapping editor and menu bar.
+             * 
+             * @type        {DOMElement}
+             * @private
+             */
+            fPnlWrapper:                    null,
+            
+            /**
+             * The DOM element wrapping the editor.
+             * 
+             * @type        {DOMElement}
+             * @private
+             */
+            fPnlWrapperEdit:                null,
+
+            /**
+             * Clear the <code>fHasChanged</code> flag. This flag is set to <code>true</code>
+             * whenever the associated change observer notices that the editor's content has changed.
+             */
             ClearFlagChanged : function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::ClearFlagChanged ()");
@@ -302,6 +449,9 @@ define
                 this.fAPIEditor.fHasChanged = false;
             },
             
+            /**
+             * Destroys this editor instance
+             */
             Destroy: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::Destroy ()");
@@ -309,6 +459,11 @@ define
                 this.fAPIEditor.Destroy ();
             },
 
+            /**
+             * Returns the stored text content.
+             * 
+             * @return      {String}        The stored content.
+             */
             GetContent: function () 
             {
                 if (gDebug) console.log ("TExerciseEditGUI::GetContent ()");
@@ -319,7 +474,18 @@ define
                 
                 return ret;
             },
-            
+
+            /**
+             * Returns <code>true</code> if the associated observer noticed a content change, 
+             * <code>false</code> otherwise.<br/>
+             * Note that the value of the hasChanged flag is persistent, i.e. clients have 
+             * to reset this flag deliberately by calling the {@link TExerciseEditGUI#ClearFlagChanged}
+             * method.  
+             * 
+             * @return      {boolean}       <code>true</code> if the associated observer 
+             *                              noticed a content change, <code>false</code> 
+             *                              otherwise.
+             */
             HasChanged: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::HasChanged ()");
@@ -330,28 +496,91 @@ define
                 
                 return ret;
             },
-            
+
+            /**
+             * Sets the editor's content.
+             * 
+             * @param       {String}    content         The content we want to set in the editor.
+             */
             SetContent: function (content)
             {
                 if (gDebug) console.log ("TExerciseEditGUI::SetContent ()");
                 
                 this.fAPIEditor.SetContent (content);
             },
-            
+
+            /**
+             * Suspends change observation, i.e. sets the associated change observer to 
+             * inactive state {@link TObserver_ContentChanged}.  
+             */
             SetOberverContentChanged_Paused: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::SetOberverContentChanged_Paused ()");
                 
                 this.fAPIEditor.SetObserverPaused ();
             },
-            
+
+            /**
+             * Resumes change observation, i.e. sets the associated change observer to 
+             * active state {@link TObserver_ContentChanged}.
+             */
             SetOberverContentChanged_Running: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::SetOberverContentChanged_Running ()");
                 
                 this.fAPIEditor.SetObserverRunning ();
             },
-            
+
+            /**
+             * Sets the editor type. This will also choose the appropriate editor. For example, 
+             * if the type is set to "rtf" then we will show a rich text editor. The following 
+             * types and languages are available:
+             * 
+             * <table border="1">
+             *     <tr>
+             *         <th>Type</th>
+             *         <th>Language</th>
+             *         <th>Document type</th>
+             *     </tr>
+             *     <tr>
+             *         <td><code>rtf</code></td>
+             *         <td><i>ignored</i></td>
+             *         <td>Free, formattable text.</td>
+             *     </tr>
+             *     <tr>
+             *         <td><code>src</code></td>
+             *         <td><code>js</code></td>
+             *         <td>Javascript source code.</td>
+             *     </tr>
+             *     <tr>
+             *         <td><code>src</code></td>
+             *         <td><code>html</code></td>
+             *         <td>HTML source code</td>
+             *     </tr>
+             *     <tr>
+             *         <td><code>src</code></td>
+             *         <td><code>plain_text</code></td>
+             *         <td>Plain text without formatting.</td>
+             *     </tr>
+             *     <tr>
+             *         <td><code>src</code></td>
+             *         <td><i>unknown</i></td>
+             *         <td>Plain text without formatting. Will create an entry in the web browser's console log.</td>
+             *     </tr>
+             *     <tr>
+             *         <td><i>unknown</i></td>
+             *         <td><i>ignored</i></td>
+             *         <td>Plain text without formatting.  Will create an entry in the web browser's console log.</td>
+             *     </tr>
+             * </table>
+             * 
+             * Depending on type and language we will choose the appropriate underlying 
+             * editor. For free form text we will present a rich text editor, for source text
+             * we will present a source code editor. For unknown types and/or languages
+             * we will present a plain vanilla text editor.
+             * 
+             * @return      {} 
+             */
             SetType: function (type, lang)
             {
                 if (gDebug) console.log ("TExerciseEditGUI::SetType ()");
@@ -359,25 +588,18 @@ define
                 this._SetType (type, lang);
             },
             
-            fAPIEditor:                     null,
-            fConfig:                        null,
-            fHandlers:                      null,
-            fHost:                          null,
-            fObserver_ContentChanged:       null,
-            fPnlWrapper:                    null,
-            fPnlWrapperEdit:                null,
-
             /**
-             * Dojo specific cTor.
+             * cTor.
              * 
-             * @param   {type} params
-             * @returns {undefined}
+             * @param       {JSON}      params      The editor's configuration. Must conform to
+             *                                      {@link TExerciseEditGUI.kSchemaParams}.
              */
             constructor: function (params)
             {
                 if (gDebug) console.log ("TExerciseEditGUI::constructor ()");
                 
-                if ((typeof params.fHost !== 'object') ||  (params.fHost == null))
+                JSObjectValidator.AssertValid (params, this.kSchemaParams, "constructor");
+                if (params.fHost == null)
                 {
                     throw "TExerciseEditGUI::constructor (): params.fHost is " +
                           "not an object. Clients must set params.fHost to a " +
@@ -421,6 +643,9 @@ define
                 };
             },
             
+            /**
+             * dTor
+             */
             destroy: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::destroy ()");
@@ -428,34 +653,8 @@ define
                 this.fAPIEditor.Destroy ();
             },
             
-            /* -------------------------------------------------------------
-             * Dijit overrides 
-             * ------------------------------------------------------------- */
-        
             /**
-             * Sets up the UI. This overrides the _WidgetBase::startup (). 
-             * We don't use the typical way of overriding 
-             * _WidgetBase::postCreate (), because this widget includes 
-             * child widgets (such as BorderContainer), and it's not 
-             * recommended to do JS resizing in the postCreate() method. 
-             * We could get fancy and do part of the instantiation in a 
-             * postCreate() method, but having everything together in 
-             * startup () makes things simpler.
-             * 
-             * Excerpt, Dojo documentation:
-             *     + postCreate
-             *          This is typically the workhorse of a custom widget. The 
-             *          widget has been rendered (but note that child widgets in 
-             *          the containerNode have not!). The widget though may not 
-             *          be attached to the DOM yet so you shouldn’t do any sizing 
-             *          calculations in this method.
-             *     
-             *     + startup
-             *          If you need to be sure parsing and creation of any child 
-             *          widgets has completed, use startup. This is often used 
-             *          for layout widgets like BorderContainer. If the widget 
-             *          does JS sizing, then startup() should call resize(), 
-             *          which does the sizing.
+             * Startup method. Sets up the UI skeleton.
              */
             startup: function ()
             {
@@ -554,7 +753,14 @@ define
                 this.fPnlWrapper        = pnlWrapper;
                 this.fPnlWrapperEdit    = pnlWrapperEdit;
             },
-            
+
+            /**
+             * Sniffs some environment properties (e.g. which browser we run in) and 
+             * returns a record containing various indicators as to what capabilities 
+             * and features we can offer.
+             * 
+             * @return      {JSON}      A record containing feature information. 
+             */
             _GetFeatureProfile: function ()
             {
                 var ret;
@@ -575,7 +781,10 @@ define
                 
                 return ret;
             },
-            
+
+            /**
+             * Specific handler, invoked when content is loaded.
+             */
             _HandleOnLoad: function ()
             {
                 if (gDebug) console.log ("TExerciseEditGUI::_HandleOnLoad ()");
@@ -587,11 +796,27 @@ define
                 this.fHandlers.onFinishedLoad.call (this.fHost);
             },
             
+            /**
+             * Logs a message to the web console.
+             * 
+             * @param       {String}    msg     The message to be logged.
+             * 
+             * @private
+             */
             _Log: function (msg)
             {
                 console.log ("TExerciseEditGUI::" + msg);
             },
 
+            /**
+            * Sets up the editor specific to the desired document type and source language. 
+            * 
+            * @param       {String}     type        The document type (e.g. 'rtf' for free form text).
+            * @param       {String}     srcLang     The source language (e.g. 'js' for javascript).
+            * 
+            * @private
+            * @see          {@link TExerciseEditGUI.SetType}    for details on type and language.
+            */
             _SetType: function (type, srcLang)
             {
                 if (gDebug) console.log ("TExerciseEditGUI::_SetType ('" + type + "', '" + srcLang + "')");

@@ -67,6 +67,7 @@ define
                         e += "(No error details available)";
                     }
 
+                    console.log (e);
                     throw e;
                 }
             }

@@ -816,7 +816,7 @@ define
             {
                 var d;
                 
-                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSave (" + decision + ")");
+                if (gDebug) console.log ("TWorksheet::_NotifySystemFileSave (" + idDecision + ")");
                 
                 d = new TDeferred ();
                 

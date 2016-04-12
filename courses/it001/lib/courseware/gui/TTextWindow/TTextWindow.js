@@ -137,7 +137,7 @@ define
         TTextWindow = 
         {
             /**
-             * JSON schema to validate the text window's descriptor.
+             * JSON schema to validate the text window's configuration descriptor.
              * 
              * @constant
              * @type        JSON schema
