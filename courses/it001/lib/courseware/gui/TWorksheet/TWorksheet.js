@@ -835,9 +835,9 @@ define
             },
             
             /**
+             * Fires an event at the {@link TController}. 
              * 
-             * @param {type} event
-             * @returns {undefined}
+             * @param       {String}        event   The ID of the event to be fired.
              */
             _NotifySystemControllerEvent: function (event)
             {
@@ -847,8 +847,10 @@ define
             },
             
             /**
+             * Suspend the Editor's change observer.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the observer has been suspended.
+             * @see     {@link TExerciseEditGUI}
              */
             _NotifySystemEditorChangeObserverSetPaused: function ()
             {
@@ -865,8 +867,10 @@ define
             },
             
             /**
+             * Resumes/Runs the Editor's change observer.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the observer has been resumed.
+             * @see     {@link TExerciseEditGUI}
              */
             _NotifySystemEditorChangeObserverSetRunning: function ()
             {
@@ -883,9 +887,10 @@ define
             },
             
             /**
+             * Opens the exercise with the given <code>exerciseID</code> for 
+             * solution editing.
              * 
-             * @param {type} exerciseID
-             * @returns {undefined}
+             * @param {String}  exerciseID      UID of the exercise to be opened.
              */
             _NotifySystemFileOpenExercise: function (exerciseID)
             {
@@ -926,26 +931,34 @@ define
             },
             
             /**
+             * Establishes whether the solution to the currently open exercise 
+             * should be saved. The function returns a promise which carries 
+             * the answer as parameter.
              * 
-             * @param {type} actions
-             * @returns {Deferred_L8._a|TWorksheet_L38.TWorksheet@pro;fDlgDoSaveConfirm@call;Show|Deferred_L8._11}
+             * @param   {TController.ESaveAction}   action  Whether we'd like to 
+             *                                              just save, get user 
+             *                                              confirmation or skip saving.
+             *                                              
+             * @returns {dojo/Deferred}     A promise, resolved when the decision 
+             *                              has been made re saving the solution 
+             *                              to the curent exercise.
              */
-            _NotifySystemFileSave_PreflightCheck: function (actions)
+            _NotifySystemFileSave_PreflightCheck: function (action)
             {
                 var d;
                 
                 if (gDebug)
                 {
-                    console.log ("_NotifySystemFileSave_PreflightCheck (actions)");
-                    console.log ("actions: " + JSON.stringify (actions));
+                    console.log ("_NotifySystemFileSave_PreflightCheck (action)");
+                    console.log ("action: " + JSON.stringify (action));
                 }
                   
-                if (actions.saveAction == this.fController.ESaveAction.kSave)
+                if (action.saveAction == this.fController.ESaveAction.kSave)
                 {
                     d = new TDeferred ();
                     d.resolve (this.ESaveDecision.kDoSave);
                 }
-                else if (actions.saveAction == this.fController.ESaveAction.kSaveConfirm)
+                else if (action.saveAction == this.fController.ESaveAction.kSaveConfirm)
                 {
                     d = this.fDlgDoSaveConfirm.Show ("Unsaved changes...", "Would you like to save?");
                 }
@@ -959,9 +972,14 @@ define
             },
 
             /**
+             * Saves the solution to the currently opened exercise, if indicated by 
+             * <code>idDecision</code>.
              * 
-             * @param {type} idDecision
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @param   {ESaveDecision}     idDecision      An enum value which denotes whether
+             *                                              we should save or not.
+             *                                              
+             * @returns {dojo/Deferred}     A promise, resolved when the solution to the 
+             *                              current exercise has been saved.
              */
             _NotifySystemFileSave: function (idDecision)
             {
@@ -981,8 +999,10 @@ define
             },
             
             /**
+             * Collapses the editor panel of the currently opened exercise.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the editor panel
+             *                              in the current exercise has finished collapsing.
              */
             _NotifyUICollapseCurrent: function ()
             {
@@ -1013,8 +1033,10 @@ define
             },
             
             /**
+             * Expands the editor panel of the exercise the user would like to work on next.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the editor panel
+             *                              in the next exercise has finished expanding.
              */
             _NotifyUIExpandNext: function ()
             {
@@ -1045,8 +1067,12 @@ define
             },
             
             /**
+             * Migrates the editor from the editor panel of the currently opened 
+             * exercise to the editor panel of the exercise to be opened next.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the editor 
+             *                              has finished migrating from the current to 
+             *                              the next exercise.
              */
             _NotifyUIMigrateEditor: function ()
             {
@@ -1067,8 +1093,10 @@ define
             },
             
             /**
+             * Scrolls the editor panel of the currently opened exercise into view.
              * 
-             * @returns {Deferred_L8._a|Deferred_L8._11}
+             * @returns {dojo/Deferred}     A promise, resolved when the editor 
+             *                              panel has finished scrolling into view.
              */
             _NotifyUIScrollWindow: function ()
             {
@@ -1102,8 +1130,10 @@ define
             },
             
             /**
+             * Gathers all solutions in this worksheet and displays them as formatted 
+             * text in a text window. The user can copy them to clipboard from there.
              * 
-             * @returns {undefined}
+             * @private
              */
             _SystemCollectSolutions: function ()
             {
@@ -1142,8 +1172,10 @@ define
             },
             
             /**
+             * Sets the content of the editor with the solution text of the currently 
+             * opened exercise.
              * 
-             * @returns {undefined}
+             * @private
              */
             _SystemFileLoadCurrent: function ()
             {
@@ -1154,8 +1186,10 @@ define
             },
 
             /**
+             * Commits the solution of the currently opened exercise to local 
+             * storage.
              * 
-             * @returns {undefined}
+             * @private
              */
             _SystemFileSaveCurrent: function ()
             {
@@ -1181,7 +1215,11 @@ define
                 var ret;
                 
                 if (has ("ff"))
-                {   /* For Firefox - we can't use dojo/dom-geometry */
+                {   /* For Firefox - we can't use dojo/dom-geometry
+                     * Courtesy https://www.kirupa.com/html5/get_element_position_using_javascript.htm
+                     * Not sure about the license to that code... may have to 
+                     * rewrite it.
+                     */
                     while (el)
                     {
                         if (el.tagName == "BODY")

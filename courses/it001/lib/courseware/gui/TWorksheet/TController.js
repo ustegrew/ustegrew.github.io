@@ -370,11 +370,16 @@ define
             fState:             null,
         
             /**
-             * For the given event, executes state transition. Transition is executed in several steps:
+             * For the given event, executes state transition and handlers. 
              * 
-             * 1. Worksheet executes pre transition actions (Save current exercise, collapse current solution etc.).
-             * 2. Worksheet sends "kSuccess" notification.
-             * 3. Now perform the transition. This also calls any worksheet specific handler.
+             * Transition is executed in several steps:
+             * <ol>
+             *     <li>Worksheet executes pre transition actions (Save current exercise, collapse current solution etc.).</li>
+             *     <li>Worksheet sends "kSuccess" notification.</li>
+             *     <li>Now perform the transition. This also calls any worksheet specific handler.</li>
+             * </ol>
+             * 
+             * @param {String} event The ID of the event for which we want to execute the state transition.
              */
             Notify: function (event)
             {

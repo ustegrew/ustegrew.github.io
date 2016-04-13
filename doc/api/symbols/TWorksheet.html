@@ -483,7 +483,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemControllerEvent">_NotifySystemControllerEvent</a></b>(event)
 								</div>
-								<div class="description"></div>
+								<div class="description">Fires an event at the <a href="../symbols/TController.html">TController</a>.</div>
 							</td>
 						</tr>
 					
@@ -492,7 +492,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemEditorChangeObserverSetPaused">_NotifySystemEditorChangeObserverSetPaused</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Suspend the Editor's change observer.</div>
 							</td>
 						</tr>
 					
@@ -501,7 +501,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemEditorChangeObserverSetRunning">_NotifySystemEditorChangeObserverSetRunning</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Resumes/Runs the Editor's change observer.</div>
 							</td>
 						</tr>
 					
@@ -510,7 +510,8 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemFileOpenExercise">_NotifySystemFileOpenExercise</a></b>(exerciseID)
 								</div>
-								<div class="description"></div>
+								<div class="description">Opens the exercise with the given <code>exerciseID</code> for 
+solution editing.</div>
 							</td>
 						</tr>
 					
@@ -519,16 +520,18 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemFileSave">_NotifySystemFileSave</a></b>(idDecision)
 								</div>
-								<div class="description"></div>
+								<div class="description">Saves the solution to the currently opened exercise, if indicated by 
+<code>idDecision</code>.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemFileSave_PreflightCheck">_NotifySystemFileSave_PreflightCheck</a></b>(actions)
+								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifySystemFileSave_PreflightCheck">_NotifySystemFileSave_PreflightCheck</a></b>(action)
 								</div>
-								<div class="description"></div>
+								<div class="description">Establishes whether the solution to the currently open exercise 
+should be saved.</div>
 							</td>
 						</tr>
 					
@@ -537,7 +540,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifyUICollapseCurrent">_NotifyUICollapseCurrent</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Collapses the editor panel of the currently opened exercise.</div>
 							</td>
 						</tr>
 					
@@ -546,7 +549,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifyUIExpandNext">_NotifyUIExpandNext</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Expands the editor panel of the exercise the user would like to work on next.</div>
 							</td>
 						</tr>
 					
@@ -555,7 +558,8 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifyUIMigrateEditor">_NotifyUIMigrateEditor</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Migrates the editor from the editor panel of the currently opened 
+exercise to the editor panel of the exercise to be opened next.</div>
 							</td>
 						</tr>
 					
@@ -564,7 +568,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._NotifyUIScrollWindow">_NotifyUIScrollWindow</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Scrolls the editor panel of the currently opened exercise into view.</div>
 							</td>
 						</tr>
 					
@@ -573,7 +577,8 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._SystemCollectSolutions">_SystemCollectSolutions</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Gathers all solutions in this worksheet and displays them as formatted 
+text in a text window.</div>
 							</td>
 						</tr>
 					
@@ -582,7 +587,8 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._SystemFileLoadCurrent">_SystemFileLoadCurrent</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Sets the content of the editor with the solution text of the currently 
+opened exercise.</div>
 							</td>
 						</tr>
 					
@@ -591,7 +597,8 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#._SystemFileSaveCurrent">_SystemFileSaveCurrent</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Commits the solution of the currently opened exercise to local 
+storage.</div>
 							</td>
 						</tr>
 					
@@ -618,7 +625,7 @@ a given exercise sheet (before it's converted here).</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#.destroy">destroy</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">dTor.</div>
 							</td>
 						</tr>
 					
@@ -817,7 +824,7 @@ and it's solution text.</div>
 							<td class="nameDescription">
 								<div class="fixedFont">TWorksheet.<b><a href="../symbols/TWorksheet.html#.startup">startup</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Startup method.</div>
 							</td>
 						</tr>
 					
@@ -1218,12 +1225,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemControllerEvent"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>_NotifySystemControllerEvent</b>(event)
 					
 					</div>
 					<div class="description">
-						
+						Fires an event at the <a href="../symbols/TController.html">TController</a>.
 						
 						
 					</div>
@@ -1235,23 +1242,16 @@ a given exercise sheet (before it's converted here).
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{type}</span> <b>event</b>
+									<span class="light fixedFont">{String}</span> <b>event</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The ID of the event to be fired.</dd>
 							
 							</dl>
 						
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1261,12 +1261,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemEditorChangeObserverSetPaused"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifySystemEditorChangeObserverSetPaused</b>()
 					
 					</div>
 					<div class="description">
-						
+						Suspend the Editor's change observer.
 						
 						
 					</div>
@@ -1281,11 +1281,18 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the observer has been suspended.</dd>
 							
 							</dl>
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -1293,12 +1300,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemEditorChangeObserverSetRunning"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifySystemEditorChangeObserverSetRunning</b>()
 					
 					</div>
 					<div class="description">
-						
+						Resumes/Runs the Editor's change observer.
 						
 						
 					</div>
@@ -1313,11 +1320,18 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the observer has been resumed.</dd>
 							
 							</dl>
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -1325,12 +1339,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemFileOpenExercise"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>_NotifySystemFileOpenExercise</b>(exerciseID)
 					
 					</div>
 					<div class="description">
-						
+						Opens the exercise with the given <code>exerciseID</code> for 
+solution editing.
 						
 						
 					</div>
@@ -1342,23 +1357,16 @@ a given exercise sheet (before it's converted here).
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{type}</span> <b>exerciseID</b>
+									<span class="light fixedFont">{String}</span> <b>exerciseID</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>UID of the exercise to be opened.</dd>
 							
 							</dl>
 						
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1368,12 +1376,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemFileSave"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifySystemFileSave</b>(idDecision)
 					
 					</div>
 					<div class="description">
-						
+						Saves the solution to the currently opened exercise, if indicated by 
+<code>idDecision</code>.
 						
 						
 					</div>
@@ -1385,10 +1394,11 @@ a given exercise sheet (before it's converted here).
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{type}</span> <b>idDecision</b>
+									<span class="light fixedFont">{ESaveDecision}</span> <b>idDecision</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>An enum value which denotes whether
+                                             we should save or not.</dd>
 							
 							</dl>
 						
@@ -1399,7 +1409,8 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the solution to the 
+                             current exercise has been saved.</dd>
 							
 							</dl>
 						
@@ -1411,12 +1422,14 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifySystemFileSave_PreflightCheck"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|TWorksheet_L38.TWorksheet@pro;fDlgDoSaveConfirm@call;Show|Deferred_L8._11}</span>
-					<span class="light">TWorksheet.</span><b>_NotifySystemFileSave_PreflightCheck</b>(actions)
+					<span class="light">{dojo/Deferred}</span>
+					<span class="light">TWorksheet.</span><b>_NotifySystemFileSave_PreflightCheck</b>(action)
 					
 					</div>
 					<div class="description">
-						
+						Establishes whether the solution to the currently open exercise 
+should be saved. The function returns a promise which carries 
+the answer as parameter.
 						
 						
 					</div>
@@ -1428,10 +1441,12 @@ a given exercise sheet (before it's converted here).
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{type}</span> <b>actions</b>
+									<span class="light fixedFont">{TController.ESaveAction}</span> <b>action</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>Whether we'd like to 
+                                             just save, get user 
+                                             confirmation or skip saving.</dd>
 							
 							</dl>
 						
@@ -1442,7 +1457,9 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|TWorksheet_L38.TWorksheet@pro;fDlgDoSaveConfirm@call;Show|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the decision 
+                             has been made re saving the solution 
+                             to the curent exercise.</dd>
 							
 							</dl>
 						
@@ -1454,12 +1471,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifyUICollapseCurrent"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifyUICollapseCurrent</b>()
 					
 					</div>
 					<div class="description">
-						
+						Collapses the editor panel of the currently opened exercise.
 						
 						
 					</div>
@@ -1474,7 +1491,8 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the editor panel
+                             in the current exercise has finished collapsing.</dd>
 							
 							</dl>
 						
@@ -1486,12 +1504,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifyUIExpandNext"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifyUIExpandNext</b>()
 					
 					</div>
 					<div class="description">
-						
+						Expands the editor panel of the exercise the user would like to work on next.
 						
 						
 					</div>
@@ -1506,7 +1524,8 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the editor panel
+                             in the next exercise has finished expanding.</dd>
 							
 							</dl>
 						
@@ -1518,12 +1537,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifyUIMigrateEditor"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifyUIMigrateEditor</b>()
 					
 					</div>
 					<div class="description">
-						
+						Migrates the editor from the editor panel of the currently opened 
+exercise to the editor panel of the exercise to be opened next.
 						
 						
 					</div>
@@ -1538,7 +1558,9 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the editor 
+                             has finished migrating from the current to 
+                             the next exercise.</dd>
 							
 							</dl>
 						
@@ -1550,12 +1572,12 @@ a given exercise sheet (before it's converted here).
 					<a name="._NotifyUIScrollWindow"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{Deferred_L8._a|Deferred_L8._11}</span>
+					<span class="light">{dojo/Deferred}</span>
 					<span class="light">TWorksheet.</span><b>_NotifyUIScrollWindow</b>()
 					
 					</div>
 					<div class="description">
-						
+						Scrolls the editor panel of the currently opened exercise into view.
 						
 						
 					</div>
@@ -1570,7 +1592,8 @@ a given exercise sheet (before it's converted here).
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Deferred_L8._a|Deferred_L8._11}</span> </dd>
+								<dd><span class="light fixedFont">{dojo/Deferred}</span> A promise, resolved when the editor 
+                             panel has finished scrolling into view.</dd>
 							
 							</dl>
 						
@@ -1582,12 +1605,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._SystemCollectSolutions"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>_SystemCollectSolutions</b>()
 					
 					</div>
 					<div class="description">
-						
+						Gathers all solutions in this worksheet and displays them as formatted 
+text in a text window. The user can copy them to clipboard from there.
 						
 						
 					</div>
@@ -1598,13 +1622,6 @@ a given exercise sheet (before it's converted here).
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1614,12 +1631,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._SystemFileLoadCurrent"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>_SystemFileLoadCurrent</b>()
 					
 					</div>
 					<div class="description">
-						
+						Sets the content of the editor with the solution text of the currently 
+opened exercise.
 						
 						
 					</div>
@@ -1630,13 +1648,6 @@ a given exercise sheet (before it's converted here).
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1646,12 +1657,13 @@ a given exercise sheet (before it's converted here).
 					<a name="._SystemFileSaveCurrent"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>_SystemFileSaveCurrent</b>()
 					
 					</div>
 					<div class="description">
-						
+						Commits the solution of the currently opened exercise to local 
+storage.
 						
 						
 					</div>
@@ -1662,13 +1674,6 @@ a given exercise sheet (before it's converted here).
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1757,7 +1762,7 @@ of the top left corner of the element looked for.                [100]
 					
 					</div>
 					<div class="description">
-						
+						dTor.
 						
 						
 					</div>
@@ -2347,12 +2352,14 @@ and it's solution text.
 					<a name=".startup"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
+					
 					<span class="light">TWorksheet.</span><b>startup</b>()
 					
 					</div>
 					<div class="description">
-						
+						Startup method. Looks for any DOM elements with the attribute
+<code>data-courseware-type="globalMenu"</code> on the currently 
+loaded document and converts them to worksheet items.
 						
 						
 					</div>
@@ -2363,13 +2370,6 @@ and it's solution text.
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -2388,7 +2388,7 @@ and it's solution text.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 13:51:04 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 15:30:47 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>
