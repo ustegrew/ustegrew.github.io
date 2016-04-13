@@ -115,7 +115,7 @@ define
                     "fNodeAnchor":
                     {
                         "description":      "The anchor node against which the work sheet is anchored",
-                        "type":             "function"
+                        "type":             "object"
                     },
                     "onFinishedLoad":
                     {
@@ -638,7 +638,7 @@ define
             },
             
             /**
-             * 
+             * dTor.
              */
             destroy: function ()
             {
@@ -664,8 +664,9 @@ define
             },
 
             /**
-             * 
-             * @returns {undefined}
+             * Startup method. Looks for any DOM elements with the attribute
+             * <code>data-courseware-type="globalMenu"</code> on the currently 
+             * loaded document and converts them to worksheet items.
              */
             startup: function ()
             {
