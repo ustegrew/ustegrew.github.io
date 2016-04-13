@@ -1,5 +1,5 @@
 /**
- *  @fileoverview
+ *  @fileoverview       The worksheet module.
  */
 define 
 (
@@ -24,6 +24,7 @@ define
         "dijit/MenuSeparator",
         "dijit/DropDownMenu",
         "dijit/form/Button",
+        "../../util/validator/TValidatorJSON",
         "../../util/json/TJSONUtils",
         "./TExercise",
         "./TModel",
@@ -56,6 +57,7 @@ define
         TMenuSeparator,
         TDropDownMenu,
         TButton,
+        JSObjectValidator,
         JSONUtils,
         TExercise,
         TModel,
@@ -79,12 +81,68 @@ define
          */
         TWorksheet = 
         {
+            /**
+             * The user's decision regards saving the current exercise.
+             * 
+             * @enum
+             */
             ESaveDecision:
             {
-                kDoNotSave: 0,
-                kDoSave:    1
+                kDoNotSave: 0,      /* Do not save (saving cancelled)           */
+                kDoSave:    1       /* Do save (saving confirmed)               */
             },
             
+            /**
+             * JSON schema to validate the button dialog's configuration descriptor.
+             * 
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaParams:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "button descriptor",
+                "description":  "Descriptor for TWorksheet configuration parameters.",
+                "type":         "object",
+                properties:
+                {
+                    "fHost":
+                    {
+                        "description":      "The object hosting this worksheet",
+                        "type":             "object"
+                    },
+                    "fNodeAnchor":
+                    {
+                        "description":      "The anchor node against which the work sheet is anchored",
+                        "type":             "function"
+                    },
+                    "onFinishedLoad":
+                    {
+                        "description":      "Handler, invoked when the editor has finished loading the stored solution text.",
+                        "type":             "function"
+                    },
+                    "onRequestLoadSolution":
+                    {
+                        "description":      "Handler, invoked when a request was issued to load a solution text.",
+                        "type":             "function"
+                    },
+                    "onRequestSaveSolution":
+                    {
+                        "description":      "Handler, invoked when  a request was issued to save the current solution text to local storage.",
+                        "type":             "function"
+                    },
+                }
+            },
+
+            /**
+             * JSON schema to validate the properties on each exercise node on 
+             * a given exercise sheet (before it's converted here).
+             *
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
             kSchemaPropertiesExercise:
             {
                 "$schema":      "http://json-schema.org/draft-03/schema#",
@@ -110,9 +168,10 @@ define
             },
         
             /**
-             *  The controller. Controls the behaviour of this worksheet.
+             *  The controller. A state machine which controls the behaviour of this worksheet.
              * 
-             * @type    TController
+             * @type        courseware/gui/TWorksheet/TController
+             * @private
              */
             fController: null,
 
@@ -120,30 +179,50 @@ define
              * The Yes/No confirmation dialog asking "Do you want to save first?"
              * before the user closes an active solution that has unsaved changes.
              * 
-             * @type    TButtonDialog
+             * @type        courseware/gui/TButtonDialog/TButtonDialog
+             * @private
              */
             fDlgDoSaveConfirm: null,
             
             /**
              * The message box containing the saved exercises when the user
              * request them to be copied to the clipboard.
+             * 
+             * @type        courseware/gui/TTextWindow/TTextWindow
+             * @private
              */
             fDlgExerciseSolutions: null,
 
             /**
              * The editor for the user to edit the solutions to the exercises.
              * 
-             * @type    TExerciseEditGUI
+             * @type        courseware/gui/TExerciseEditGUI/TExerciseEditGUI
+             * @private
              */
             fEditor: null,
             
+            /**
+             * The currently open exercise.
+             * 
+             * @type        courseware/gui/TWorksheet/TExercise
+             * @private
+             */
             fExerciseCurrent: null,
+            
+            /**
+             * The exercise to be opened next, e.g. when the user has one exercise 
+             * open and would like to open another one.
+             * 
+             * @type        courseware/gui/TWorksheet/TExercise
+             * @private
+             */
             fExerciseNext: null,
 
             /**
              * The client using this class.
              * 
-             * @type    JSObject
+             * @type        JSObject
+             * @private
              */
             fHost: null,
 
@@ -152,13 +231,17 @@ define
              * context (i.e. 'this' inside a callback will point to the client
              * object, not the TWorksheet object.
              * 
-             * @type    JSObject
+             * @type        JSON
+             * @private
              */
             fHandlers: null,
 
             /**
              * The model holding the exercises. Provides index and hash based access
              * to each exercise element.
+             * 
+             * @type        courseware/gui/TWorksheet/TModel
+             * @private
              */
             fModel: null,
             
@@ -166,6 +249,9 @@ define
              * The anchor node against which the work sheet is anchored, e.g. the content panel
              * in which the worksheet is located. Needed for certain effects, such as scrolling 
              * the active solution into view.
+             * 
+             * @type        DOM element
+             * @private
              */
             fNodeAnchor: null,
             
@@ -173,10 +259,16 @@ define
              * A Deferred object to facilitate clean termination of this worksheet 
              * (e.g. We'd like to save when the user has a solution open with unsaved changes).
              * 
-             * @type    dojo/Deferred
+             * @type        dojo/Deferred
+             * @private
              */
             fSemaphore: null,
             
+            /**
+             * Returns the solutions to all stored exercises.
+             * 
+             * @returns     {JSArray}       The solutions to all exercises.
+             */
             GetAllSolutions: function ()
             {
                 var i;
@@ -198,6 +290,12 @@ define
                 return ret;
             },
             
+            /**
+             * Returns a record containing the UID of the currently opened exercise
+             * and it's solution text.
+             * 
+             * @returns {JSON}      UID and solution text as one JSON record.
+             */
             GetCurrentSolution: function ()
             {
                 var ret;
@@ -211,6 +309,12 @@ define
                 return ret;
             },
             
+            /**
+             * Requests termination of the worksheet.
+             * 
+             * @returns     {dojo/Deferred}     A promise, resolved when the worksheet 
+             *                                  has actually finished terminating.
+             */
             RequestTerminate: function ()
             {
                 this.fSemaphore = new TDeferred ();
@@ -219,16 +323,21 @@ define
                 return this.fSemaphore;
             },
             
+            /**
+             * Sets the solution text of the currently opened exercise.
+             * 
+             * @param       {String}    content     The content of the solution text
+             */
             SetCurrentSolution: function (content)
             {
                 this.fExerciseCurrent.fTextSolution = content;
             },
             
-            /** *****************************************************************************************************************
+            /* *****************************************************************************************************************
              * Event handlers - called from associated TController instance.    [60]
-             ***************************************************************************************************************** **/
+             ***************************************************************************************************************** */
             
-            /**
+            /*
              * Event handlers for TController state: kChanging.
              *     Change mode: User has done changes to the text in the current exercise's editor panel, and has not saved the exercise yet.
              */
@@ -295,7 +404,7 @@ define
                 this.fSemaphore.resolve ();
             },
             
-            /**
+            /*
              * Event handlers for TController state: kEditing.
              *     Editing mode: User is editing a particular exercise, but has not typed any characters into the editor panel since the last save.
              */
@@ -362,7 +471,7 @@ define
                 this.fSemaphore.resolve ();
             },
             
-            /**
+            /*
              * Event handlers for TController state: kNull.
              *     When we are finished building the worksheet and ready to have the user work with it.
              */
@@ -412,9 +521,9 @@ define
                 this.fSemaphore.resolve ();
             },
             
-            /** *****************************************************************************************************************
+            /* *****************************************************************************************************************
              * Notifications from associated TController instance
-             ***************************************************************************************************************** **/
+             ***************************************************************************************************************** */
             
             /**
              * Notification: Execute actions before transiting to the next state (Animations, saving current exercise etc.).
@@ -499,11 +608,16 @@ define
             },
             
             /**
-             * Dojo specific cTor.
+             * cTor.
+             *
+             * @param {JSON}    params      The worksheet's configuration.  Must
+             *                              conform to {@link TWorksheet.kSchemaParams}.
              */
             constructor: function (params)
             {
                 if (gDebug) console.log ("TWorksheet::constructor ()");
+
+                JSObjectValidator.AssertValid (params, this.kSchemaParams, "constructor");
                 
                 this.fHost                      = params.fHost;
                 this.fNodeAnchor                = params.fNodeAnchor;
@@ -523,6 +637,9 @@ define
                 this.fDlgExerciseSolutions      = null;
             },
             
+            /**
+             * 
+             */
             destroy: function ()
             {
                 if (gDebug) console.log ("TWorksheet::destroy ()");
@@ -546,6 +663,10 @@ define
                 }
             },
 
+            /**
+             * 
+             * @returns {undefined}
+             */
             startup: function ()
             {
                 var _this           = this;
@@ -712,6 +833,11 @@ define
                 this.fController.Notify ("kStart");
             },
             
+            /**
+             * 
+             * @param {type} event
+             * @returns {undefined}
+             */
             _NotifySystemControllerEvent: function (event)
             {
                 if (gDebug) console.log ("TWorksheet::_NotifySystemControllerEvent ('" + event + "')");
@@ -719,6 +845,10 @@ define
                 this.fController.Notify.call (this.fController, event);
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifySystemEditorChangeObserverSetPaused: function ()
             {
                 var d;
@@ -733,6 +863,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifySystemEditorChangeObserverSetRunning: function ()
             {
                 var d;
@@ -747,6 +881,11 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @param {type} exerciseID
+             * @returns {undefined}
+             */
             _NotifySystemFileOpenExercise: function (exerciseID)
             {
                 var doOpen;
@@ -780,10 +919,16 @@ define
                 if (doOpen)
                 {
                     this.fExerciseNext = this.fModel.GetByID (exerciseID);
+                    this.fHandlers.onRequestLoadSolution (this.fExerciseNext.fID);
                     this._NotifySystemControllerEvent ("kEdit");
                 }
             },
             
+            /**
+             * 
+             * @param {type} actions
+             * @returns {Deferred_L8._a|TWorksheet_L38.TWorksheet@pro;fDlgDoSaveConfirm@call;Show|Deferred_L8._11}
+             */
             _NotifySystemFileSave_PreflightCheck: function (actions)
             {
                 var d;
@@ -812,6 +957,11 @@ define
                 return d;
             },
 
+            /**
+             * 
+             * @param {type} idDecision
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifySystemFileSave: function (idDecision)
             {
                 var d;
@@ -829,6 +979,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifyUICollapseCurrent: function ()
             {
                 var _this = this;
@@ -857,6 +1011,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifyUIExpandNext: function ()
             {
                 var _this = this;
@@ -885,6 +1043,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifyUIMigrateEditor: function ()
             {
                 var d;
@@ -903,6 +1065,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {Deferred_L8._a|Deferred_L8._11}
+             */
             _NotifyUIScrollWindow: function ()
             {
                 var yNode;
@@ -934,6 +1100,10 @@ define
                 return d;
             },
             
+            /**
+             * 
+             * @returns {undefined}
+             */
             _SystemCollectSolutions: function ()
             {
                 var i;
@@ -970,6 +1140,10 @@ define
                 this.fDlgExerciseSolutions.Show ("Your solutions", "Copy the text below to the clipboard.", ss);
             },
             
+            /**
+             * 
+             * @returns {undefined}
+             */
             _SystemFileLoadCurrent: function ()
             {
                 if (gDebug) console.log ("TWorksheet::_SystemFileLoadCurrent ()");
@@ -978,6 +1152,10 @@ define
                 this.fEditor.ClearFlagChanged   ();
             },
 
+            /**
+             * 
+             * @returns {undefined}
+             */
             _SystemFileSaveCurrent: function ()
             {
                 var content;

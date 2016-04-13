@@ -258,7 +258,7 @@ ul.inheritsList
 				
 				
 			
-				TChangeToClassName
+				TExercise
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TExercise.js.html">TExercise.js</a>.
@@ -282,7 +282,7 @@ ul.inheritsList
 							<div class="fixedFont">
 								<b><a href="../symbols/TExercise.html#constructor">TExercise</a></b>()
 							</div>
-							<div class="description">Insert_explanation_here</div>
+							<div class="description">A struct holding data pertaining to a worksheet exercise.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -290,6 +290,146 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class TExercise.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fContentLang">fContentLang</a></b>
+								</div>
+								<div class="description">The source language expected for the solution (e.g.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fContentType">fContentType</a></b>
+								</div>
+								<div class="description">The document type expected for the solution (e.g.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fHasChanged">fHasChanged</a></b>
+								</div>
+								<div class="description"><code>true</code> if the solution to this exercise has been edited 
+since the last save, <code>false</code> otherwise.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fID">fID</a></b>
+								</div>
+								<div class="description">The unique ID of this exercise.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fIsOpen">fIsOpen</a></b>
+								</div>
+								<div class="description"><code>true</code> if this exercise is open for editing of the solution,
+<code>false</code> otherwise.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fNodeParent">fNodeParent</a></b>
+								</div>
+								<div class="description">The DOM element holding the entire exercise (question, solution editor, .</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fNodeText">fNodeText</a></b>
+								</div>
+								<div class="description">The DOM element holding the Exercise question text.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fNodeToolbar">fNodeToolbar</a></b>
+								</div>
+								<div class="description">The DOM element holding the toolbar which contains the "Edit this solution" button.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fNodeWorkspace">fNodeWorkspace</a></b>
+								</div>
+								<div class="description">The DOM element holding the editor component.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fObjButton">fObjButton</a></b>
+								</div>
+								<div class="description">The "Edit this solution" button.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fTextQuestion">fTextQuestion</a></b>
+								</div>
+								<div class="description">Te text of the exercise question.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TExercise.<b><a href="../symbols/TExercise.html#.fTextSolution">fTextSolution</a></b>
+								</div>
+								<div class="description">The text of the solution, as authored by the user.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -311,7 +451,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TExercise.<b><a href="../symbols/TExercise.html#.constructor">constructor</a></b>()
 								</div>
-								<div class="description">Dojo specific cTor.</div>
+								<div class="description">cTor.</div>
 							</td>
 						</tr>
 					
@@ -336,7 +476,8 @@ ul.inheritsList
 				</div>
 				
 				<div class="description">
-					Insert_explanation_here
+					A struct holding data pertaining to a worksheet exercise.
+All fields in this struct are public.
 					
 				</div>
 				
@@ -356,6 +497,277 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name=".fContentLang"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       String}</span>
+					<span class="light">TExercise.</span><b>fContentLang</b>
+					
+					</div>
+					<div class="description">
+						The source language expected for the solution (e.g. "js")
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fContentType"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       String}</span>
+					<span class="light">TExercise.</span><b>fContentType</b>
+					
+					</div>
+					<div class="description">
+						The document type expected for the solution (e.g. "rtf", "src", ...)
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fHasChanged"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       boolean}</span>
+					<span class="light">TExercise.</span><b>fHasChanged</b>
+					
+					</div>
+					<div class="description">
+						<code>true</code> if the solution to this exercise has been edited 
+since the last save, <code>false</code> otherwise.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fID"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       String}</span>
+					<span class="light">TExercise.</span><b>fID</b>
+					
+					</div>
+					<div class="description">
+						The unique ID of this exercise.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fIsOpen"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       boolean}</span>
+					<span class="light">TExercise.</span><b>fIsOpen</b>
+					
+					</div>
+					<div class="description">
+						<code>true</code> if this exercise is open for editing of the solution,
+<code>false</code> otherwise.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fNodeParent"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       DOM element}</span>
+					<span class="light">TExercise.</span><b>fNodeParent</b>
+					
+					</div>
+					<div class="description">
+						The DOM element holding the entire exercise (question, solution editor, ...).
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fNodeText"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       DOM element}</span>
+					<span class="light">TExercise.</span><b>fNodeText</b>
+					
+					</div>
+					<div class="description">
+						The DOM element holding the Exercise question text.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fNodeToolbar"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       DOM element}</span>
+					<span class="light">TExercise.</span><b>fNodeToolbar</b>
+					
+					</div>
+					<div class="description">
+						The DOM element holding the toolbar which contains the "Edit this solution" button.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fNodeWorkspace"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       DOM element}</span>
+					<span class="light">TExercise.</span><b>fNodeWorkspace</b>
+					
+					</div>
+					<div class="description">
+						The DOM element holding the editor component.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fObjButton"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       dijit/Button}</span>
+					<span class="light">TExercise.</span><b>fObjButton</b>
+					
+					</div>
+					<div class="description">
+						The "Edit this solution" button.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fTextQuestion"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       String}</span>
+					<span class="light">TExercise.</span><b>fTextQuestion</b>
+					
+					</div>
+					<div class="description">
+						Te text of the exercise question.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fTextSolution"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{type       String}</span>
+					<span class="light">TExercise.</span><b>fTextSolution</b>
+					
+					</div>
+					<div class="description">
+						The text of the solution, as authored by the user.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -371,7 +783,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Dojo specific cTor.
+						cTor.
 						
 						
 					</div>
@@ -400,7 +812,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Apr 12 2016 06:26:08 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 13:51:03 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

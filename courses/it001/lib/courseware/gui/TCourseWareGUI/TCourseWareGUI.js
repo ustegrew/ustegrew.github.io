@@ -1,27 +1,29 @@
 /**
  *  @fileoverview        Main GUI for the courseware module.
  */
-define 
+define
 (
     [
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dojo/Deferred",
+        "courseware/util/validator/TValidatorJSON",
         "dojo/dom-construct",
         "dojo/on",
         "dojo/store/Memory",
         "dijit/tree/ObjectStoreModel",
         "dijit/Tree",
-        "dijit/layout/BorderContainer", 
+        "dijit/layout/BorderContainer",
         "dijit/layout/ContentPane",
         "dijit/TitlePane",
         "courseware/gui/TWorksheet/TWorksheet"
     ],
-    function 
+    function
     (
         declare,
         _WidgetBase,
         TDeferred,
+        JSObjectValidator,
         domConstruct,
         on,
         MemoryStore,
@@ -39,10 +41,10 @@ define
         /**
          * Class for the main course UI.
          * <p><br/></p>
-         * 
+         *
          * <b>Elements on the user interface</b>
-         * 
-         * <pre>    
+         *
+         * <pre>
          *     .-------------------------------------.
          *     | Heading                             |
          *     '-------------------------------------'
@@ -63,34 +65,57 @@ define
          *     |'--------------''-------------------'|
          *     '-------------------------------------'
          * </pre>
-         * 
+         *
          * <dl>
          *     <dt>Heading</dt>
          *     <dd>The heading text. Changes with each particular lesson loaded.</dd>
-         *     
+         *
          *     <dt>Content (tree)</dt>
          *     <dd>A tree with clickable links to the resp. lessons and ext. resources.</dd>
-         *     
+         *
          *     <dt>Article view</dt>
          *     <dd>A title pane showing the resp. article</dd>
-         *     
+         *
          *     <dt>Exercises</dt>
          *     <dd>A title pane showing the exercises for the currently loaded lesson.</dd>
          * </dl>
-         * 
+         *
          * @class       TCourseWareGUI
          * @augments    _WidgetBase
          * @augments    _TemplateMixin
          */
-        TCourseWareGUI = 
+        TCourseWareGUI =
         {
             /**
+             * JSON schema to validate the CourseWare GUI's configuration descriptor.
+             *
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaParams:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Text window descriptor",
+                "description":  "Descriptor for the CourseWareGUI descriptor",
+                "type":         "object",
+                properties:
+                {
+                    "fHost":
+                    {
+                        "description":      "The object hosting this GUI",
+                        "type":             "object"
+                    }
+                }
+            },
+
+            /**
              * The default (dummy) data for the content nodes.
-             * 
+             *
              * @type        JSON
              * @private
              */
-            fData: 
+            fData:
             [
                 {
                     id:                     "root",
@@ -101,18 +126,18 @@ define
                     hasChildren:            false
                 }
             ],
-            
+
             /**
              * The client using this UI.
-             * 
+             *
              * @type        courseware/TCourseWare
              * @private
              */
             fHost: null,
-            
+
             /**
              * The panel holding the article content.
-             * 
+             *
              * @type        dijit/TitlePane
              * @private
              */
@@ -120,7 +145,7 @@ define
 
             /**
              * The panel holding the exercises.
-             * 
+             *
              * @type        dijit/TitlePane
              * @private
              */
@@ -128,15 +153,15 @@ define
 
             /**
              * The panel holding the Heading.
-             * 
+             *
              * @type        DOM DIV
              * @private
              */
             fPnlHeading: null,
-            
+
             /**
              * The panel holding the entire CourseWare UI.
-             * 
+             *
              * @type        dijit/layout/BorderContainer
              * @private
              */
@@ -144,7 +169,7 @@ define
 
             /**
              * The panel holding the content tree.
-             * 
+             *
              * @type        dijit/layout/ContentPane
              * @private
              */
@@ -152,74 +177,77 @@ define
 
             /**
              * The panel holding the article and exercises.
-             * 
+             *
              * @type        dijit/layout/ContentPane
              * @private
              */
             fPnlMainR: null,
-            
+
             /**
              * The ID of the data's root node.
-             * 
+             *
              * @type        String
              * @private
              */
             fRootID: "root",
-            
+
             /**
              * The Dojo tree object holding the contents (LH side)
-             * 
+             *
              * @type        dijit/Tree
              * @private
              */
             fTree: null,
-            
+
             /**
              * The worksheet module, for the student to work on the exercises.
+             *
+             * @ty
              */
             fWorksheet: null,
-            
+
             /**
-             * Loads the course as specified by the descriptor. This 
-             * 
-             * @param   {JSObject}      descriptor      The couse's descriptor, containing 
-             *                                          information on all lessons and ext. 
+             * Loads the course as specified by the descriptor. This will load the
+             * descriptor and set the LH content tree.
+             *
+             * @param   {JSObject}      descriptor      The couse's descriptor, containing
+             *                                          information on all lessons and ext.
              *                                          resources.
-             * @public
              */
             LoadCourse: function (descriptor)
             {
-                var x;
-
                 this.fRootID = descriptor.rootNodeID;
                 this.fTree.doLoadNew (descriptor);
             },
-    
+
             /**
              * Loads the start article, i.e. the first lesson in the course.
-             * 
+             *
              * @public
              */
             LoadInitialArticle: function ()
             {
                 var x;
-                
+
                 x = this._GetDescriptor ({isStartNode: true});
                 this._LoadArticle (x);
             },
-            
+
             /**
-             * Dojo specific cTor.
-             * 
-             * @param   {type} params
-             * @param   {type} srcNodeRef
-             * @returns {undefined}
+             * cTor.
+             *
+             * @param {JSON}    params      The CourseWare GUI's configuration.  Must
+             *                              conform to {@link TCourseWareGUI.kSchemaParams}.
              */
             constructor: function (params)
             {
+                JSObjectValidator.AssertValid (params, this.kSchemaParams, "constructor");
                 this.fHost = params.fHost;
             },
-            
+
+            /**
+             * dTor.
+             */
             destroy: function ()
             {
                 if (this.fWorksheet != null)
@@ -227,40 +255,14 @@ define
                     this.fWorksheet.destroy ();
                 }
             },
-            
-            /* -------------------------------------------------------------
-             * Dijit overrides 
-             * ------------------------------------------------------------- */
-        
+
             /**
-             * Sets up the UI. This overrides the _WidgetBase::startup (). 
-             * We don't use the typical way of overriding 
-             * _WidgetBase::postCreate (), because this widget includes 
-             * child widgets (such as BorderContainer), and it's not 
-             * recommended to do JS resizing in the postCreate() method. 
-             * We could get fancy and do part of the instantiation in a 
-             * postCreate() method, but having everything together in 
-             * startup () makes things simpler.
-             * 
-             * Excerpt, Dojo documentation:
-             *     + postCreate
-             *          This is typically the workhorse of a custom widget. The 
-             *          widget has been rendered (but note that child widgets in 
-             *          the containerNode have not!). The widget though may not 
-             *          be attached to the DOM yet so you shouldn’t do any sizing 
-             *          calculations in this method.
-             *     
-             *     + startup
-             *          If you need to be sure parsing and creation of any child 
-             *          widgets has completed, use startup. This is often used 
-             *          for layout widgets like BorderContainer. If the widget 
-             *          does JS sizing, then startup() should call resize(), 
-             *          which does the sizing.
+             * Startup method. Sets up the CourseWare GUI.
              */
             startup: function ()
             {
                 var _host = this;
-                
+
                 var pnlMain;
                 var pnlMainL;
                 var pnlMainLCnt;
@@ -272,7 +274,7 @@ define
                 var pnlMainRCntArticle;
                 var pnlMainRCntExercises;
 
-                this.fPnlHeading = domConstruct.create 
+                this.fPnlHeading = domConstruct.create
                 (
                     "div",
                     {
@@ -308,13 +310,13 @@ define
                         region:     "center"
                     }
                 );
-                
+
                 this.fPnlMain   = pnlMain;                                      /* <--- Property: fPnlMain                      */
                 this.fPnlMainL  = pnlMainL;                                     /* <--- Property: fPnlMainL                     */
                 this.fPnlMainR  = pnlMainR;                                     /* <--- Property: fPnlMainR                     */
 
                 /* Setup wrappers for LH / RH panel. wrappers provide scroll bar. */
-                pnlMainLCnt = domConstruct.place 
+                pnlMainLCnt = domConstruct.place
                 (
                     "<div style='width:100%;height:100%;overflow-y:scroll'></div>",
                     pnlMainL.domNode,
@@ -343,9 +345,9 @@ define
                         getRootNode: function ()
                         {
                             var ret;
-                            
+
                             ret = this.query ({id: _host.fRootID});
-                            
+
                             return ret;
                         }
                     }
@@ -441,23 +443,39 @@ define
                 domConstruct.place              (pnlMain.domNode,  this.domNode, "last" );
                 pnlMain.startup                 ();
             },
-            
+
+            /**
+             * Tests whether the given category ID is known. Throws an exception
+             * if it's not known.
+             *
+             * @param   {String}    c       The category tested.
+             *
+             * @throws  {String}    Exception with error message if the
+             *                      category is unknown.
+             */
             _AssertKnownCategory: function (c)
             {
                 var kCats = ["folder", "lesson", "external"];
-                
+
                 var i;
-                
+
                 i = kCats.indexOf (c);
                 if (i <= -0.5)                                                  /* [10] */
                 {
-                    throw "TCourseWareGUI::_AssertKnownCategory: Unknown category '" + 
-                          c + 
+                    throw "TCourseWareGUI::_AssertKnownCategory: Unknown category '" +
+                          c +
                           "' in descriptor: " +
                           JSON.stringify (descriptor, null, 4);
                 }
             },
 
+            /**
+             * Returns the descriptor of node the user clicked on in the content tree.
+             *
+             * @param       {JSObject}      query
+             * @returns     {JSObject}      The descriptor of the requested node.
+             * @throws {String} An exception containing details, if there wasn't any matching node.
+             */
             _GetDescriptor: function (query)
             {
                 var queryStr;
@@ -467,37 +485,38 @@ define
                 var n;
                 var x;
                 var ret;
-                
+
                 queryStr   = JSON.stringify (query, null, 4);
                 repoStr    = JSON.stringify (this.fTree.model.store, null, 4);
                 items      = this.fTree.model.store.query (query);
                 isArray    = Array.isArray (items);
                 if (! isArray)
                 {
-                    throw "TCourseWareGUI::_LoadArticle: Can't find article for query '" + 
-                          queryStr + 
+                    throw "TCourseWareGUI::_GetDescriptor: Can't find article for query '" +
+                          queryStr +
                           "' in repository:\n" +
                           repoStr;
                 }
-                
+
                 n = items.length;
                 if (n <= 0)
                 {
-                    throw "TCourseWareGUI::_LoadArticle: Can't find article for query '" + 
-                          queryStr + 
+                    throw "TCourseWareGUI::_GetDescriptor: Can't find article for query '" +
+                          queryStr +
                           "' in repository:\n" +
                           repoStr;
                 }
-                
+
                 ret = items[0];
 
                 return ret;
             },
-    
+
             /**
-             * Loads the article (lesson) as specified by the descriptor with the given <code>id</code>.
-             * 
-             * @param   {JSObject}    descriptor      The article's descriptor 
+             * Loads the article/lesson/ext. resource as specified by the 
+             * descriptor with the given <code>id</code>.
+             *
+             * @param   {JSObject}    descriptor      The article's descriptor
              * @private
              */
             _LoadArticle: function (descriptor)
@@ -505,7 +524,7 @@ define
                 var _this = this;
                 var cat;
                 var d;
-                
+
                 cat = descriptor.category;
                 this._AssertKnownCategory (cat);
 
@@ -526,7 +545,7 @@ define
                 {
                     d.resolve ();
                 }
-                
+
                 d.then
                 (
                     function ()
@@ -547,23 +566,35 @@ define
                 );
             },
 
+            /**
+             * Loads the folder as specified by the given <code>item</code>.
+             * 
+             * @param   {JSON}          item        A descriptor specifying the folder to load.
+             * @private
+             */
             _LoadFolder: function (item)
             {
                 this.fPnlHeading.innerHTML = item.heading;
             },
 
+            /**
+             * Loads the lesson as specified by the given <code>item</code>.
+             * 
+             * @param   {JSON}          item        A descriptor specifying the lesson to load.
+             * @private
+             */
             _LoadLesson: function (item)
             {
                 var _this = this;
-                
+
                 /* Notify hosting component, so it can clean up before unloading  */
                 this.fHost.NotifyUnloadingArticle ();
-                
+
                 /* Open both title panels, so they actually load their contents.
                  * dijit/TitlePane doesn't load when it's closed. */
                 this.fPnlArticle.set ("open", true);
                 this.fPnlExercises.set ("open", true);
-                
+
                 /* Set content */
                 this.fPnlHeading.innerHTML      = item.heading;
                 this.fPnlArticle.set ("title", item.heading);
@@ -575,53 +606,65 @@ define
                     }
                 ).then
                 (
-                    function () 
+                    function ()
                     {
                         return _this._Worksheet_Initialize ();
                     }
                 ).then
                 (
-                    function () 
+                    function ()
                     {
                         return _this.fPnlExercises.set ("open", false);
                     }
                 ).then
                 (
-                    function () 
+                    function ()
                     {
                         _this._NotifyFinishedLoadArticle ();
                     }
                 );
             },
 
+            /**
+             * Loads external resource into new window/tab
+             * 
+             * @param   {JSON}      item        A descriptor specifying the resource to load.
+             */
             _LoadExternal: function (item)
             {
                 this.fPnlHeading.innerHTML = item.heading;
             },
             
+            /**
+             * Notifies the hosting client that we are finished loading an 
+             * article (lesson, resource, ...).
+             */
             _NotifyFinishedLoadArticle: function ()
             {
                 this.fHost.NotifyHasLoadedArticle ();
             },
-            
+
+            /**
+             * Creates a worksheet for teh currently open lesson.
+             */
             _Worksheet_Create: function ()
             {
                 var _this = this;
-                
-                this.fWorksheet = new TWorksheet 
+
+                this.fWorksheet = new TWorksheet
                 (
                     {
                         fHost:          this,
                         fNodeAnchor:    this.fPnlMainR.domNode.firstChild,
-                        onFinishedLoad: function () 
+                        onFinishedLoad: function ()
                         {
                             console.log ("Worksheet loaded");
                         },
-                        onRequestLoadSolution: function (id) 
+                        onRequestLoadSolution: function (id)
                         {
                             _this._Worksheet_LoadSolution (id);
                         },
-                        onRequestSaveSolution: function () 
+                        onRequestSaveSolution: function ()
                         {
                             _this._Worksheet_SaveSolution ();
                         }
@@ -629,33 +672,42 @@ define
                 );
                 this.fWorksheet.startup ();
             },
-            
+
+            /**
+             * Loads a user solution from the local storage into the current worksheet.
+             * 
+             * @param       {type}      id      The UID of the solution.
+             */
             _Worksheet_LoadSolution: function (id)
             {
                 var s;
-                
+
                 s = this.fHost.ExerciseSolution_Get     (id);
                 this.fWorksheet.SetCurrentSolution      (s);
             },
             
+            /**
+             * Saves the exercise solution which is open on the current worksheet.
+             */
             _Worksheet_SaveSolution: function ()
             {
                 var e;
-                
+
                 e = this.fWorksheet.GetCurrentSolution  ();
                 this.fHost.ExerciseSolution_Save        (e.id, e.content);
             },
-            
+
             /**
-             * Converts the exercise part into a worksheet, so the student can work on the solutions.
+             * Converts the exercise part of the currently loaded lesson into 
+             * a worksheet, so the student can work on the solutions.
              */
             _Worksheet_Initialize: function ()
             {
                 var _this = this;
                 var d;
-                
+
                 d = new TDeferred ();
-                
+
                 if (this.fWorksheet != null)
                 {
                     this.fWorksheet.RequestTerminate ().then
@@ -673,13 +725,13 @@ define
                     _this._Worksheet_Create ();
                     d.resolve ();
                 }
-                
+
                 return d;
             }
         };
-    
+
         ret = declare ("TCourseWareGUI", [_WidgetBase], TCourseWareGUI);
-    
+
         return ret;
     }
 );
@@ -689,11 +741,11 @@ define
             that we catch this reliably we test for i <= -0.5 rather than i === -1.
             Just in case i happens to be a floating point number.
 
-    [11]:   I could equally well use a switch statement - however, using strings in 
-            the case clauses just doesn't feel right. I've never seen strings in 
+    [11]:   I could equally well use a switch statement - however, using strings in
+            the case clauses just doesn't feel right. I've never seen strings in
             case statements in any other language either.
 
     [20]:   Renewing data is normally not provided in the standard tree.
             Therefore we needed this hackish solution. With help from:
                 http://stackoverflow.com/a/5430590
- */      
+ */

@@ -327,9 +327,40 @@ ul.inheritsList
 							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
+								TController.<b><a href="../symbols/TController.html#.fStack">fStack</a></b>
+								</div>
+								<div class="description">Buffers the next expected transition for executing after all 
+the animations have run.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TController.<b><a href="../symbols/TController.html#.fState">fState</a></b>
+								</div>
+								<div class="description">Stores the ID of the current state.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
 								TController.<b><a href="../symbols/TController.html#.fUI">fUI</a></b>
 								</div>
 								<div class="description">The user interface.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &lt;constant&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TController.<b><a href="../symbols/TController.html#.kSchemaParams">kSchemaParams</a></b>
+								</div>
+								<div class="description">JSON schema to validate the controller's configuration descriptor.</div>
 							</td>
 						</tr>
 					
@@ -359,7 +390,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TController.<b><a href="../symbols/TController.html#._GetTransition">_GetTransition</a></b>(event)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the transition to be executed next.</div>
 							</td>
 						</tr>
 					
@@ -542,6 +573,57 @@ ul.inheritsList
 
 					<hr />
 				
+					<a name=".fStack"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{JSArray}</span>
+					<span class="light">TController.</span><b>fStack</b>
+					
+					</div>
+					<div class="description">
+						Buffers the next expected transition for executing after all 
+the animations have run.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TController.js.html">TController.js</a>.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fState"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{String}</span>
+					<span class="light">TController.</span><b>fState</b>
+					
+					</div>
+					<div class="description">
+						Stores the ID of the current state.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TController.js.html">TController.js</a>.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name=".fUI"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
@@ -551,6 +633,31 @@ ul.inheritsList
 					</div>
 					<div class="description">
 						The user interface.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".kSchemaParams"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; &lt;constant&gt; 
+					
+					<span class="light">{JSON schema}</span>
+					<span class="light">TController.</span><b>kSchemaParams</b>
+					
+					</div>
+					<div class="description">
+						JSON schema to validate the controller's configuration descriptor.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TController.js.html">TController.js</a>.
 						
 						
 					</div>
@@ -575,12 +682,12 @@ ul.inheritsList
 					<a name="._GetTransition"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{JSON}</span>
 					<span class="light">TController.</span><b>_GetTransition</b>(event)
 					
 					</div>
 					<div class="description">
-						
+						Returns the transition to be executed next.
 						
 							<br />
 							<i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TController.js.html">TController.js</a>.
@@ -595,7 +702,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>event</b>
+									<span class="light fixedFont">{type}</span> <b>event</b>
 									
 								</dt>
 								<dd></dd>
@@ -605,6 +712,13 @@ ul.inheritsList
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{JSON}</span> The transition to execute.</dd>
+							
+							</dl>
 						
 						
 						
@@ -932,7 +1046,7 @@ Dojo framework will flag up 'undefined' reference errors.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Apr 12 2016 06:26:08 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 13:51:03 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

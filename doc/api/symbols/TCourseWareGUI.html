@@ -415,6 +415,16 @@ ul.inheritsList
 							</td>
 						</tr>
 					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &lt;constant&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#.kSchemaParams">kSchemaParams</a></b>
+								</div>
+								<div class="description">JSON schema to validate the CourseWare GUI's configuration descriptor.</div>
+							</td>
+						</tr>
+					
 					</tbody>
 				</table>
 				
@@ -441,7 +451,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._AssertKnownCategory">_AssertKnownCategory</a></b>(c)
 								</div>
-								<div class="description"></div>
+								<div class="description">Tests whether the given category ID is known.</div>
 							</td>
 						</tr>
 					
@@ -450,7 +460,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._GetDescriptor">_GetDescriptor</a></b>(query)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the descriptor of node the user clicked on in the content tree.</div>
 							</td>
 						</tr>
 					
@@ -459,7 +469,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._LoadArticle">_LoadArticle</a></b>(descriptor)
 								</div>
-								<div class="description">Loads the article (lesson) as specified by the descriptor with the given <code>id</code>.</div>
+								<div class="description">Loads the article/lesson/ext.</div>
 							</td>
 						</tr>
 					
@@ -468,7 +478,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._LoadExternal">_LoadExternal</a></b>(item)
 								</div>
-								<div class="description"></div>
+								<div class="description">Loads external resource into new window/tab</div>
 							</td>
 						</tr>
 					
@@ -477,7 +487,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._LoadFolder">_LoadFolder</a></b>(item)
 								</div>
-								<div class="description"></div>
+								<div class="description">Loads the folder as specified by the given <code>item</code>.</div>
 							</td>
 						</tr>
 					
@@ -486,7 +496,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._LoadLesson">_LoadLesson</a></b>(item)
 								</div>
-								<div class="description"></div>
+								<div class="description">Loads the lesson as specified by the given <code>item</code>.</div>
 							</td>
 						</tr>
 					
@@ -495,7 +505,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._NotifyFinishedLoadArticle">_NotifyFinishedLoadArticle</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Notifies the hosting client that we are finished loading an 
+article (lesson, resource, .</div>
 							</td>
 						</tr>
 					
@@ -504,7 +515,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._Worksheet_Create">_Worksheet_Create</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Creates a worksheet for teh currently open lesson.</div>
 							</td>
 						</tr>
 					
@@ -513,7 +524,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._Worksheet_Initialize">_Worksheet_Initialize</a></b>()
 								</div>
-								<div class="description">Converts the exercise part into a worksheet, so the student can work on the solutions.</div>
+								<div class="description">Converts the exercise part of the currently loaded lesson into 
+a worksheet, so the student can work on the solutions.</div>
 							</td>
 						</tr>
 					
@@ -522,7 +534,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._Worksheet_LoadSolution">_Worksheet_LoadSolution</a></b>(id)
 								</div>
-								<div class="description"></div>
+								<div class="description">Loads a user solution from the local storage into the current worksheet.</div>
 							</td>
 						</tr>
 					
@@ -531,16 +543,16 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#._Worksheet_SaveSolution">_Worksheet_SaveSolution</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Saves the exercise solution which is open on the current worksheet.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#.constructor">constructor</a></b>(params, srcNodeRef)
+								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#.constructor">constructor</a></b>(params)
 								</div>
-								<div class="description">Dojo specific cTor.</div>
+								<div class="description">cTor.</div>
 							</td>
 						</tr>
 					
@@ -549,7 +561,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#.destroy">destroy</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">dTor.</div>
 							</td>
 						</tr>
 					
@@ -576,7 +588,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TCourseWareGUI.<b><a href="../symbols/TCourseWareGUI.html#.startup">startup</a></b>()
 								</div>
-								<div class="description">Sets up the UI.</div>
+								<div class="description">Startup method.</div>
 							</td>
 						</tr>
 					
@@ -606,7 +618,7 @@ ul.inheritsList
 
 <b>Elements on the user interface</b>
 
-<pre>    
+<pre>
     .-------------------------------------.
     | Heading                             |
     '-------------------------------------'
@@ -631,13 +643,13 @@ ul.inheritsList
 <dl>
     <dt>Heading</dt>
     <dd>The heading text. Changes with each particular lesson loaded.</dd>
-    
+
     <dt>Content (tree)</dt>
     <dd>A tree with clickable links to the resp. lessons and ext. resources.</dd>
-    
+
     <dt>Article view</dt>
     <dd>A title pane showing the resp. article</dd>
-    
+
     <dt>Exercises</dt>
     <dd>A title pane showing the exercises for the currently loaded lesson.</dd>
 </dl>
@@ -904,6 +916,28 @@ ul.inheritsList
 						
 						
 
+					<hr />
+				
+					<a name=".kSchemaParams"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; &lt;constant&gt; 
+					
+					<span class="light">{JSON schema}</span>
+					<span class="light">TCourseWareGUI.</span><b>kSchemaParams</b>
+					
+					</div>
+					<div class="description">
+						JSON schema to validate the CourseWare GUI's configuration descriptor.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
 					
 				
 			
@@ -922,7 +956,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Tests whether the given category ID is known. Throws an exception
+if it's not known.
 						
 						
 					</div>
@@ -934,15 +969,26 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>c</b>
+									<span class="light fixedFont">{String}</span> <b>c</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The category tested.</dd>
 							
 							</dl>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span>  <b></b>
+								</dt>
+								<dd>Exception with error message if the
+                     category is unknown.</dd>
+							
+							</dl>
 						
 						
 						
@@ -953,12 +999,12 @@ ul.inheritsList
 					<a name="._GetDescriptor"> </a>
 					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
 					
-					
+					<span class="light">{JSObject}</span>
 					<span class="light">TCourseWareGUI.</span><b>_GetDescriptor</b>(query)
 					
 					</div>
 					<div class="description">
-						
+						Returns the descriptor of node the user clicked on in the content tree.
 						
 						
 					</div>
@@ -970,7 +1016,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>query</b>
+									<span class="light fixedFont">{JSObject}</span> <b>query</b>
 									
 								</dt>
 								<dd></dd>
@@ -980,6 +1026,23 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span>  <b></b>
+								</dt>
+								<dd>An exception containing details, if there wasn't any matching node.</dd>
+							
+							</dl>
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{JSObject}</span> The descriptor of the requested node.</dd>
+							
+							</dl>
 						
 						
 						
@@ -994,7 +1057,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Loads the article (lesson) as specified by the descriptor with the given <code>id</code>.
+						Loads the article/lesson/ext. resource as specified by the 
+descriptor with the given <code>id</code>.
 						
 						
 					</div>
@@ -1030,7 +1094,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Loads external resource into new window/tab
 						
 						
 					</div>
@@ -1042,10 +1106,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>item</b>
+									<span class="light fixedFont">{JSON}</span> <b>item</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>A descriptor specifying the resource to load.</dd>
 							
 							</dl>
 						
@@ -1066,7 +1130,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Loads the folder as specified by the given <code>item</code>.
 						
 						
 					</div>
@@ -1078,10 +1142,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>item</b>
+									<span class="light fixedFont">{JSON}</span> <b>item</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>A descriptor specifying the folder to load.</dd>
 							
 							</dl>
 						
@@ -1102,7 +1166,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Loads the lesson as specified by the given <code>item</code>.
 						
 						
 					</div>
@@ -1114,10 +1178,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>item</b>
+									<span class="light fixedFont">{JSON}</span> <b>item</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>A descriptor specifying the lesson to load.</dd>
 							
 							</dl>
 						
@@ -1138,7 +1202,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Notifies the hosting client that we are finished loading an 
+article (lesson, resource, ...).
 						
 						
 					</div>
@@ -1163,7 +1228,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Creates a worksheet for teh currently open lesson.
 						
 						
 					</div>
@@ -1188,7 +1253,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Converts the exercise part into a worksheet, so the student can work on the solutions.
+						Converts the exercise part of the currently loaded lesson into 
+a worksheet, so the student can work on the solutions.
 						
 						
 					</div>
@@ -1213,7 +1279,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Loads a user solution from the local storage into the current worksheet.
 						
 						
 					</div>
@@ -1225,10 +1291,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>id</b>
+									<span class="light fixedFont">{type}</span> <b>id</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The UID of the solution.</dd>
 							
 							</dl>
 						
@@ -1249,7 +1315,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Saves the exercise solution which is open on the current worksheet.
 						
 						
 					</div>
@@ -1269,12 +1335,12 @@ ul.inheritsList
 					<a name=".constructor"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{undefined}</span>
-					<span class="light">TCourseWareGUI.</span><b>constructor</b>(params, srcNodeRef)
+					
+					<span class="light">TCourseWareGUI.</span><b>constructor</b>(params)
 					
 					</div>
 					<div class="description">
-						Dojo specific cTor.
+						cTor.
 						
 						
 					</div>
@@ -1286,29 +1352,17 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{type}</span> <b>params</b>
+									<span class="light fixedFont">{JSON}</span> <b>params</b>
 									
 								</dt>
-								<dd></dd>
-							
-								<dt>
-									<span class="light fixedFont">{type}</span> <b>srcNodeRef</b>
-									
-								</dt>
-								<dd></dd>
+								<dd>The CourseWare GUI's configuration.  Must
+                             conform to <a href="../symbols/TCourseWareGUI.html#.kSchemaParams">TCourseWareGUI.kSchemaParams</a>.</dd>
 							
 							</dl>
 						
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{undefined}</span> </dd>
-							
-							</dl>
 						
 						
 						
@@ -1323,7 +1377,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						dTor.
 						
 						
 					</div>
@@ -1348,7 +1402,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Loads the course as specified by the descriptor. This
+						Loads the course as specified by the descriptor. This will load the
+descriptor and set the LH content tree.
 						
 						
 					</div>
@@ -1363,8 +1418,8 @@ ul.inheritsList
 									<span class="light fixedFont">{JSObject}</span> <b>descriptor</b>
 									
 								</dt>
-								<dd>The couse's descriptor, containing 
-                                         information on all lessons and ext. 
+								<dd>The couse's descriptor, containing
+                                         information on all lessons and ext.
                                          resources.</dd>
 							
 							</dl>
@@ -1411,29 +1466,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Sets up the UI. This overrides the _WidgetBase::startup (). 
-We don't use the typical way of overriding 
-_WidgetBase::postCreate (), because this widget includes 
-child widgets (such as BorderContainer), and it's not 
-recommended to do JS resizing in the postCreate() method. 
-We could get fancy and do part of the instantiation in a 
-postCreate() method, but having everything together in 
-startup () makes things simpler.
-
-Excerpt, Dojo documentation:
-    + postCreate
-         This is typically the workhorse of a custom widget. The 
-         widget has been rendered (but note that child widgets in 
-         the containerNode have not!). The widget though may not 
-         be attached to the DOM yet so you shouldn’t do any sizing 
-         calculations in this method.
-    
-    + startup
-         If you need to be sure parsing and creation of any child 
-         widgets has completed, use startup. This is often used 
-         for layout widgets like BorderContainer. If the widget 
-         does JS sizing, then startup() should call resize(), 
-         which does the sizing.
+						Startup method. Sets up the CourseWare GUI.
 						
 						
 					</div>
@@ -1462,7 +1495,7 @@ Excerpt, Dojo documentation:
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Apr 12 2016 06:26:08 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 13:51:03 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

@@ -245,7 +245,7 @@ define
             },
             
             /**
-             * Dojo specific cTor.
+             * cTor.
              * 
              * @param {JSON}    params      The text window's configuration.  Must 
              *                              conform to {@link TTextWindow.kSchemaParams}.

@@ -258,7 +258,7 @@ ul.inheritsList
 				
 				
 			
-				TChangeToClassName
+				TModel
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_gui_TWorksheet_TModel.js.html">TModel.js</a>.
@@ -282,7 +282,7 @@ ul.inheritsList
 							<div class="fixedFont">
 								<b><a href="../symbols/TModel.html#constructor">TModel</a></b>()
 							</div>
-							<div class="description">Insert_explanation_here</div>
+							<div class="description">Storage model, holding all exercises of a worksheet.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -290,6 +290,44 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class TModel.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TModel.<b><a href="../symbols/TModel.html#.fExerciseList">fExerciseList</a></b>
+								</div>
+								<div class="description">Background storage for index based access.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TModel.<b><a href="../symbols/TModel.html#.fExerciseMap">fExerciseMap</a></b>
+								</div>
+								<div class="description">Background storage for key based access.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -311,7 +349,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#._AssertIDUsable">_AssertIDUsable</a></b>(id, testTypeUnique)
 								</div>
-								<div class="description"></div>
+								<div class="description">Tests whether the given <code>id</code> is aready stored, resp.</div>
 							</td>
 						</tr>
 					
@@ -320,7 +358,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#._AssertIndexUsable">_AssertIndexUsable</a></b>(i)
 								</div>
-								<div class="description"></div>
+								<div class="description">Tests whether the given index <code>i</code> is within bounds.</div>
 							</td>
 						</tr>
 					
@@ -329,7 +367,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.constructor">constructor</a></b>()
 								</div>
-								<div class="description">Dojo specific cTor.</div>
+								<div class="description">cTor.</div>
 							</td>
 						</tr>
 					
@@ -338,7 +376,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.GetByID">GetByID</a></b>(id)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the exercise with the given key, <code>id</code>.</div>
 							</td>
 						</tr>
 					
@@ -347,7 +385,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.GetByIndex">GetByIndex</a></b>(i)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the exercise with the given index, <code>i</code>.</div>
 							</td>
 						</tr>
 					
@@ -356,7 +394,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.GetNumElements">GetNumElements</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the number of exercises stored.</div>
 							</td>
 						</tr>
 					
@@ -365,7 +403,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.HasElement">HasElement</a></b>(id)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns <code>true</code>, if there's an exercise with the 
+given <code>id</code>, <code>false</code> otherwise.</div>
 							</td>
 						</tr>
 					
@@ -374,7 +413,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TModel.<b><a href="../symbols/TModel.html#.Register">Register</a></b>(exercise)
 								</div>
-								<div class="description"></div>
+								<div class="description">Registers the given exercise, i.e.</div>
 							</td>
 						</tr>
 					
@@ -399,7 +438,8 @@ ul.inheritsList
 				</div>
 				
 				<div class="description">
-					Insert_explanation_here
+					Storage model, holding all exercises of a worksheet. Provides index 
+based access and key based access.
 					
 				</div>
 				
@@ -419,6 +459,55 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name=".fExerciseList"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{JSArray}</span>
+					<span class="light">TModel.</span><b>fExerciseList</b>
+					
+					</div>
+					<div class="description">
+						Background storage for index based access.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".fExerciseMap"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{JSObject}</span>
+					<span class="light">TModel.</span><b>fExerciseMap</b>
+					
+					</div>
+					<div class="description">
+						Background storage for key based access.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -434,7 +523,46 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Tests whether the given <code>id</code> is aready stored, resp. not stored. 
+The exact behaviour depends on the <code>testTypeUnique</code> parameter: 
+
+<table border="1">
+    <tr>
+        <th>testTypeUnique</th>
+        <th>hasID</th>
+        <th>Result</th>
+    </tr>
+    <tr>
+        <td><code>ETestType.kSkip</code></td>
+        <td><code>true</code></td>
+        <td>OK</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td><code>false</code></td>
+        <td>OK</td>
+    </tr>
+    <tr>
+        <td><code>ETestType.kIDMustExist</code></td>
+        <td><code>true</code></td>
+        <td>OK</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td><code>false</code></td>
+        <td>throw exception</td>
+    </tr>
+    <tr>
+        <td><code>ETestType.kIDMustNotExist</code></td>
+        <td><code>true</code></td>
+        <td>throw exception</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td><code>false</code></td>
+        <td>OK</td>
+    </tr>
+</table>
 						
 						
 					</div>
@@ -446,21 +574,32 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>id</b>
+									<span class="light fixedFont">{type}</span> <b>id</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The UID to look for.</dd>
 							
 								<dt>
-									<b>testTypeUnique</b>
+									<span class="light fixedFont">{type}</span> <b>testTypeUnique</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>A flag, determining the test specifics.</dd>
 							
 							</dl>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span>  <b></b>
+								</dt>
+								<dd>Exception with message if an exercise with the same 
+                       ID does (not) exist.</dd>
+							
+							</dl>
 						
 						
 						
@@ -476,7 +615,10 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Tests whether the given index <code>i</code> is within bounds.
+For <code>i</code> to be valid, the value of <code>i</code> must
+be in interval <code>[0, n[</code> where <code>n</code>
+is the number of exercises stored.
 						
 						
 					</div>
@@ -488,15 +630,26 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>i</b>
+									<span class="light fixedFont">{type}</span> <b>i</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The index to test.</dd>
 							
 							</dl>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span>  <b></b>
+								</dt>
+								<dd>Exception with message if <code>i</code>
+                       is out of bounds.</dd>
+							
+							</dl>
 						
 						
 						
@@ -512,7 +665,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Dojo specific cTor.
+						cTor.
 						
 						
 					</div>
@@ -532,12 +685,12 @@ ul.inheritsList
 					<a name=".GetByID"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{TExtercise}</span>
 					<span class="light">TModel.</span><b>GetByID</b>(id)
 					
 					</div>
 					<div class="description">
-						
+						Returns the exercise with the given key, <code>id</code>.
 						
 						
 					</div>
@@ -549,16 +702,23 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>id</b>
+									<span class="light fixedFont">{String}</span> <b>id</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The UID of the desired exercise.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{TExtercise}</span> The exercise.</dd>
+							
+							</dl>
 						
 						
 						
@@ -568,12 +728,14 @@ ul.inheritsList
 					<a name=".GetByIndex"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{TExtercise}</span>
 					<span class="light">TModel.</span><b>GetByIndex</b>(i)
 					
 					</div>
 					<div class="description">
-						
+						Returns the exercise with the given index, <code>i</code>. Index 
+must be between <code>0</code> (zero) and <code>n-1</code>, where
+<code>n</code> is the amount of exercises stored.
 						
 						
 					</div>
@@ -585,16 +747,23 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>i</b>
+									<span class="light fixedFont">{String}</span> <b>i</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The index of the desired exercise.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{TExtercise}</span> The exercise.</dd>
+							
+							</dl>
 						
 						
 						
@@ -604,12 +773,12 @@ ul.inheritsList
 					<a name=".GetNumElements"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{integer}</span>
 					<span class="light">TModel.</span><b>GetNumElements</b>()
 					
 					</div>
 					<div class="description">
-						
+						Returns the number of exercises stored.
 						
 						
 					</div>
@@ -620,6 +789,13 @@ ul.inheritsList
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{integer}</span> The number of exercises.</dd>
+							
+							</dl>
 						
 						
 						
@@ -629,12 +805,13 @@ ul.inheritsList
 					<a name=".HasElement"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{<a href="../symbols/TExercise.html">TExercise</a>}</span>
 					<span class="light">TModel.</span><b>HasElement</b>(id)
 					
 					</div>
 					<div class="description">
-						
+						Returns <code>true</code>, if there's an exercise with the 
+given <code>id</code>, <code>false</code> otherwise.
 						
 						
 					</div>
@@ -646,16 +823,25 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>id</b>
+									<span class="light fixedFont">{String}</span> <b>id</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The UID of the exercise searched for.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/TExercise.html">TExercise</a>}</span> The exercise searched, or, 
+                                 <code>null</code> if no such exercise 
+                                 is stored.</dd>
+							
+							</dl>
 						
 						
 						
@@ -670,7 +856,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Registers the given exercise, i.e. adds it to storage.
 						
 						
 					</div>
@@ -682,15 +868,26 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>exercise</b>
+									<span class="light fixedFont">{<a href="../symbols/TExercise.html">TExercise</a>}</span> <b>exercise</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The exercise to be stored.</dd>
 							
 							</dl>
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span>  <b></b>
+								</dt>
+								<dd>Exception with message if an exercise with
+                         the same UID is already stored.</dd>
+							
+							</dl>
 						
 						
 						
@@ -710,7 +907,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Apr 12 2016 06:26:08 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 13:51:03 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

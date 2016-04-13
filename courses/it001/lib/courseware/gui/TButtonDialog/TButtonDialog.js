@@ -283,7 +283,7 @@ define
             },
 
             /**
-             * Dojo specific cTor.
+             * cTor.
              * 
              * @param {JSON}    params      The dialog's configuration. Must contain the 
              *                              configuration for the set of buttons. Must 

@@ -1171,7 +1171,7 @@ define
         Shlemiel-the-painter-solution). Works for now - maybe we can implement a better 
         solution. Possible: Upon creation, augment the Editor component's inner structure 
         with some sort of DOM event handlers which detect content changes and pass these
-        on. Such handlers would need to cover border cases such as the user pasting content, 
+        on. Such handlers would need to cover border cases such as the user copying/pasting content, 
         i.e. key press detection is insufficient!
         
 [112]:  We set a guard to avoid multiple scheduling of window.setTimeout (...), just in case

@@ -1,26 +1,41 @@
 /**
- *  @fileoverview        Insert_here
+ *  @fileoverview        The state machine controlling the behaviour of a worksheet.
  */
 define 
 (
     [
-        "dojo/_base/declare"
+        "dojo/_base/declare",
+        "courseware/util/validator/TValidatorJSON"
     ],
     function 
     (
-        declare
+        declare,
+        JSObjectValidator
     )
     {
         /* Debug flag - for that extra info in hard places! */
         var gDebug = false;
         
+        /**
+         * The type of action to take with respect to saving the currently open
+         * exercise solution.
+         * 
+         * @enum
+         */
         var ESaveAction =
         {
-            kNone:                      0,
-            kSave:                      1,
-            kSaveConfirm:               2
+            kNone:                      0,      /* Don't save                   */
+            kSave:                      1,      /* Do save                      */
+            kSaveConfirm:               2       /* Ask the user whether to save */
         };
         
+        /**
+         * The central state table. Determines the different states of the 
+         * controller, how to go about saving the current solution and what 
+         * animations to play on state transitions.
+         * 
+         * @type        JSON
+         */
         var gkStateTable =                                                      /* [10] */
         {   
             /* Worksheet just constructed */
@@ -297,26 +312,61 @@ define
         var ret;
 
         /**
-         * On the worksheet all animations and other things) happen asynchronously. e.g. when 
-         * calling an animation function the call returns immediately, but the actual animation
-         * will complete at some unspecified time in the future.  However, We have to enforce 
-         * some sort of order in which everything unfolds:
-         *  
-         * 1. Receive incoming event, e.g. "kEdit". This event must be scheduled for later (stack). 
-         * 2. Call pre-handling. This will execute all worksheet animations, e.g. on current exercise, collapse 
-         *    editor, then migrate editor, then expand next exercise.
-         * 3. Once all pre-handling operations have finished, we receive a "kSuccess" event.
-         * 4. We retrieve pre-scheduled events back from storage and handle them. 
+         * The controller, moderating the behaviour of the worksheet it's associated with.
+         * Uses a state machine model.
          * 
-         * @class       TChangeToClassName
+         * @class       TController
          */
         TController = 
         {
+            /**
+             * JSON schema to validate the controller's configuration descriptor.
+             *
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaParams:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Text window descriptor",
+                "description":  "Descriptor for the controller descriptor",
+                "type":         "object",
+                properties:
+                {
+                    "fHost":
+                    {
+                        "description":      "The object hosting this controller",
+                        "type":             "object"
+                    }
+                }
+            },
+
             /* Export enumerators */
             ESaveAction:        ESaveAction,
                 
+            /**
+             * The client hosting this controller.
+             * 
+             * @type        courseware/gui/TWorksheet/TWorksheet
+             * @private
+             */
             fHost:              null,
+            
+            /**
+             * Buffers the next expected transition for executing after all 
+             * the animations have run.
+             * 
+             * @type    JSArray
+             * @private
+             */
             fStack:             null,
+            
+            /**
+             * Stores the ID of the current state.
+             * 
+             * @type    String
+             */
             fState:             null,
         
             /**
@@ -365,6 +415,12 @@ define
                 }
             },
             
+            /**
+             * Returns the transition to be executed next.
+             * 
+             * @param   {type}      event
+             * @returns {JSON}      The transition to execute.
+             */
             _GetTransition: function (event)
             {
                 var params;
@@ -416,10 +472,18 @@ define
                 return ret;
             },
             
+            /**
+             * cTor.
+             * 
+             * @param {JSON}    params      The dialog's configuration. Must contain the 
+             *                              configuration for the set of buttons. Must 
+             *                              conform to {@link TController.kSchemaParams}.
+             */
             constructor: function (params)
             {
-                if (gDebug) console.log ("TController::constructor ()");
+                if (gDebug) console.log ("TController::constructor ()");        /*[20]  */
 
+                JSObjectValidator.AssertValid (params, this.kSchemaParams, "constructor");
                 this.fHost  = params.fHost;
                 this.fState = "kNull";
                 this.fStack = [];
