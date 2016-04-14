@@ -258,7 +258,7 @@ ul.inheritsList
 				
 				
 			
-				TChangeToClassName
+				TDriver.
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/_home_peter_Documents_dev_teach_courses_ustegrew.github.io_courses_it001_lib_courseware_storage_driver_TDriver.js.html">TDriver.js</a>.
@@ -282,7 +282,7 @@ ul.inheritsList
 							<div class="fixedFont">
 								<b><a href="../symbols/TDriver.html#constructor">TDriver</a></b>()
 							</div>
-							<div class="description">Insert_explanation_here</div>
+							<div class="description"><code>localStorage</code> drivers (abstract base class).</div>
 						</td>
 					</tr>
 				</tbody>
@@ -290,6 +290,34 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class TDriver.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TDriver.<b><a href="../symbols/TDriver.html#.fStore">fStore</a></b>
+								</div>
+								<div class="description">The system's localStorage object.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -311,7 +339,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.constructor">constructor</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">cTor.</div>
 							</td>
 						</tr>
 					
@@ -320,7 +348,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.Get">Get</a></b>(key)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the value stored with the given <code>key</code>.</div>
 							</td>
 						</tr>
 					
@@ -329,7 +357,7 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.GetSize">GetSize</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the number of data items stored in the localStore.</div>
 							</td>
 						</tr>
 					
@@ -338,7 +366,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.HasKey">HasKey</a></b>(key)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns <code>true</code> the localStorage contains a key/value 
+pair with the given <code>key</code>, <code>false</code> otherwise.</div>
 							</td>
 						</tr>
 					
@@ -347,16 +376,17 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.Remove">Remove</a></b>(key)
 								</div>
-								<div class="description"></div>
+								<div class="description">Removes the key/value pair with the given <code>key</code> from 
+the localStorage.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.Set">Set</a></b>(key, data)
+								<div class="fixedFont">TDriver.<b><a href="../symbols/TDriver.html#.Set">Set</a></b>(key, value)
 								</div>
-								<div class="description"></div>
+								<div class="description">Updates or adds the given <code>key</code>/<code>value</code> pair.</div>
 							</td>
 						</tr>
 					
@@ -381,7 +411,9 @@ ul.inheritsList
 				</div>
 				
 				<div class="description">
-					Insert_explanation_here
+					<code>localStorage</code> drivers (abstract base class). Provides the 
+API for the localStorage layer. Sub classes must override the 
+<a href="../symbols/TDriver.html#.Get">TDriver.Get</a> and <a href="../symbols/TDriver.html#.Set">TDriver.Set</a> methods.
 					
 				</div>
 				
@@ -401,6 +433,33 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name=".fStore"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; 
+					
+					<span class="light">{window.localStorage}</span>
+					<span class="light">TDriver.</span><b>fStore</b>
+					
+					</div>
+					<div class="description">
+						The system's localStorage object.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -416,7 +475,7 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						cTor.
 						
 						
 					</div>
@@ -436,12 +495,13 @@ ul.inheritsList
 					<a name=".Get"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{String}</span>
 					<span class="light">TDriver.</span><b>Get</b>(key)
 					
 					</div>
 					<div class="description">
-						
+						Returns the value stored with the given <code>key</code>.<br/>
+Please note: Concrete sub classes must override this method.
 						
 						
 					</div>
@@ -453,16 +513,23 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key we want to retrieve the value of.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> The value associated with the given <code>key</code>.</dd>
+							
+							</dl>
 						
 						
 						
@@ -472,12 +539,12 @@ ul.inheritsList
 					<a name=".GetSize"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{integer}</span>
 					<span class="light">TDriver.</span><b>GetSize</b>()
 					
 					</div>
 					<div class="description">
-						
+						Returns the number of data items stored in the localStore.
 						
 						
 					</div>
@@ -488,6 +555,13 @@ ul.inheritsList
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{integer}</span> The number of stored items in the localStore.</dd>
+							
+							</dl>
 						
 						
 						
@@ -497,12 +571,13 @@ ul.inheritsList
 					<a name=".HasKey"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{boolean}</span>
 					<span class="light">TDriver.</span><b>HasKey</b>(key)
 					
 					</div>
 					<div class="description">
-						
+						Returns <code>true</code> the localStorage contains a key/value 
+pair with the given <code>key</code>, <code>false</code> otherwise.
 						
 						
 					</div>
@@ -514,16 +589,25 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key being looked up.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> <code>true</code> if a value with the given 
+                     <code>key</code> exists, <code>false</code> 
+                     otherwise.</dd>
+							
+							</dl>
 						
 						
 						
@@ -538,7 +622,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Removes the key/value pair with the given <code>key</code> from 
+the localStorage.
 						
 						
 					</div>
@@ -550,10 +635,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key we want to remove the value of.</dd>
 							
 							</dl>
 						
@@ -570,11 +655,12 @@ ul.inheritsList
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">TDriver.</span><b>Set</b>(key, data)
+					<span class="light">TDriver.</span><b>Set</b>(key, value)
 					
 					</div>
 					<div class="description">
-						
+						Updates or adds the given <code>key</code>/<code>value</code> pair.<br/>
+Please note: Concrete sub classes must override this method.
 						
 						
 					</div>
@@ -586,16 +672,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key we want to store the value as.</dd>
 							
 								<dt>
-									<b>data</b>
+									<span class="light fixedFont">{String}</span> <b>value</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The value to be stored.</dd>
 							
 							</dl>
 						
@@ -620,7 +706,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 15:30:46 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Apr 14 2016 12:56:10 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>

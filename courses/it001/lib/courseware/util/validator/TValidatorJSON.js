@@ -20,7 +20,7 @@ define
          */
         ret = 
         {
-            AssertValid: function (data, schema, strContext)
+            AssertValid: function (obj, schema, strContext)
             {
                 var vResult;
                 var objStr;
@@ -29,12 +29,12 @@ define
                 var e;
                 var err;
 
-                vResult = JSObjectValidator.validate (data, schema);
+                vResult = JSObjectValidator.validate (obj, schema);
                 if (! vResult.valid)
                 {
                     try
                     {
-                        objStr = JSON.stringify (data, null, 4);
+                        objStr = JSON.stringify (obj, null, 4);
                     }
                     catch (e)
                     {

@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Data storage driver. This driver passes all data unmodified.
+ *  @fileoverview        Data storage driver, passes data unmodified.
  */
 define 
 (
@@ -17,12 +17,18 @@ define
         var ret;
 
         /**
-         * Insert_explanation_here
+         * The allpass driver. Passes all data unmodified.
          * 
-         * @class       TChangeToClassName
+         * @class       TDriverAllpass
          */
         TDriverAllpass = 
         {
+            /**
+             * Returns the value stored with the given <code>key</code>.
+             * 
+             * @param   {String}    key     The key we want to retrieve the value of.
+             * @returns {String}    The value associated with the given <code>key</code>.
+             */
             Get: function (key)
             {
                 var ret;
@@ -32,9 +38,15 @@ define
                 return ret;
             },
         
-            Set: function (key, data)
+            /**
+             * Updates or adds the given <code>key</code>/<code>value</code> pair.
+             * 
+             * @param {String}      key     The key we want to store the value as.
+             * @param {String}      value   The value to be stored.
+             */
+            Set: function (key, value)
             {
-                this.fStore.setItem (key, data);
+                this.fStore.setItem (key, value);
             }
         };
     

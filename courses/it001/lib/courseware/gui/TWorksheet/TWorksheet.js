@@ -137,7 +137,7 @@ define
 
             /**
              * JSON schema to validate the properties on each exercise node on 
-             * a given exercise sheet (before it's converted here).
+             * a given exercise sheet (before it's converted in TWorksheet).
              *
              * @constant
              * @type        JSON schema
@@ -541,11 +541,14 @@ define
                     console.log ("actions: " + JSON.stringify (actions));
                 }
 
+                _this._DebugDumpModel ("NotifyPreTransitionActions (false, false)::ENTRY");
+                
                 this._NotifySystemFileSave_PreflightCheck (actions).then
                 (
-                    function (decision)
+                    function (decision) 
                     {
-                        return _this._NotifySystemFileSave (decision);           /* [80] */
+                        _this._DebugDumpModel ("NotifyPreTransitionActions::_NotifySystemFileSave_PreflightCheck");
+                        return _this._NotifySystemFileSave (decision);          /* [80] */
                     }
                 ).then
                 (
@@ -554,16 +557,18 @@ define
                         doC = actions.doCollapseCurrent;
                         doE = actions.doExpandNext;
                         
+                        _this._DebugDumpModel ("NotifyPreTransitionActions::_NotifySystemFileSave");
+
                         if ((! doC)  &&  (! doE))
                         {
-                            _this._NotifySystemControllerEvent ("kSuccess");     /* [90] */
+                            _this._NotifySystemControllerEvent ("kSuccess");    /* [90] */
                         }
                         else if ((! doC)  &&  (  doE))
                         {
                             _this._NotifySystemEditorChangeObserverSetPaused ().then
                             (
                                 function () {return _this._NotifyUIMigrateEditor ();}
-                            ).then
+                            ).then 
                             (
                                 function () {return _this._NotifyUIExpandNext ();}
                             ).then
@@ -571,7 +576,7 @@ define
                                 function () {return _this._NotifyUIScrollWindow ();}
                             ).then
                             (
-                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
+                                function () {return _this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                         else if ((  doC)  &&  (! doE))
@@ -581,7 +586,7 @@ define
                                 function () {return _this._NotifyUICollapseCurrent ();}
                             ).then
                             (
-                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
+                                function () {return _this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                         else if ((  doC)  &&  (  doE))
@@ -600,7 +605,7 @@ define
                                 function () {return _this._NotifyUIScrollWindow ();}
                             ).then
                             (
-                                function () {_this._NotifySystemControllerEvent ("kSuccess");}
+                                function () {return _this._NotifySystemControllerEvent ("kSuccess");}
                             );
                         }
                     }
@@ -831,19 +836,68 @@ define
                                  "data-courseware-type=\"exercise\".");
                 }
                 
+                this._DebugDumpModel ("startup()");
+                
                 this.fController.Notify ("kStart");
+            },
+            
+            _DebugDumpModel: function (preamble)
+            {
+                var i;
+                var n;
+                var e;
+                var rec;
+                var dmp;
+                
+                if (gDebug)
+                {
+                    if (preamble)
+                    {
+                        console.log ("_DebugDumpModel: " + preamble);
+                    }
+                    
+                    n   = this.fModel.GetNumElements ();
+                    if (n >= 1)
+                    {
+                        console.log ("_DebugDumpModel: Exercise nodes (" + n + " elements):");
+                        for (i = 0; i < n; i++)
+                        {
+                            e       = this.fModel.GetByIndex (i);
+                            rec = {};
+                            rec.ID      = (e.fID)           ?  e.fID                            : " ?" + JSON.stringify (e.fID)             + " ?";
+                            rec.Type    = (e.fContentType)  ?  e.fContentType                   : " ?" + JSON.stringify (e.fContentType)    + " ?";;
+                            rec.Lang    = (e.fContentLang)  ?  e.fContentLang                   : " ?" + JSON.stringify (e.fContentLang)    + " ?";;
+                            rec.Q       = (e.fTextQuestion) ?  e.fTextQuestion.substr (0, 20)   : " ?" + JSON.stringify (e.fTextQuestion)   + " ?";;
+                            rec.A       = (e.fTextSolution) ?  e.fTextSolution.substr (0, 20)   : " ?" + JSON.stringify (e.fTextSolution)   + " ?";;
+                            dmp         = JSON.stringify (rec);
+                            console.log (dmp);
+                        }
+                    }
+                    else
+                    {
+                        console.log ("Exercise nodes (" + n + " elements)");
+                    }
+                }
             },
             
             /**
              * Fires an event at the {@link TController}. 
              * 
              * @param       {String}        event   The ID of the event to be fired.
+             * @returns     {dojo/Deferred} A promise, resolved when the event has been fired.
              */
             _NotifySystemControllerEvent: function (event)
             {
+                var d;                                                          /* [120] */
+                
                 if (gDebug) console.log ("TWorksheet::_NotifySystemControllerEvent ('" + event + "')");
                 
+                d = new TDeferred ();
+                
                 this.fController.Notify.call (this.fController, event);
+                d.resolve ();
+                
+                return d;
             },
             
             /**
@@ -925,7 +979,6 @@ define
                 if (doOpen)
                 {
                     this.fExerciseNext = this.fModel.GetByID (exerciseID);
-                    this.fHandlers.onRequestLoadSolution (this.fExerciseNext.fID);
                     this._NotifySystemControllerEvent ("kEdit");
                 }
             },
@@ -1324,5 +1377,8 @@ define
            
  [110]:    Offset of -50px - Equivalent to three or four lines of text, so the user can see the last part of 
            the current exercise. 
+
+ [120]:    Strictly speaking, we don't need a Deferred object here, but it's there because we had 
+           to instrument the code for debug purposes. Should be removed for production code.
 
  */

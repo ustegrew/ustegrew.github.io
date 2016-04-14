@@ -1,28 +1,29 @@
 /**
- *  @fileoverview        Data storage driver. This driver passes all data unmodified.
+ *  @fileoverview        Data storage driver, passes data (de)compressed.
  */
 define 
 (
     [
         "dojo/_base/declare",
         "pieroxy_lz-string/lz-string",
+        "../../util/validator/TValidatorJSON",
         "./TDriver"
     ],
     function 
     (
         declare,
         compressor,
+        JSObjectValidator,
         TDriver
     )
     {
-        var kEconomyMin = 20;
-        
         var TDriverCompress;
         var ret;
 
         /**
          * The compression driver. (De)Compresses all data to (from) the local 
-         * storage. 
+         * storage. Uses LZW compression through a library (lz-string).
+         * 
          * Not all data will be compressed! For each submitted chunk of data 
          * the driver decides whether to store it compressed or as-is. This is
          * decided by the amount of storage saved: For each submitted chunk:
@@ -37,9 +38,54 @@ define
          * This object will be (de)serialized to/from a JSON record.
          * 
          * @class       TDriverCompress
+         * @extends     TDriver
          */
         TDriverCompress = 
         {
+            /**
+             * JSON schema to validate stored entries.
+             *
+             * @constant
+             * @type        JSON schema
+             * @private
+             */
+            kSchemaStoredRecord:
+            {
+                "$schema":      "http://json-schema.org/draft-03/schema#",
+                "title":        "Stored entry",
+                "description":  "Record as stored in localStorage",
+                "type":         "object",
+                properties:
+                {
+                    "isCompressed":
+                    {
+                        "description":      "Flag, denoting whether the entry is compressed or not",
+                        "type":             "boolean"
+                    },
+                    "value":
+                    {
+                        "description":      "The data payload",
+                        "type":             "string"
+                    }
+                }
+            },
+        
+            /**
+             * The threshold value. If we save at least this much percentage of 
+             * data we will compress it before storing it.
+             * 
+             * @type Float
+             * @constant
+             * @private
+             */
+            kEconomyMin: 20,
+        
+            /**
+             * Returns the value stored with the given <code>key</code>. 
+             * 
+             * @param   {String}    key     The key we want to retrieve the value of.
+             * @returns {String}    The value associated with the given <code>key</code>.
+             */
             Get: function (key)
             {
                 var stor;
@@ -51,20 +97,33 @@ define
                 if (stor !== null)
                 {
                     record  = JSON.parse (stor);
+
+                    /* [30] */
+                    JSObjectValidator.AssertValid (record, this.kSchemaStoredRecord, "TDriverCompress::Get");
+
                     if (record.isCompressed)
                     {
-                        ret = compressor.decompressFromBase64 (record.data);
+                        ret = compressor.decompressFromBase64 (record.value);
                     }
                     else
                     {
-                        ret = record.data;
+                        ret = record.value;
                     }
                 }
                 
                 return ret;
             },
         
-            Set: function (key, data)
+            /**
+             * Updates or adds the given <code>key</code>/<code>value</code> pair. 
+             * Value will be compressed if compression saves a threshold amount 
+             * of space.
+             * 
+             * @param {String}      key     The key we want to store the value as.
+             * @param {String}      value   The value to be stored.
+             * @see {@link TDriverCompress.kEconomyMin}
+             */
+            Set: function (key, value)
             {
                 var compr;
                 var lPerc;
@@ -72,17 +131,17 @@ define
                 var record;
                 var stor;
                 
-                compr   = compressor.compressToBase64 (data);                   /* [10] */
+                compr = compressor.compressToBase64 (value);                   /* [10] */
                 if (compr.length >= 1)
                 {
-                    lPerc   = 100 * compr.length / data.length;
+                    lPerc   = 100 * compr.length / value.length;
                     economy = 100 - lPerc;
-                    if (economy >= kEconomyMin)
+                    if (economy >= this.kEconomyMin)
                     {
                         record =
                         {
                             isCompressed:   true,
-                            data:           compr
+                            value:          compr
                         };
                     }
                     else
@@ -90,7 +149,7 @@ define
                         record =
                         {
                             isCompressed:   false,
-                            data:           data                                /* [20] */
+                            value:          value                               /* [20] */
                         };
                     }
                 }
@@ -99,7 +158,7 @@ define
                     record =
                     {
                         isCompressed:   false,
-                        data:           ""
+                        value:          ""
                     }
                 }
                 stor = JSON.stringify (record);
@@ -119,5 +178,7 @@ define
  [20]: If the record is small we are throwing away the compressed data. This makes the driver 
        time inefficient for small records which is a design weakness. I don't know the 
        solution to this. For now, it works.
+ [30]: We must validate each stored record, otherwise we get subtle bugs (variables are
+       suddenly undefined somewhere else etc.)
 
  */

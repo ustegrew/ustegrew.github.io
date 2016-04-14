@@ -6,125 +6,186 @@
 	.REGX {color: #339;}
 	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
 	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
-<span class='line'>  2</span>  *  @fileoverview        Data storage driver. This driver passes all data unmodified.
+<span class='line'>  2</span>  *  @fileoverview        Data storage driver, passes data (de)compressed.
 <span class='line'>  3</span>  */</span><span class="WHIT">
 <span class='line'>  4</span> </span><span class="NAME">define</span><span class="WHIT"> 
 <span class='line'>  5</span> </span><span class="PUNC">(</span><span class="WHIT">
 <span class='line'>  6</span> </span><span class="WHIT">    </span><span class="PUNC">[</span><span class="WHIT">
 <span class='line'>  7</span> </span><span class="WHIT">        </span><span class="STRN">"dojo/_base/declare"</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>  8</span> </span><span class="WHIT">        </span><span class="STRN">"pieroxy_lz-string/lz-string"</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>  9</span> </span><span class="WHIT">        </span><span class="STRN">"./TDriver"</span><span class="WHIT">
-<span class='line'> 10</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 11</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
-<span class='line'> 12</span>     </span><span class="PUNC">(</span><span class="WHIT">
-<span class='line'> 13</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="NAME">compressor</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">TDriver</span><span class="WHIT">
-<span class='line'> 16</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">kEconomyMin</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">20</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 19</span> </span><span class="WHIT">        
-<span class='line'> 20</span>         </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TDriverCompress</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>  9</span> </span><span class="WHIT">        </span><span class="STRN">"../../util/validator/TValidatorJSON"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">        </span><span class="STRN">"./TDriver"</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> 
+<span class='line'> 13</span>     </span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">        </span><span class="NAME">declare</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">        </span><span class="NAME">compressor</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">JSObjectValidator</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">        </span><span class="NAME">TDriver</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">TDriverCompress</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 21</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'> 22</span> 
 <span class='line'> 23</span> </span><span class="WHIT">        </span><span class="COMM">/**
 <span class='line'> 24</span>          * The compression driver. (De)Compresses all data to (from) the local 
-<span class='line'> 25</span>          * storage. 
-<span class='line'> 26</span>          * Not all data will be compressed! For each submitted chunk of data 
-<span class='line'> 27</span>          * the driver decides whether to store it compressed or as-is. This is
-<span class='line'> 28</span>          * decided by the amount of storage saved: For each submitted chunk:
-<span class='line'> 29</span>          *     - if compressing can reduce storage size by at least 20% then 
-<span class='line'> 30</span>          *       the data will be stored in compressed format.
-<span class='line'> 31</span>          *     - if savings are less than 20%, then we store uncompressed.
-<span class='line'> 32</span>          * After the compression round the data will be packed into a JS object:
-<span class='line'> 33</span>          *     {
-<span class='line'> 34</span>          *         isCompressed:    boolean     // true if data is compressed
-<span class='line'> 35</span>          *         data:            string      // The data payload
-<span class='line'> 36</span>          *     }
-<span class='line'> 37</span>          * This object will be (de)serialized to/from a JSON record.
-<span class='line'> 38</span>          * 
-<span class='line'> 39</span>          * @class       TDriverCompress
-<span class='line'> 40</span>          */</span><span class="WHIT">
-<span class='line'> 41</span> </span><span class="WHIT">        </span><span class="NAME">TDriverCompress</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
-<span class='line'> 42</span>         </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 43</span> </span><span class="WHIT">            </span><span class="NAME">Get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 44</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 45</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 46</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">record</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 47</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 48</span> </span><span class="WHIT">                
-<span class='line'> 49</span>                 </span><span class="NAME">ret</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 50</span> </span><span class="WHIT">                </span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fStore.getItem</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 51</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 52</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 53</span> </span><span class="WHIT">                    </span><span class="NAME">record</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.parse</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">stor</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 54</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record.isCompressed</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 55</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 56</span> </span><span class="WHIT">                        </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">compressor.decompressFromBase64</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record.data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 57</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 58</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
-<span class='line'> 59</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 60</span> </span><span class="WHIT">                        </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">record.data</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 61</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 62</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 63</span> </span><span class="WHIT">                
-<span class='line'> 64</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 65</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 66</span> </span><span class="WHIT">        
-<span class='line'> 67</span>             </span><span class="NAME">Set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 68</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 69</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">compr</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 70</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">lPerc</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 71</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">economy</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 72</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">record</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 73</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 74</span> </span><span class="WHIT">                
-<span class='line'> 75</span>                 </span><span class="NAME">compr</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">compressor.compressToBase64</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">                   </span><span class="COMM">/* [10] */</span><span class="WHIT">
-<span class='line'> 76</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">compr.length</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 77</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 78</span> </span><span class="WHIT">                    </span><span class="NAME">lPerc</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="NAME">compr.length</span><span class="WHIT"> </span><span class="PUNC">/</span><span class="WHIT"> </span><span class="NAME">data.length</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 79</span> </span><span class="WHIT">                    </span><span class="NAME">economy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">lPerc</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 80</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">economy</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">kEconomyMin</span><span class="PUNC">)</span><span class="WHIT">
-<span class='line'> 81</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 82</span> </span><span class="WHIT">                        </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
-<span class='line'> 83</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 84</span> </span><span class="WHIT">                            </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 85</span> </span><span class="WHIT">                            </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT">           </span><span class="NAME">compr</span><span class="WHIT">
-<span class='line'> 86</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 87</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 88</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
-<span class='line'> 89</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 90</span> </span><span class="WHIT">                        </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
-<span class='line'> 91</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 92</span> </span><span class="WHIT">                            </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'> 93</span> </span><span class="WHIT">                            </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT">           </span><span class="NAME">data</span><span class="WHIT">                                </span><span class="COMM">/* [20] */</span><span class="WHIT">
-<span class='line'> 94</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'> 95</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 96</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'> 97</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'> 25</span>          * storage. Uses LZW compression through a library (lz-string).
+<span class='line'> 26</span>          * 
+<span class='line'> 27</span>          * Not all data will be compressed! For each submitted chunk of data 
+<span class='line'> 28</span>          * the driver decides whether to store it compressed or as-is. This is
+<span class='line'> 29</span>          * decided by the amount of storage saved: For each submitted chunk:
+<span class='line'> 30</span>          *     - if compressing can reduce storage size by at least 20% then 
+<span class='line'> 31</span>          *       the data will be stored in compressed format.
+<span class='line'> 32</span>          *     - if savings are less than 20%, then we store uncompressed.
+<span class='line'> 33</span>          * After the compression round the data will be packed into a JS object:
+<span class='line'> 34</span>          *     {
+<span class='line'> 35</span>          *         isCompressed:    boolean     // true if data is compressed
+<span class='line'> 36</span>          *         data:            string      // The data payload
+<span class='line'> 37</span>          *     }
+<span class='line'> 38</span>          * This object will be (de)serialized to/from a JSON record.
+<span class='line'> 39</span>          * 
+<span class='line'> 40</span>          * @class       TDriverCompress
+<span class='line'> 41</span>          * @extends     TDriver
+<span class='line'> 42</span>          */</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="NAME">TDriverCompress</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'> 44</span>         </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 46</span>              * JSON schema to validate stored entries.
+<span class='line'> 47</span>              *
+<span class='line'> 48</span>              * @constant
+<span class='line'> 49</span>              * @type        JSON schema
+<span class='line'> 50</span>              * @private
+<span class='line'> 51</span>              */</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">            </span><span class="NAME">kSchemaStoredRecord</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">                </span><span class="STRN">"$schema"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"http://json-schema.org/draft-03/schema#"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">                </span><span class="STRN">"title"</span><span class="PUNC">:</span><span class="WHIT">        </span><span class="STRN">"Stored entry"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">                </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">  </span><span class="STRN">"Record as stored in localStorage"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">                </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">         </span><span class="STRN">"object"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">                </span><span class="NAME">properties</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">                    </span><span class="STRN">"isCompressed"</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">                        </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"Flag, denoting whether the entry is compressed or not"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">                        </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"boolean"</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">                    </span><span class="STRN">"value"</span><span class="PUNC">:</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">                        </span><span class="STRN">"description"</span><span class="PUNC">:</span><span class="WHIT">      </span><span class="STRN">"The data payload"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">                        </span><span class="STRN">"type"</span><span class="PUNC">:</span><span class="WHIT">             </span><span class="STRN">"string"</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">        
+<span class='line'> 73</span>             </span><span class="COMM">/**
+<span class='line'> 74</span>              * The threshold value. If we save at least this much percentage of 
+<span class='line'> 75</span>              * data we will compress it before storing it.
+<span class='line'> 76</span>              * 
+<span class='line'> 77</span>              * @type Float
+<span class='line'> 78</span>              * @constant
+<span class='line'> 79</span>              * @private
+<span class='line'> 80</span>              */</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">            </span><span class="NAME">kEconomyMin</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">20</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">        
+<span class='line'> 83</span>             </span><span class="COMM">/**
+<span class='line'> 84</span>              * Returns the value stored with the given &lt;code>key&lt;/code>. 
+<span class='line'> 85</span>              * 
+<span class='line'> 86</span>              * @param   {String}    key     The key we want to retrieve the value of.
+<span class='line'> 87</span>              * @returns {String}    The value associated with the given &lt;code>key&lt;/code>.
+<span class='line'> 88</span>              */</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">            </span><span class="NAME">Get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">record</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="WHIT">                
+<span class='line'> 95</span>                 </span><span class="NAME">ret</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">                </span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.fStore.getItem</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">!==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
 <span class='line'> 98</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'> 99</span> </span><span class="WHIT">                    </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
-<span class='line'>100</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>101</span> </span><span class="WHIT">                        </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>102</span> </span><span class="WHIT">                        </span><span class="NAME">data</span><span class="PUNC">:</span><span class="WHIT">           </span><span class="STRN">""</span><span class="WHIT">
-<span class='line'>103</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>104</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>105</span> </span><span class="WHIT">                </span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>106</span> </span><span class="WHIT">                </span><span class="NAME">this.fStore.setItem</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>107</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>108</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>109</span> </span><span class="WHIT">    
-<span class='line'>110</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TDriverCompress"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">TDriver</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TDriverCompress</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>111</span> </span><span class="WHIT">    
-<span class='line'>112</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>113</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
-<span class='line'>114</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>115</span> 
-<span class='line'>116</span> </span><span class="COMM">/*
-<span class='line'>117</span> 
-<span class='line'>118</span>  [10]: We compress to (decompress from) a base64 string as this uses a safe character set.
-<span class='line'>119</span>  [20]: If the record is small we are throwing away the compressed data. This makes the driver 
-<span class='line'>120</span>        time inefficient for small records which is a design weakness. I don't know the 
-<span class='line'>121</span>        solution to this. For now, it works.
-<span class='line'>122</span> 
-<span class='line'>123</span>  */</span></pre></body></html>
+<span class='line'> 99</span> </span><span class="WHIT">                    </span><span class="NAME">record</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.parse</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">stor</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="WHIT">                    </span><span class="COMM">/* [30] */</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">                    </span><span class="NAME">JSObjectValidator.AssertValid</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.kSchemaStoredRecord</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"TDriverCompress::Get"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>103</span> 
+<span class='line'>104</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record.isCompressed</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">                        </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">compressor.decompressFromBase64</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record.value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">                        </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">record.value</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">                
+<span class='line'>114</span>                 </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">        
+<span class='line'>117</span>             </span><span class="COMM">/**
+<span class='line'>118</span>              * Updates or adds the given &lt;code>key&lt;/code>/&lt;code>value&lt;/code> pair. 
+<span class='line'>119</span>              * Value will be compressed if compression saves a threshold amount 
+<span class='line'>120</span>              * of space.
+<span class='line'>121</span>              * 
+<span class='line'>122</span>              * @param {String}      key     The key we want to store the value as.
+<span class='line'>123</span>              * @param {String}      value   The value to be stored.
+<span class='line'>124</span>              * @see {@link TDriverCompress.kEconomyMin}
+<span class='line'>125</span>              */</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">            </span><span class="NAME">Set</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">            </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">compr</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">lPerc</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">economy</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">record</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">                </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">                
+<span class='line'>134</span>                 </span><span class="NAME">compr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">compressor.compressToBase64</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">value</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">                   </span><span class="COMM">/* [10] */</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">compr.length</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">                    </span><span class="NAME">lPerc</span><span class="WHIT">   </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="NAME">compr.length</span><span class="WHIT"> </span><span class="PUNC">/</span><span class="WHIT"> </span><span class="NAME">value.length</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">                    </span><span class="NAME">economy</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">100</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">lPerc</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">                    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">economy</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">this.kEconomyMin</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">                        </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">                            </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">true</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">                            </span><span class="NAME">value</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NAME">compr</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">                    </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">                        </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">                        </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">                            </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">                            </span><span class="NAME">value</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="NAME">value</span><span class="WHIT">                               </span><span class="COMM">/* [20] */</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">                        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">                </span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">                </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">                    </span><span class="NAME">record</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">                    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">                        </span><span class="NAME">isCompressed</span><span class="PUNC">:</span><span class="WHIT">   </span><span class="KEYW">false</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">                        </span><span class="NAME">value</span><span class="PUNC">:</span><span class="WHIT">          </span><span class="STRN">""</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">                    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">                </span><span class="NAME">stor</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">record</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">                </span><span class="NAME">this.fStore.setItem</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">key</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">stor</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">    
+<span class='line'>169</span>         </span><span class="NAME">ret</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">declare</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">"TDriverCompress"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">TDriver</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">TDriverCompress</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">    
+<span class='line'>171</span>         </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">ret</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>174</span> 
+<span class='line'>175</span> </span><span class="COMM">/*
+<span class='line'>176</span> 
+<span class='line'>177</span>  [10]: We compress to (decompress from) a base64 string as this uses a safe character set.
+<span class='line'>178</span>  [20]: If the record is small we are throwing away the compressed data. This makes the driver 
+<span class='line'>179</span>        time inefficient for small records which is a design weakness. I don't know the 
+<span class='line'>180</span>        solution to this. For now, it works.
+<span class='line'>181</span>  [30]: We must validate each stored record, otherwise we get subtle bugs (variables are
+<span class='line'>182</span>        suddenly undefined somewhere else etc.)
+<span class='line'>183</span> 
+<span class='line'>184</span>  */</span></pre></body></html>

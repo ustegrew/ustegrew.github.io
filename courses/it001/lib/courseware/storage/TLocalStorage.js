@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Insert_here
+ *  @fileoverview        Adapter (driver) to the browser's local storage.
  */
 define 
 (
@@ -17,6 +17,13 @@ define
         TDriverCompress
     )
     {
+        /**
+         * JSON schema to validate the driver's configuration descriptor.
+         * 
+         * @constant
+         * @type        JSON schema
+         * @private
+         */
         var kSchemaParams =
         {
             "$schema":      "http://json-schema.org/draft-03/schema#",
@@ -40,15 +47,24 @@ define
         var ret;
 
         /**
-         * Accessor to the global window.localStorage object. 
+         * Adapter to the global window.localStorage object. 
          * 
          * @class       TLocalStorage
          */
         TLocalStorage = 
         {
-            fLS:        null,
+//            fLS:        null, // Obsolete?
+             /**
+              * The underlying driver which provides the connectivity with the local storage.
+              */
             fDriver:    null,
             
+            /**
+             * 
+             * @param {type} key
+             * @param {type} defaultValue
+             * @returns {TLocalStorage_L13.TLocalStorage@pro;fDriver@call;Get|String}
+             */
             Get: function (key, defaultValue)
             {
                 var ret;
@@ -59,6 +75,10 @@ define
                 return ret;
             },
             
+            /**
+             * 
+             * @returns {TLocalStorage_L13.TLocalStorage@pro;fDriver@call;GetSize}
+             */
             GetSize: function ()
             {
                 var ret;
@@ -68,6 +88,11 @@ define
                 return ret;
             },
             
+            /**
+             * 
+             * @param {type} key
+             * @returns {TLocalStorage_L13.TLocalStorage@pro;fDriver@call;HasKey}
+             */
             HasKey: function (key)
             {
                 var ret;
@@ -77,16 +102,32 @@ define
                 return ret;
             },
             
+            /**
+             * 
+             * @param {type} key
+             * @returns {undefined}
+             */
             Remove: function (key)
             {
                 this.fDriver.Remove (key);
             },
             
+            /**
+             * 
+             * @param {type} key
+             * @param {type} data
+             * @returns {undefined}
+             */
             Set: function (key, data)
             {
                 this.fDriver.Set (key, data);
             },
             
+            /**
+             * 
+             * @param {type} params
+             * @returns {undefined}
+             */
             constructor: function (params)
             {
                 var kID = "TLocalStorage::cTor";

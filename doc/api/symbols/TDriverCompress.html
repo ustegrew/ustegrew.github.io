@@ -256,6 +256,8 @@ ul.inheritsList
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
+				<br />Extends
+					<a href="../symbols/TDriver.html">TDriver</a>.<br />
 				
 			
 				TDriverCompress
@@ -291,6 +293,48 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class TDriverCompress.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &lt;constant&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TDriverCompress.<b><a href="../symbols/TDriverCompress.html#.kEconomyMin">kEconomyMin</a></b>
+								</div>
+								<div class="description">The threshold value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;private&gt; &lt;static&gt; &lt;constant&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								TDriverCompress.<b><a href="../symbols/TDriverCompress.html#.kSchemaStoredRecord">kSchemaStoredRecord</a></b>
+								</div>
+								<div class="description">JSON schema to validate stored entries.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+				<dl class="inheritsList">
+				
+				</dl>
+				
+			
 
 <!-- ============================== methods summary ======================== -->
 			
@@ -311,16 +355,16 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont">TDriverCompress.<b><a href="../symbols/TDriverCompress.html#.Get">Get</a></b>(key)
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns the value stored with the given <code>key</code>.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">TDriverCompress.<b><a href="../symbols/TDriverCompress.html#.Set">Set</a></b>(key, data)
+								<div class="fixedFont">TDriverCompress.<b><a href="../symbols/TDriverCompress.html#.Set">Set</a></b>(key, value)
 								</div>
-								<div class="description"></div>
+								<div class="description">Updates or adds the given <code>key</code>/<code>value</code> pair.</div>
 							</td>
 						</tr>
 					
@@ -328,6 +372,10 @@ ul.inheritsList
 				</table>
 				
 				
+				
+				<dl class="inheritsList">
+				
+				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
@@ -346,7 +394,8 @@ ul.inheritsList
 				
 				<div class="description">
 					The compression driver. (De)Compresses all data to (from) the local 
-storage. 
+storage. Uses LZW compression through a library (lz-string).
+
 Not all data will be compressed! For each submitted chunk of data 
 the driver decides whether to store it compressed or as-is. This is
 decided by the amount of storage saved: For each submitted chunk:
@@ -378,6 +427,56 @@ This object will be (de)serialized to/from a JSON record.
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name=".kEconomyMin"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; &lt;constant&gt; 
+					
+					<span class="light">{Float}</span>
+					<span class="light">TDriverCompress.</span><b>kEconomyMin</b>
+					
+					</div>
+					<div class="description">
+						The threshold value. If we save at least this much percentage of 
+data we will compress it before storing it.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".kSchemaStoredRecord"> </a>
+					<div class="fixedFont">&lt;private&gt; &lt;static&gt; &lt;constant&gt; 
+					
+					<span class="light">{JSON schema}</span>
+					<span class="light">TDriverCompress.</span><b>kSchemaStoredRecord</b>
+					
+					</div>
+					<div class="description">
+						JSON schema to validate stored entries.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -388,12 +487,12 @@ This object will be (de)serialized to/from a JSON record.
 					<a name=".Get"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					
+					<span class="light">{String}</span>
 					<span class="light">TDriverCompress.</span><b>Get</b>(key)
 					
 					</div>
 					<div class="description">
-						
+						Returns the value stored with the given <code>key</code>.
 						
 						
 					</div>
@@ -405,16 +504,23 @@ This object will be (de)serialized to/from a JSON record.
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key we want to retrieve the value of.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> The value associated with the given <code>key</code>.</dd>
+							
+							</dl>
 						
 						
 						
@@ -425,11 +531,13 @@ This object will be (de)serialized to/from a JSON record.
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">TDriverCompress.</span><b>Set</b>(key, data)
+					<span class="light">TDriverCompress.</span><b>Set</b>(key, value)
 					
 					</div>
 					<div class="description">
-						
+						Updates or adds the given <code>key</code>/<code>value</code> pair. 
+Value will be compressed if compression saves a threshold amount 
+of space.
 						
 						
 					</div>
@@ -441,16 +549,16 @@ This object will be (de)serialized to/from a JSON record.
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>key</b>
+									<span class="light fixedFont">{String}</span> <b>key</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The key we want to store the value as.</dd>
 							
 								<dt>
-									<b>data</b>
+									<span class="light fixedFont">{String}</span> <b>value</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The value to be stored.</dd>
 							
 							</dl>
 						
@@ -459,6 +567,13 @@ This object will be (de)serialized to/from a JSON record.
 						
 						
 						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd></dd>
+							
+							</dl>
 						
 
 					
@@ -475,7 +590,7 @@ This object will be (de)serialized to/from a JSON record.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Apr 13 2016 15:30:47 GMT+0200 (CEST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Apr 14 2016 12:56:10 GMT+0200 (CEST)
 		</div>
 	</body>
 </html>
