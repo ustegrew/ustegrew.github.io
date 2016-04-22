@@ -71,44 +71,46 @@
         <tbody>
           <tr>
             <td>You can find the work area beneath each article. </td>
-            <td><img  src="course/it001/lessons/01/img/sshot-01.png"></td>
+            <td><img  src="course/it001/lessons/01/img/sshot-06.png"></td>
           </tr>
           <tr>
-            <td>If the work area is collapsed, click the little triangle to expand it.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-02.png"></td>
+            <td>If it's collapsed, click the little triangle to expand it.<br>
+            </td>
+            <td><br>
+            </td>
           </tr>
           <tr>
             <td>To work on an exercise, click the "Edit" button next to it.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-03.png"></td>
+            <td><br>
+            </td>
           </tr>
           <tr>
             <td>This will show an editor beneath that exercise. You can edit
               your solution there.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-04.png"></td>
+            <td><br>
+            </td>
           </tr>
           <tr>
             <td>When done, click on "File", then "Save". This saves your
               solution on your machine.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-05.png"></td>
+            <td><br>
+            </td>
           </tr>
           <tr>
             <td>When done with all exercises,scroll to the top of the exercise
               section.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-06.png"></td>
+            <td><br>
+            </td>
           </tr>
           <tr>
-            <td>Click on "Page tools", then "Solutions to clipboard".</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-07.png"></td>
+            <td>Click on "Page tools".</td>
+            <td><br>
+            </td>
           </tr>
           <tr>
-            <td>This will bring up a window showing all the solutions on that
-              page.</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-08.png"></td>
-          </tr>
-          <tr>
-            <td>Copy and paste all the solutions to your clipboard. You can send
-              the copied text to your tutor (e.g. as an email).</td>
-            <td><img  src="course/it001/lessons/01/img/sshot-09.png"></td>
+            <td>Click on "Solutions to clipboard".</td>
+            <td><br>
+            </td>
           </tr>
         </tbody>
       </table>
