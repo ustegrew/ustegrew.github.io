@@ -632,7 +632,7 @@ define
              */
             _LoadExternal: function (item)
             {
-                this.fPnlHeading.innerHTML = item.heading;
+                window.open (item.url);
             },
             
             /**

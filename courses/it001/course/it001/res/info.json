@@ -154,7 +154,7 @@
                     "name":                 "MDN",
                     "heading":              "it 001 :: Resources :: MDN",
                     "details":              "Mozilla developer network",
-                    "url":                  "/docs/mdn/developer.mozilla.org/en-US",
+                    "url":                  "https://developer.mozilla.org/en-US",
                     "parent":               "it001.resources"
                 },
 
