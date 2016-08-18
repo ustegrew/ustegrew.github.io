@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Program examples, chapter
+ *  @fileoverview        Program examples, chapter 8
  */
 define (["course/it001/res/scripts/decl"], function ()
 {
@@ -789,13 +789,13 @@ define (["course/it001/res/scripts/decl"], function ()
 //     {
 //         globals:
 //         {
-//             symbols: ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"]
+//             symbols: ["i", "isBanana", "n", "nd", "node"]
 //         },
 //         transitionTable:
 //         [
 //             { // State 0
 //                 source:         "function Visit (node)",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -806,7 +806,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 1
 //                 source:         "{",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -817,7 +817,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 2
 //                 source:         "    var     i;",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -828,7 +828,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 3
 //                 source:         "    var     n;",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -839,7 +839,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 4
 //                 source:         "    var     nd;",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -850,7 +850,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 5
 //                 source:         "    var     isBanana;",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -861,7 +861,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 6
 //                 source:         "",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -872,7 +872,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 7
 //                 source:         "    isBanana = IsBanana (node);",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -883,7 +883,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 8
 //                 source:         "    if (isBanana)",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -894,7 +894,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 9
 //                 source:         "    {",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -905,7 +905,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 10
 //                 source:         "        console.log (\"Yum Yum!\");",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -916,7 +916,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 11
 //                 source:         "    }",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -927,7 +927,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 12
 //                 source:         "",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -938,7 +938,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 13
 //                 source:         "    n = GetNumChildren (node);",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -949,7 +949,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 14
 //                 source:         "    if (n >= 1)",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -960,7 +960,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 15
 //                 source:         "    {",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -971,7 +971,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 16
 //                 source:         "        for (i = 0; i < n; i++)",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -982,7 +982,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 17
 //                 source:         "        {",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -993,7 +993,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 18
 //                 source:         "            nd = GetChildNode (node, i);",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -1004,7 +1004,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 19
 //                 source:         "            Visit (nd); /* Recursion: Visit child node */",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -1015,7 +1015,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 20
 //                 source:         "        }",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -1026,7 +1026,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 21
 //                 source:         "    }",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -1037,7 +1037,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 22
 //                 source:         "}",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:
 //                     function ()
@@ -1048,7 +1048,7 @@ define (["course/it001/res/scripts/decl"], function ()
 //             },
 //             { // State 23
 //                 source:         "/* End */",
-//                 symbols:        ["GetChildNode", "GetNumChildren", "IsBanana", "Visit", "console", "gt", "i", "isBanana", "log", "lt", "n", "nd", "node"],
+//                 symbols:        "i", "isBanana", "n", "nd", "node"],
 //                 comment:        "",
 //                 transition:     function (){}
 //             }

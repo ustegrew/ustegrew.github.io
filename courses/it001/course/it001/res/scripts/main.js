@@ -45,27 +45,28 @@ define
         {
             var kQuerySection       = "pre.prettyprint";
             
-            var i;
-            var n;
-            var nL;
-            var replPattern;
-            var replReLeadSp;
-            var replReSp;
-            var nSpaces;
-            var isList;
-            var match;
-            var doOmitLastLine;
             var sourceSections;
-            var codeListing;
-            var codeLine;
-            var leadingSpaces;
-            var newCode;
             
             sourceSections = query (kQuerySection);
             sourceSections.forEach
             (
                 function (node)
                 {   
+                    var i;
+                    var n;
+                    var nL;
+                    var replPattern;
+                    var replReLeadSp;
+                    var replReSp;
+                    var nSpaces;
+                    var isList;
+                    var match;
+                    var doOmitLastLine;
+                    var codeListing;
+                    var codeLine;
+                    var leadingSpaces;
+                    var newCode;
+
                     newCode     = "";
                     codeListing = node.innerHTML.split ("\n");
                     isList      = Array.isArray (codeListing);
@@ -88,7 +89,7 @@ define
                         if (n >= 1)
                         {
                             codeLine = codeListing [0];
-                            match    = codeLine.match (/^\s+/);
+                            match    = codeLine.match (/^\s+/);                 /* [30] */
                             if (match !== null)
                             {
                                 leadingSpaces = match [0];
@@ -239,8 +240,8 @@ define
          This answers the problem that the css rule "white-space: pre-line;" 
          is insufficient to clear all prepended spaces. As one solution,we 
          tried to not have the leading spaces in the first place , but this 
-         confuses the indentation of the HTML code, making the HTML code harder 
-         to read.
+         confuses the indentation of the HTML code in each article, making 
+         the HTML code harder to read.
 
          For each node:
              1. Get innerHTML (content)
@@ -252,9 +253,16 @@ define
              7.     but omit the last line if it is empty (0 or more spaces only).
              8. set innerHTML to new string.
 
-    [20] the present version of Chrome doesn't support flags in the String::replace()
+    [20] The present version of Chrome doesn't support flags in the String::replace()
          function. But the 'global' flag works when specified inside a regular expression.
          We have to use the 'global' flag, otherwise the String::replace() function 
          will only replace the first occurence of a space.
-
+         
+    [30] We indent to the level of the first line of code encountered. This particular 
+         implementation has a disadvantage of skipping source code sections where the 
+         first line is empty, 
+         i.e. codeLine.match (/^\s+/) returns a null object ->  if (match !== null) fails
+         even if there is tons of code following.  
+         For now, not worth mitigating here; we just have to avoid empty first-lines in
+         each source code example.
  */

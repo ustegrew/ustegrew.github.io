@@ -1,5 +1,5 @@
 /**
- *  @fileoverview        Program examples, chapter
+ *  @fileoverview        Program examples, chapter 5
  */
 define (["course/it001/res/scripts/decl"], function ()
 {
