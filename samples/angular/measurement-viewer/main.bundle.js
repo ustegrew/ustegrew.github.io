@@ -170,8 +170,8 @@ var ImgviewComponent = /** @class */ (function () {
     function ImgviewComponent(fSwitchStates) {
         var _this = this;
         this.fSwitchStates = fSwitchStates;
-        this.kDefaultPath = '/assets/img/dc-00000.png';
-        this.kHead = '/assets/img/dc-';
+        this.kDefaultPath = 'http://ustegrew.github.io/samples/angular/measurement-viewer/assets/img/dc-00000.png';
+        this.kHead = 'http://ustegrew.github.io/samples/angular/measurement-viewer/assets/img/dc-';
         this.kTail = '.png';
         this.fSwitchStates.fNotifier.subscribe(function (note) {
             _this._notifyChange();
