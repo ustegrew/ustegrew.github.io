@@ -161,7 +161,6 @@ var AppModule = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_tlanding_tlanding_component__ = __webpack_require__("../../../../../src/app/components/pages/tlanding/tlanding.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_tdetails_tdetails_component__ = __webpack_require__("../../../../../src/app/components/pages/tdetails/tdetails.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_tcart_tcart_component__ = __webpack_require__("../../../../../src/app/components/pages/tcart/tcart.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_tfour_oh_four_tfour_oh_four_component__ = __webpack_require__("../../../../../src/app/components/pages/tfour-oh-four/tfour-oh-four.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -173,13 +172,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
 var kRoutes = [
     { path: 'landing', component: __WEBPACK_IMPORTED_MODULE_2__pages_tlanding_tlanding_component__["a" /* TLandingComponent */] },
     { path: 'details/:id', component: __WEBPACK_IMPORTED_MODULE_3__pages_tdetails_tdetails_component__["a" /* TDetailsComponent */] },
     { path: 'shopping-cart', component: __WEBPACK_IMPORTED_MODULE_4__pages_tcart_tcart_component__["a" /* TCartComponent */] },
-    { path: '', redirectTo: '/landing', pathMatch: 'full' },
-    { path: '**', component: __WEBPACK_IMPORTED_MODULE_5__pages_tfour_oh_four_tfour_oh_four_component__["a" /* TFourOhFourComponent */] }
+    { path: '**', redirectTo: '/landing', pathMatch: 'full' }
 ];
 var AppRouterModule = /** @class */ (function () {
     function AppRouterModule() {
