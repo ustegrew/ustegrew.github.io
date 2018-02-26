@@ -647,7 +647,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/widgets/tlogo/tlogo.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<img src=\"/assets/branding/logo.png\">\n"
+module.exports = "<img src=\"ustegrew.github.io/samples/angular/awesomegroceries/assets/branding/logo.png\">\n"
 
 /***/ }),
 
