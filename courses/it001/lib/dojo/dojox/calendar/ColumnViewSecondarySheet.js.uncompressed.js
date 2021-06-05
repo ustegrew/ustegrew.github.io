@@ -7,7 +7,7 @@ define("dojox/calendar/ColumnViewSecondarySheet", [
 "dojo/_base/lang",
 "dojo/dom-geometry",
 "dojo/dom-style",
-"dojox/calendar/MatrixView",
+"./MatrixView",
 "dojo/text!./templates/ColumnViewSecondarySheet.html"],
 
 function(arr,

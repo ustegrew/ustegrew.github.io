@@ -10,6 +10,9 @@ define("dojox/calendar/nls/buttons", { root: {
 }
 //end v1.x content
 ,
+"bs": true,
+"mk": true,
+"sr": true,
 "zh": true,
 "zh-tw": true,
 "uk": true,
@@ -38,6 +41,7 @@ define("dojox/calendar/nls/buttons", { root: {
 "fi": true,
 "es": true,
 "el": true,
+"eu": true,
 "de": true,
 "da": true,
 "cs": true,

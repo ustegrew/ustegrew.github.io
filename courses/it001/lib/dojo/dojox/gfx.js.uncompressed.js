@@ -10,13 +10,13 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 
 	var g = lang.getObject("dojox.gfx", true),
 		b = g._base = {};
-	
+
 	// candidates for dojox.style (work on VML and SVG nodes)
 	g._hasClass = function(/*DomNode*/node, /*String*/classStr){
 		// summary:
 		//		Returns whether or not the specified classes are a portion of the
 		//		class list currently applied to the node.
-		
+
 		// return (new RegExp('(^|\\s+)'+classStr+'(\\s+|$)')).test(node.className)	// Boolean
 		var cls = node.getAttribute("className");
 		return cls && (" " + cls + " ").indexOf(" " + classStr + " ") >= 0;  // Boolean
@@ -54,7 +54,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 			'x-small': 0, 'small': 0, 'medium': 0, 'large': 0, 'x-large': 0,
 			'xx-large': 0
 		};
-		var p, oldStyle;	
+		var p, oldStyle;
 		if(has("ie")){
 			//	We do a font-size fix if and only if one isn't applied already.
 			// NOTE: If someone set the fontSize on the HTML Element, this will kill it.
@@ -209,11 +209,10 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 
 	// IE10
 
-	b._fixMsTouchAction = function(/*dojox/gfx/shape.Surface*/surface){
-		var r = surface.rawNode;
-		if (typeof r.style.msTouchAction != 'undefined')
-			r.style.msTouchAction = "none";
-	};
+	var touchActionProp = has("pointer-events") ? "touchAction" : has("MSPointer") ? "msTouchAction" : null;
+	b._fixMsTouchAction = touchActionProp ? function(/*dojox/gfx/shape.Surface*/surface){
+		surface.rawNode.style[touchActionProp] = "none";
+	} : function() {};
 
 	/*=====
 	g.Stroke = {
@@ -240,22 +239,22 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 		//		The join style to use when combining path segments. Default value 4.
 		join: 4
 	};
-	
+
 	g.Fill = {
 		// summary:
 		//		Defines how to fill a shape. Four types of fills can be used: solid, linear gradient, radial gradient and pattern.
 		//		See dojox/gfx.LinearGradient, dojox/gfx.RadialGradient and dojox/gfx.Pattern respectively for more information about the properties supported by each type.
-		
+
 		// type: String?
 		//		The type of fill. One of 'linear', 'radial', 'pattern' or undefined. If not specified, a solid fill is assumed.
 		type:"",
-		
+
 		// color: String|dojo/Color?
 		//		The color of a solid fill type.
 		color:null,
-		
+
 	};
-	
+
 	g.LinearGradient = {
 		// summary:
 		//		An object defining the default stylistic properties used for Linear Gradient fills.
@@ -287,7 +286,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 		//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
 		colors: []
 	};
-	
+
 	g.RadialGradient = {
 		// summary:
 		//		Specifies the properties for RadialGradients using in fills patterns.
@@ -314,7 +313,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 		//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
 		colors: []
 	};
-	
+
 	g.Pattern = {
 		// summary:
 		//		An object specifying the default properties for a Pattern using in fill operations.
@@ -373,27 +372,27 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 	g.Font = {
 		// summary:
 		//		An object specifying the properties for a Font used in text operations.
-	
+
 		// type: String
 		//		Specifies this object is a Font, value 'font'.
 		type: "font",
-	
+
 		// style: String
 		//		The font style, one of 'normal', 'bold', default value 'normal'.
 		style: "normal",
-	
+
 		// variant: String
 		//		The font variant, one of 'normal', ... , default value 'normal'.
 		variant: "normal",
-	
+
 		// weight: String
 		//		The font weight, one of 'normal', ..., default value 'normal'.
 		weight: "normal",
-	
+
 		// size: String
 		//		The font size (including units), default value '10pt'.
 		size: "10pt",
-	
+
 		// family: String
 		//		The font family, one of 'serif', 'sanserif', ..., default value 'serif'.
 		family: "serif"
@@ -412,7 +411,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 
 			// type: String
 			//		Specifies this object is a Path, default value 'path'.
-			type: "path", 
+			type: "path",
 
 			// path: String
 			//		The path commands. See W32C SVG 1.0 specification.
@@ -776,7 +775,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 				if(t){
 					return new t();
 				}
-				t = typeCtorCache[type] = new Function();
+				t = typeCtorCache[type] = function () {};
 				t.prototype = g[ "default" + type ];
 				return new t();
 			}
@@ -1003,7 +1002,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 			}
 		}
 	});
-	
+
 	/*=====
 		g.createSurface = function(parentNode, width, height){
 			// summary:
@@ -1022,7 +1021,7 @@ function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 			//		private
 		};
 	=====*/
-	
+
 	return g; // defaults object api
 });
 
